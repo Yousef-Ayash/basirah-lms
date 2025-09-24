@@ -37,8 +37,8 @@
     افتح الطرفية (Terminal) وقم بتشغيل الأمر التالي لنسخ المشروع:
 
     ```bash
-    git clone [your-repository-url.git]
-    cd [project-folder-name]
+    git clone https://github.com/Yousef-Ayash/basirah-lms.git
+    cd basirah-lms
     ```
 
 2.  **تثبيت ملحقات PHP:**

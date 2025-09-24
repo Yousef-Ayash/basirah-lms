@@ -37,8 +37,8 @@ Follow these steps to get your development environment set up.
     Open your terminal and run the following command to clone the project:
 
     ```bash
-    git clone [your-repository-url.git]
-    cd [project-folder-name]
+    git clone https://github.com/Yousef-Ayash/basirah-lms.git
+    cd basirah-lms
     ```
 
 2.  **Install PHP Dependencies:**
