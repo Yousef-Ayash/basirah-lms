@@ -25,11 +25,9 @@ class ExamAttemptController extends Controller
 
         // check open/close
         if ($exam->open_at && $now->lt($exam->open_at)) {
-            // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Exam not open yet.']);
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_not_open_yet')]);
         }
         if ($exam->close_at && $now->gt($exam->close_at)) {
-            // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Exam is already closed.']);
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_is_closed')]);
         }
 
@@ -39,12 +37,10 @@ class ExamAttemptController extends Controller
             ->count();
 
         if ($attemptCount >= $exam->max_attempts) {
-            // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Maximum attempts reached.']);
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.max_attempts_reached')]);
         }
 
         if ($exam->questions()->count() === 0) {
-            // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'This exam has no questions and cannot be started.']);
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_no_questions')]);
         }
 
@@ -71,7 +67,7 @@ class ExamAttemptController extends Controller
             'metadata' => [
                 'ip' => $request->ip(),
                 'user_agent' => $request->userAgent(),
-                'questions_ids' => $questionIds
+                'question_ids' => $questionIds
             ],
         ]);
 
@@ -86,14 +82,14 @@ class ExamAttemptController extends Controller
         ]);
 
         // load questions without correct answers
-        $questions = $exam->questions()->orderBy('order')->get()->map(function (ExamQuestion $q) {
-            return [
-                'id' => $q->id,
-                'question_text' => $q->question_text,
-                'options' => $q->options,
-                'order' => $q->order,
-            ];
-        });
+        // $questions = $exam->questions()->orderBy('order')->get()->map(function (ExamQuestion $q) {
+        //     return [
+        //         'id' => $q->id,
+        //         'question_text' => $q->question_text,
+        //         'options' => $q->options,
+        //         'order' => $q->order,
+        //     ];
+        // });
 
         $displayQuestions = $questions->map(function (ExamQuestion $q) {
             return [
