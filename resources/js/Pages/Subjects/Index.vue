@@ -6,11 +6,11 @@ import StudentLayout from '@/Pages/Student/Layout.vue';
 export default {
     layout: (h, page) => {
         const user = usePage().props.auth.user;
-        const isAdmin = user.roles?.some(role => role.name === 'admin');
+        const isAdmin = user.roles?.some((role) => role.name === 'admin');
         const LayoutComponent = isAdmin ? AdminLayout : StudentLayout;
         return h(LayoutComponent, [page]);
-    }
-}
+    },
+};
 </script>
 
 <script setup>
@@ -22,6 +22,9 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Link, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
+import { useTranslations } from '@/composables/useTranslations';
+
+const { __ } = useTranslations();
 
 const props = defineProps({
     subjects: Object, // Paginated subjects object
@@ -50,36 +53,76 @@ watch(
 
 <template>
     <div>
-        <Head title="Subjects" />
-        <SectionHeader title="Browse Subjects" />
+        <Head :title="__('common.subjects')" />
+        <SectionHeader :title="__('student.browse_subjects')" />
 
         <Card class="mb-6">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <BaseInput v-model="filters.q" placeholder="Search by title or description..." />
+                <BaseInput
+                    v-model="filters.q"
+                    :placeholder="
+                        __('placeholders.search_by_title_or_description')
+                    "
+                />
                 <BaseSelect v-model="filters.level_id">
-                    <option value="">All Levels</option>
-                    <option v-for="level in levels" :key="level.id" :value="level.id">{{ level.name }}</option>
+                    <option value="">{{ __common.all_levels }}</option>
+                    <option
+                        v-for="level in levels"
+                        :key="level.id"
+                        :value="level.id"
+                    >
+                        {{ level.name }}
+                    </option>
                 </BaseSelect>
             </div>
         </Card>
 
-        <div v-if="subjects.data.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <Link v-for="subject in subjects.data" :key="subject.id" :href="route('subjects.show', subject.id)">
-                <Card class="h-full transition hover:-translate-y-1 hover:shadow-lg">
-                    <div class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700">
-                        <span class="text-sm text-gray-400">No Image</span>
+        <div
+            v-if="subjects.data.length"
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+            <Link
+                v-for="subject in subjects.data"
+                :key="subject.id"
+                :href="route('subjects.show', subject.id)"
+            >
+                <Card
+                    class="h-full transition hover:-translate-y-1 hover:shadow-lg"
+                >
+                    <div
+                        class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700"
+                    >
+                        <span class="text-sm text-gray-400">{{
+                            __('labels.no_image')
+                        }}</span>
                     </div>
-                    <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">{{ subject.title }}</h2>
-                    <p class="line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
+                    <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">
+                        {{ subject.title }}
+                    </h2>
+                    <p
+                        class="line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
+                    >
                         {{ subject.description }}
                     </p>
                     <div class="mt-2 text-xs text-gray-500">
-                        <span>{{ subject.materials_count }} Materials</span> | <span>{{ subject.exams_count }} Exams</span>
+                        <span
+                            >{{ subject.materials_count }}
+                            {{ __('common.materials') }}</span
+                        >
+                        |
+                        <span
+                            >{{ subject.exams_count }}
+                            {{ __('common.exams') }}</span
+                        >
                     </div>
                 </Card>
             </Link>
         </div>
-        <EmptyState v-else message="No subjects found." sub="Try adjusting your search filters." />
+        <EmptyState
+            v-else
+            :message="__('messages.no_subjects_found')"
+            :sub="__('messages.try_adjusting_filters')"
+        />
 
         <div class="mt-6">
             <Pagination :links="subjects.links" />

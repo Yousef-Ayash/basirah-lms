@@ -148,7 +148,8 @@
         "material_is_pdf": "This material is a PDF document.",
         "key_points": "Key Points",
         "view_exam": "View Exam",
-        "my_marks": "My Marks"
+        "my_marks": "My Marks",
+        "browse_subjects": "Browse Subjects"
     },
     "admin": {
         "admin_dashboard": "Admin Dashboard",
@@ -320,7 +321,8 @@
         "ready_to_import": "✓ Ready to import",
         "delete_question_confirm": "Are you sure you want to delete this question?",
         "ready": "✓ Ready",
-        "exam_submitted_successfully": "Your exam was submitted. Score: :score"
+        "exam_submitted_successfully": "Your exam was submitted. Score: :score",
+        "try_adjusting_filters": "Try adjusting your search filters."
     },
     "labels": {
         "full_name": "Full Name",
@@ -393,12 +395,15 @@
         "no_level": "-- No Level --",
         "questions_to_display_note": "Leave blank or 0 to show all questions from the question bank.",
         "pass_threshold": "Pass Threshold (%)",
-        "exam": "Exam"
+        "exam": "Exam",
+        "no_image": "No Image"
     },
     "placeholders": {
         "minutes_example": "e.g., 60",
         "eg": "e.g.,",
-        "key_takeaways": "Enter key takeaways or a summary for students..."
+        "key_takeaways": "Enter key takeaways or a summary for students...",
+        "click_or_drag_to_upload": "Click or drag to upload",
+        "search_by_title_or_description": "Search by title or description..."
     },
     "errors": {
         "attempt_already_submitted": "Attempt already submitted.",
@@ -423,6 +428,19 @@
         "phone_number": "+963 930 101 566",
         "address": "Damascus - Rukn al-Din, Sheikh Ahmed Kuftaro Complex",
         "copyright": "Copyright Basirah Center | All Rights Reserved",
+        "copyright_line": "Basirah. All rights reserved.",
         "help": "help"
+    },
+    "materials": {
+        "types": {
+            "pdf": "PDF",
+            "picture": "Picture",
+            "youtube": "YouTube"
+        }
+    },
+    "validation": {
+        "required": ":field is required",
+        "min_length": ":field must be at least :n characters",
+        "email": "Enter a valid email"
     }
 }

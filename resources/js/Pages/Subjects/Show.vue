@@ -6,11 +6,11 @@ import StudentLayout from '@/Pages/Student/Layout.vue';
 export default {
     layout: (h, page) => {
         const user = usePage().props.auth.user;
-        const isAdmin = user.roles?.some(role => role.name === 'admin');
+        const isAdmin = user.roles?.some((role) => role.name === 'admin');
         const LayoutComponent = isAdmin ? AdminLayout : StudentLayout;
         return h(LayoutComponent, [page]);
-    }
-}
+    },
+};
 </script>
 
 <script setup>
@@ -21,7 +21,9 @@ import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useTranslations } from '@/composables/useTranslations';
 
+const { __ } = useTranslations();
 
 const props = defineProps({
     subject: Object,
@@ -46,7 +48,9 @@ const toggleBookmark = (material) => {
     if (isCurrentlyBookmarked) {
         // --- Handle Un-bookmarking ---
         // Optimistically remove the ID from our local list
-        localBookmarkedIds.value = localBookmarkedIds.value.filter((id) => id !== material.id);
+        localBookmarkedIds.value = localBookmarkedIds.value.filter(
+            (id) => id !== material.id,
+        );
 
         // Send the DELETE request to the server
         router.delete(route('bookmarks.destroy', { material: material.id }), {
@@ -67,7 +71,9 @@ const toggleBookmark = (material) => {
                 preserveScroll: true,
                 // If the server request fails, remove the ID to revert the change
                 onError: () => {
-                    localBookmarkedIds.value = localBookmarkedIds.value.filter((id) => id !== material.id);
+                    localBookmarkedIds.value = localBookmarkedIds.value.filter(
+                        (id) => id !== material.id,
+                    );
                 },
             },
         );
@@ -79,34 +85,79 @@ const toggleBookmark = (material) => {
     <div>
         <Head :title="subject.title" />
         <div class="mb-6">
-            <img v-if="subject.cover_image" :src="subject.cover_image" alt="Subject Cover" class="mb-4 max-h-64 w-full rounded-lg object-cover" />
+            <img
+                v-if="subject.cover_image"
+                :src="subject.cover_image"
+                alt="Subject Cover"
+                class="mb-4 max-h-64 w-full rounded-lg object-cover"
+            />
             <h1 class="mb-2 text-3xl font-bold">{{ subject.title }}</h1>
-            <p class="text-gray-600 dark:text-gray-400">{{ subject.description }}</p>
+            <p class="text-gray-600 dark:text-gray-400">
+                {{ subject.description }}
+            </p>
         </div>
 
-        <TabGroup :tabs="['Materials', 'Exams']" v-slot="{ active }">
+        <TabGroup
+            :tabs="[__('common.materials'), __('common.exams')]"
+            v-slot="{ active }"
+        >
             <div v-show="active === 0" class="space-y-4">
-                <div v-if="materials.data.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    <Card v-for="material in materials.data" :key="material.id" class="flex flex-col">
-                        <a :href="route('materials.show', material.id)" target="_blank" class="block">
-                            <img v-if="material.thumbnail_url" :src="material.thumbnail_url" class="h-40 w-full rounded-t-lg object-cover" />
-                            <div v-else class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700">
-                                No Preview
+                <div
+                    v-if="materials.data.length"
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                    <Card
+                        v-for="material in materials.data"
+                        :key="material.id"
+                        class="flex flex-col"
+                    >
+                        <a
+                            :href="route('materials.show', material.id)"
+                            target="_blank"
+                            class="block"
+                        >
+                            <img
+                                v-if="material.thumbnail_url"
+                                :src="material.thumbnail_url"
+                                class="h-40 w-full rounded-t-lg object-cover"
+                            />
+                            <div
+                                v-else
+                                class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700"
+                            >
+                                {{ __('student.no_preview') }}
                             </div>
                         </a>
                         <div class="flex flex-grow flex-col p-4">
-                            <h3 class="flex-grow font-medium">{{ material.title }}</h3>
+                            <h3 class="flex-grow font-medium">
+                                {{ material.title }}
+                            </h3>
                             <div class="mt-2 flex items-center justify-between">
-                                <span class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold uppercase dark:bg-gray-700">{{
-                                    material.type
-                                }}</span>
-                                <button @click="toggleBookmark(material)" class="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700">
-                                    <svg v-if="isBookmarked(material.id)" class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                <span
+                                    class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold uppercase dark:bg-gray-700"
+                                    >{{ material.type }}</span
+                                >
+                                <button
+                                    @click="toggleBookmark(material)"
+                                    class="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                >
+                                    <svg
+                                        v-if="isBookmarked(material.id)"
+                                        class="h-5 w-5 text-yellow-500"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
                                         <path
                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                                         ></path>
                                     </svg>
-                                    <svg v-else class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg
+                                        v-else
+                                        class="h-5 w-5 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
                                         <path
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
@@ -120,7 +171,7 @@ const toggleBookmark = (material) => {
                     </Card>
                 </div>
                 <div v-else class="mt-6">
-                    <EmptyState message="No materials have been added to this subject yet." />
+                    <EmptyState :message="__('messages.no_materials_yet')" />
                 </div>
                 <div class="mt-6">
                     <Pagination :links="materials.links" />
@@ -129,15 +180,31 @@ const toggleBookmark = (material) => {
 
             <div v-show="active === 1" class="space-y-4">
                 <div v-if="exams.length">
-                    <Card v-for="exam in exams" :key="exam.id" class="flex flex-col p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <Card
+                        v-for="exam in exams"
+                        :key="exam.id"
+                        class="flex flex-col p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
                         <div>
-                            <h3 class="text-lg font-medium">{{ exam.title }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Time Limit: {{ exam.time_limit_minutes }} min</p>
+                            <h3 class="text-lg font-medium">
+                                {{ exam.title }}
+                            </h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('labels.time_limit') }}
+                                {{ exam.time_limit_minutes }}
+                                {{ __('common.minutes_short') }}
+                            </p>
                         </div>
-                        <BaseButton as="a" :href="route('exams.show', exam.id)" class="mt-2 sm:mt-0"> View Exam </BaseButton>
+                        <BaseButton
+                            as="a"
+                            :href="route('exams.show', exam.id)"
+                            class="mt-2 sm:mt-0"
+                        >
+                            {{ __('student.view_exam') }}
+                        </BaseButton>
                     </Card>
                 </div>
-                <EmptyState v-else message="No exams are available for this subject yet." />
+                <EmptyState v-else :message="__('messages.no_exams_yet')" />
             </div>
         </TabGroup>
     </div>

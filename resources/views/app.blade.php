@@ -12,16 +12,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     @if (app()->getLocale() == 'ar')
-        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap"
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap"
             rel="stylesheet">
     @else
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
             rel="stylesheet">
     @endif
 
-    {{-- <!-- Fonts --> --}}
-    {{-- <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
+    <style>
+        :root {
+            @if (app()->getLocale() == 'ar')
+                --font-sans: 'Noto Kufi Arabic', ui-sans-serif, system-ui, sans-serif;
+            @else
+                --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+            @endif
+        }
+    </style>
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 

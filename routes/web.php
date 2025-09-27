@@ -22,16 +22,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 // Public and Foundational Routes
 Route::get('/', function () {
@@ -67,7 +57,7 @@ Route::middleware('auth')->group(function () {
 // #####################################################################
 Route::middleware(['auth', 'approved'])->group(function () {
 
-    // ## Phase 4: Subjects, Materials & Bookmarks
+    // ## Subjects, Materials & Bookmarks
     Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
     Route::get('materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
@@ -76,7 +66,7 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('/bookmarks', [BookmarkController::class, 'store'])->name('bookmarks.store');
     Route::delete('/bookmarks/{material}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 
-    // ## Phase 5: Exam Lifecycle for Students
+    // ## Exam Lifecycle for Students
     Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
     Route::post('exams/{exam}/start', [ExamAttemptController::class, 'start'])->name('exams.start');
     Route::get('my-attempts', [ExamAttemptController::class, 'index'])->name('attempts.index');
@@ -93,18 +83,17 @@ Route::middleware(['auth', 'approved'])->group(function () {
 // #####################################################################
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:admin'])->group(function () {
 
-    // ## Phase 1: Initial User Approval
+    // ## Initial User Approval
     Route::get('/users/pending', [UserController::class, 'index'])->name('users.pending');
     Route::post('/users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
     Route::delete('/users/{user}/deny', [UserController::class, 'deny'])->name('users.deny');
 
-    // ## Phase 4: Subjects & Materials Management
+    // ## Subjects & Materials Management
     Route::resource('subjects', AdminSubjectController::class)->except(['show']);
-    // Route::post('materials', [MaterialController::class, 'store'])->name('materials.store');
     Route::post('subjects/{subject}/materials', [AdminMaterialController::class, 'store'])->name('subjects.materials.store');
     Route::delete('materials/{material}', [AdminMaterialController::class, 'destroy'])->name('materials.destroy');
 
-    // ## Phase 5: Exam, Question, and Attempt Management
+    // ## Exam, Question, and Attempt Management
     Route::resource('exams', AdminExamController::class);
     Route::get('exams/{exam}/questions/export', [AdminExamController::class, 'exportQuestions'])->name('exams.questions.export');
     Route::get('exams/{exam}/questions', [AdminQuestionController::class, 'index'])->name('exams.questions.index');
@@ -120,11 +109,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('exams/{exam}/attempts', [AdminExamController::class, 'attempts'])->name('exams.attempts.index');
     Route::get('exams/{exam}/attempts/{attempt}', [AdminExamController::class, 'attemptShow'])->name('exams.attempts.show');
 
-    // ## Phase 6: Exam Logging & Auditing
+    // ## Exam Logging & Auditing
     Route::get('logs/exam', [ExamLogController::class, 'index'])->name('logs.exam.index');
     Route::get('logs/exam/export', [ExamLogController::class, 'export'])->name('logs.exam.export');
 
-    // ## Phase 7: Marks & Reporting
+    // ## Marks & Reporting
     Route::resource('marks', MarkController::class)->except(['show']);
     Route::post('marks/import/preview', [MarkController::class, 'importPreview'])->name('marks.import.preview');
     Route::post('marks/import/commit', [MarkController::class, 'importCommit'])->name('marks.import.commit');
@@ -138,7 +127,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
     Route::get('reports/exams-for-student/{user}', [ReportController::class, 'getExamsForStudent'])->name('reports.exams_for_student');
 
-    // ## Phase 8: Student Management
+    // ## Student Management
     Route::get('students/export', [StudentController::class, 'export'])->name('students.export');
     Route::resource('students', StudentController::class)->except(['show']);
     Route::post('students/{user}/approve', [StudentController::class, 'approve'])->name('students.approve');
@@ -152,5 +141,4 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('view-as-admin', [ViewController::class, 'viewAsAdmin'])->name('view-as-admin');
 });
 
-// Finally, include the authentication routes defined by Laravel Breeze/Fortify
 require __DIR__ . '/auth.php';

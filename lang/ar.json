@@ -148,7 +148,8 @@
         "material_is_pdf": "هذه المادة عبارة عن مستند PDF.",
         "key_points": "النقاط الرئيسية",
         "view_exam": "عرض الاختبار",
-        "my_marks": "درجاتي"
+        "my_marks": "درجاتي",
+        "browse_subjects": "تصفح المواد"
     },
     "admin": {
         "admin_dashboard": "لوحة تحكم المسؤول",
@@ -320,7 +321,8 @@
         "ready_to_import": "✓ جاهز للاستيراد",
         "delete_question_confirm": "هل أنت متأكد أنك تريد حذف هذا السؤال؟",
         "ready": "✓ جاهز",
-        "exam_submitted_successfully": "تم تسليم اختبارك. الدرجة: :score"
+        "exam_submitted_successfully": "تم تسليم اختبارك. الدرجة: :score",
+        "try_adjusting_filters": "حاول تعديل فلاتر البحث."
     },
     "labels": {
         "full_name": "الاسم الكامل",
@@ -393,12 +395,15 @@
         "no_level": "-- بلا مستوى --",
         "questions_to_display_note": "اتركه فارغاً أو 0 لإظهار كافة الأسئلة من بنك الأسئلة.",
         "pass_threshold": "عتبة النجاح (%)",
-        "exam": "الاختبار"
+        "exam": "الاختبار",
+        "no_image": "لا توجد صورة"
     },
     "placeholders": {
         "minutes_example": "مثال: 60",
         "eg": "مثال:",
-        "key_takeaways": "أدخل النقاط الرئيسية أو ملخصًا للطلاب..."
+        "key_takeaways": "أدخل النقاط الرئيسية أو ملخصًا للطلاب...",
+        "click_or_drag_to_upload": "انقر أو اسحب للرفع",
+        "search_by_title_or_description": "البحث بالعنوان أو الوصف..."
     },
     "errors": {
         "attempt_already_submitted": "تم تسليم هذه المحاولة بالفعل.",
@@ -422,7 +427,20 @@
         "faculty": "الهيئة التدريسية",
         "phone_number": "+963 930 101 566",
         "address": "دمشق - ركن الدين، مجمع الشيخ أحمد كفتارو",
-        "copyright": "Copyright Basirah Center | All Rights Reserved",
-        "help": "مساعدة"
+        "copyright": "جميع الحقوق محفوظة | لمركز بصيرة",
+        "help": "مساعدة",
+        "copyright_line": "بصيرة. جميع الحقوق محفوظة."
+    },
+    "materails": {
+        "types": {
+            "pdf": "ملف PDF",
+            "picture": "صورة",
+            "youtube": "يوتيوب"
+        }
+    },
+    "vlidation": {
+        "required": ":field مطلوب",
+        "min_length": "يجب أن يتكون :field من :n أحرف على الأقل",
+        "email": "أدخل بريدًا إلكترونيًا صالحًا"
     }
 }
