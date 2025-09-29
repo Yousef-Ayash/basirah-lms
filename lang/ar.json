@@ -15,6 +15,7 @@
         "login": "تسجيل الدخول",
         "register": "تسجيل",
         "name": "الاسم",
+        "bio": "السيرة",
         "email": "البريد الإلكتروني",
         "password": "كلمة المرور",
         "actions": "الإجراءات",
@@ -62,7 +63,9 @@
         "details": "تفاصيل",
         "minutes": "دقيقة",
         "welcome_name": "أهلاً بك، :name!",
-        "error_submission": "حدث خطأ في الإرسال."
+        "error_submission": "حدث خطأ في الإرسال.",
+        "photo": "صورة",
+        "teachers": "المدرسون"
     },
     "auth": {
         "forgot_password": "هل نسيت كلمة المرور؟",
@@ -149,7 +152,8 @@
         "key_points": "النقاط الرئيسية",
         "view_exam": "عرض الاختبار",
         "my_marks": "درجاتي",
-        "browse_subjects": "تصفح المواد"
+        "browse_subjects": "تصفح المواد",
+        "out_teacher": "الكادر التدريسي"
     },
     "admin": {
         "admin_dashboard": "لوحة تحكم المسؤول",
@@ -265,7 +269,11 @@
         "add_question_manually": "إضافة سؤال يدويًا",
         "new_questions_batch": "أسئلة جديدة ستتم إضافتها (:count)",
         "viewing_as_student_banner": "أنت تعرض التطبيق حالياً كطالب.",
-        "add_new_material": "إضافة مادة جديدة"
+        "add_new_material": "إضافة مادة جديدة",
+        "create_teacher": "إنشاء مدرس",
+        "create_new_teacher": "إنشاء مدرس جديد",
+        "edit_teacher": "تعديل بيانات المدرس: :teacher",
+        "manage_teachers": "إدارة المدرسين"
     },
     "buttons": {
         "save": "حفظ",
@@ -303,7 +311,8 @@
         "edit_details": "تعديل التفاصيل",
         "import_marks": "استيراد الدرجات",
         "download_open_pdf": "تحميل / فتح PDF",
-        "generate": "إنشاء تقرير"
+        "generate": "إنشاء تقرير",
+        "add_teacher": "إضافة مدرس +"
     },
     "messages": {
         "saved": "تم الحفظ.",
@@ -396,7 +405,8 @@
         "questions_to_display_note": "اتركه فارغاً أو 0 لإظهار كافة الأسئلة من بنك الأسئلة.",
         "pass_threshold": "عتبة النجاح (%)",
         "exam": "الاختبار",
-        "no_image": "لا توجد صورة"
+        "no_image": "لا توجد صورة",
+        "edit_teacher": "تعديل بيانات المدرس"
     },
     "placeholders": {
         "minutes_example": "مثال: 60",

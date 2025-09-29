@@ -15,6 +15,7 @@
         "login": "Log In",
         "register": "Register",
         "name": "Name",
+        "bio": "Biography",
         "email": "Email",
         "password": "Password",
         "actions": "Actions",
@@ -62,7 +63,9 @@
         "details": "Details",
         "minutes": "minutes",
         "welcome_name": "Welcome, :name!",
-        "error_submission": "There was an error with your submission."
+        "error_submission": "There was an error with your submission.",
+        "photo": "Photo",
+        "teachers": "Teachers"
     },
     "auth": {
         "forgot_password": "Forgot Password?",
@@ -149,7 +152,8 @@
         "key_points": "Key Points",
         "view_exam": "View Exam",
         "my_marks": "My Marks",
-        "browse_subjects": "Browse Subjects"
+        "browse_subjects": "Browse Subjects",
+        "out_teacher": "Our Teachers"
     },
     "admin": {
         "admin_dashboard": "Admin Dashboard",
@@ -265,7 +269,11 @@
         "add_question_manually": "Add Question Manually",
         "new_questions_batch": "New Questions to be Added (:count)",
         "viewing_as_student_banner": "You are currently viewing the application as a student.",
-        "add_new_material": "Add New Material"
+        "add_new_material": "Add New Material",
+        "create_teacher": "Create Teacher",
+        "create_new_teacher": "Create New Teacher",
+        "edit_teacher": "Edit Teacher: :teacher",
+        "manage_teachers": "Manage Teachers"
     },
     "buttons": {
         "save": "Save",
@@ -303,7 +311,8 @@
         "edit_details": "Edit Details",
         "import_marks": "Import Marks",
         "download_open_pdf": "Download / Open PDF",
-        "generate": "Generate Report"
+        "generate": "Generate Report",
+        "add_teacher": "Add Teacher +"
     },
     "messages": {
         "saved": "Saved.",
@@ -396,7 +405,8 @@
         "questions_to_display_note": "Leave blank or 0 to show all questions from the question bank.",
         "pass_threshold": "Pass Threshold (%)",
         "exam": "Exam",
-        "no_image": "No Image"
+        "no_image": "No Image",
+        "edit_teacher": "Edit Teacher"
     },
     "placeholders": {
         "minutes_example": "e.g., 60",

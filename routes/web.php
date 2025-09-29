@@ -20,6 +20,8 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
+use App\Http\Controllers\TeacherController;
 use Inertia\Inertia;
 
 
@@ -75,6 +77,9 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::get('attempts/{attempt}/download', [ExamAttemptController::class, 'download'])->name('attempts.download');
     Route::post('attempts/{attempt}/autosave', [ExamAttemptController::class, 'autosave'])->name('attempts.autosave');
     Route::post('attempts/{attempt}/submit', [ExamAttemptController::class, 'submit'])->name('attempts.submit');
+
+    // # Teachers
+    Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
 });
 
 
@@ -137,8 +142,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::post('students/import/preview', [StudentController::class, 'importPreview'])->name('students.import.preview');
     Route::post('students/import/commit', [StudentController::class, 'importCommit'])->name('students.import.commit');
 
+    // ## View as student
     Route::get('view-as-student', [ViewController::class, 'viewAsStudent'])->name('view-as-student');
     Route::get('view-as-admin', [ViewController::class, 'viewAsAdmin'])->name('view-as-admin');
+
+    // ## Teacher routes
+    Route::resource('teachers', AdminTeacherController::class);
 });
 
 require __DIR__ . '/auth.php';

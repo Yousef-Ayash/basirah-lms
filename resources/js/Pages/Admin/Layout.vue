@@ -1,13 +1,27 @@
 <template>
-    <div class="flex min-h-screen flex-col bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
-        <div v-if="viewingAsStudent" class="bg-yellow-400 p-2 text-center text-sm text-black">
+    <div
+        class="flex min-h-screen flex-col bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white"
+    >
+        <div
+            v-if="viewingAsStudent"
+            class="bg-yellow-400 p-2 text-center text-sm text-black"
+        >
             {{ __('admin.viewing_as_student_banner') }}
-            <Link :href="route('admin.view-as-admin')" class="font-bold underline">{{ __('admin.return_to_admin') }}</Link>
+            <Link
+                :href="route('admin.view-as-admin')"
+                class="font-bold underline"
+                >{{ __('admin.return_to_admin') }}</Link
+            >
         </div>
 
         <NavBar :links="navLinks" />
         <main class="mx-auto w-full max-w-7xl flex-grow px-4 py-6">
-            <Alert v-if="flashSuccess" :message="flashSuccess" type="success" class="mb-4" />
+            <Alert
+                v-if="flashSuccess"
+                :message="flashSuccess"
+                type="success"
+                class="mb-4"
+            />
             <slot />
         </main>
         <Footer />
@@ -36,6 +50,7 @@ const adminLinks = computed(() => [
     { label: __('common.marks'), to: route('admin.marks.index') },
     { label: __('common.reports'), to: route('admin.reports.index') },
     { label: __('common.logs'), to: route('admin.logs.exam.index') },
+    { label: __('common.teachers'), to: route('admin.teachers.index') },
 ]);
 
 const studentLinks = computed(() => [
@@ -45,5 +60,7 @@ const studentLinks = computed(() => [
     { label: __('student.my_bookmarks'), to: route('bookmarks.index') },
 ]);
 
-const navLinks = computed(() => (viewingAsStudent.value ? studentLinks.value : adminLinks.value));
+const navLinks = computed(() =>
+    viewingAsStudent.value ? studentLinks.value : adminLinks.value,
+);
 </script>

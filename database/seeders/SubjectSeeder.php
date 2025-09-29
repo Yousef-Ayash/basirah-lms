@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Subject;
 use App\Models\Level;
 use App\Models\User;
+use App\Models\Teacher;
 
 class SubjectSeeder extends Seeder
 {
@@ -17,6 +18,7 @@ class SubjectSeeder extends Seeder
             Subject::factory(5)->create([
                 'level_id' => $level->id,
                 'created_by' => $admin ? $admin->id : User::factory(),
+                'teacher_id' => Teacher::inRandomOrder()->first()->id,
             ]);
         }
     }
