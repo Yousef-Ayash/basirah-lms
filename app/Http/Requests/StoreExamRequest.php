@@ -20,6 +20,7 @@ class StoreExamRequest extends FormRequest
             'open_at' => 'nullable|date',
             'close_at' => 'nullable|date|after:open_at',
             'max_attempts' => 'required|integer|min:1',
+            'distance_between_attempts' => 'required|integer|min:0',
             'questions_to_display' => 'nullable|integer|min:0',
             'full_mark' => 'nullable|integer|min:0',
             'review_allowed' => 'boolean',

@@ -16,6 +16,7 @@ class Exam extends Model
         'open_at',
         'close_at',
         'max_attempts',
+        'distance_between_attempts',
         'questions_to_display',
         'full_mark',
         'review_allowed',

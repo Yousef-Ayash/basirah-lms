@@ -20,12 +20,22 @@ class ExamController extends Controller
         $questionCount = $exam->questions()->count();
         $attemptsCount = $user->attempts()->where('exam_id', $exam->id)->count();
 
+        $last_attempt = StudentExamAttempt::where('exam_id', $exam->id)->where('user_id', $user->id)->latest('submitted_at')->value('submitted_at');
+
+        if ($last_attempt) {
+            $submittedDate = Carbon::parse($last_attempt)->startOfDay();
+            $next_attempt_date = Carbon::parse($last_attempt)
+                ->addDays($exam->distance_between_attempts)
+                ->toDateString();
+        }
+
         // Determine eligibility to start
         $now = Carbon::now();
         $canStart = $questionCount > 0 // <-- Add this condition
             && (!$exam->open_at || $now->gte($exam->open_at))
             && (!$exam->close_at || $now->lte($exam->close_at))
-            && $attemptsCount < $exam->max_attempts;
+            && $attemptsCount < $exam->max_attempts
+            && ($last_attempt && $submittedDate->lte($now->subDays($exam->distance_between_attempts)));
 
         return Inertia::render('Exams/Show', [
             'exam' => [
@@ -43,6 +53,7 @@ class ExamController extends Controller
             ],
             'attempts_count' => $attemptsCount,
             'can_start' => $canStart,
+            'next_attempt_date' => $next_attempt_date,
         ]);
     }
 }

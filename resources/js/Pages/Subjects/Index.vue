@@ -65,7 +65,7 @@ watch(
                     "
                 />
                 <BaseSelect v-model="filters.level_id">
-                    <option value="">{{ __common.all_levels }}</option>
+                    <option value="">{{ __('common.all_levels') }}</option>
                     <option
                         v-for="level in levels"
                         :key="level.id"

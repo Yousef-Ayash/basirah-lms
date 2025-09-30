@@ -42,6 +42,7 @@ const form = useForm({
     subject_id: preselectedSubject || null,
     time_limit_minutes: 60,
     max_attempts: 1,
+    distance_between_attempts: 0,
     open_at: '',
     close_at: '',
     review_allowed: true,

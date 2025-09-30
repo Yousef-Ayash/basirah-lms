@@ -6,7 +6,6 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-import { useThemeStore } from './stores/themes';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const pinia = createPinia();
@@ -31,5 +30,5 @@ createInertiaApp({
     },
 });
 
-const themeStore = useThemeStore();
-themeStore.initTheme();
+// const themeStore = useThemeStore();
+// themeStore.initTheme();

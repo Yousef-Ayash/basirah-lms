@@ -29,7 +29,7 @@
                 {{ subject.title }}
             </option>
         </BaseSelect>
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-3">
             <BaseInput
                 :label="__('labels.time_limit_minutes')"
                 type="number"
@@ -44,6 +44,18 @@
                 :error="modelValue.errors.max_attempts"
                 required
             />
+            <div>
+                <BaseInput
+                    label="المسافة بين المحاولات (بالايام)"
+                    type="number"
+                    v-model="modelValue.distance_between_attempts"
+                    :error="modelValue.errors.distance_between_attempts"
+                    required
+                />
+                <p class="mt-1 text-xs text-gray-500">
+                    اتركه فارغاً أو 0 لإلغاء قيود المسافة بين كل محاولة تقديم.
+                </p>
+            </div>
         </div>
         <div class="grid gap-4 sm:grid-cols-2">
             <div>

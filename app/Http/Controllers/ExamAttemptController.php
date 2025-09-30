@@ -44,6 +44,17 @@ class ExamAttemptController extends Controller
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_no_questions')]);
         }
 
+        $last_attempt = StudentExamAttempt::where('exam_id', $exam->id)->where('user_id', $user->id)->latest('submitted_at')->value('submitted_at');
+
+        if ($last_attempt) {
+            $submittedDate = Carbon::parse($last_attempt)->startOfDay();
+            $now = now()->startOfDay();
+
+            if (!$submittedDate->lte($now->subDays($exam->distance_between_attempts))) {
+                return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'لم يحن موعد محاولة التقديم التالية.']);
+            }
+        }
+
         $questionsQuery = $exam->questions();
 
         // Check if we need to select a random subset of questions

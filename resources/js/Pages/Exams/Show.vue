@@ -27,7 +27,20 @@ const props = defineProps({
     exam: Object,
     attempts_count: Number,
     can_start: Boolean,
+    next_attempt_date: Date,
 });
+
+function getLocalToday() {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so we add 1
+    const day = String(today.getDate()).padStart(2, '0');
+
+    const yyyyMMdd = `${year}-${month}-${day}`;
+
+    return yyyyMMdd;
+}
 
 // Create computed properties to determine the exam's status
 const hasAttemptsLeft = computed(
@@ -39,7 +52,7 @@ const isNotYetOpen = computed(
 const isClosed = computed(
     () => props.exam.close_at && new Date(props.exam.close_at) < new Date(),
 );
-const hasNoQuestions = computed(() => props.exam.question_count === 0); // <-- New computed property
+const hasNoQuestions = computed(() => props.exam.question_count === 0);
 
 // Helper for formatting dates
 const formatDate = (dateString) => {
@@ -109,6 +122,15 @@ const alertInfo = computed(() => {
                 <li class="flex justify-between">
                     <span>العلامة الكاملة:</span>
                     <span class="font-semibold">{{ exam.full_mark }}</span>
+                </li>
+                <li
+                    v-if="
+                        new Date(getLocalToday()) < new Date(next_attempt_date)
+                    "
+                    class="flex justify-between"
+                >
+                    <span>موعد المحاولة التالية:</span>
+                    <span class="font-semibold">{{ next_attempt_date }}</span>
                 </li>
                 <li v-if="exam.open_at" class="flex justify-between">
                     <span>{{ __('student.opens_on') }}:</span>
