@@ -41,6 +41,7 @@ class QuestionController extends Controller
             'question_text' => $data['question_text'],
             'options' => $data['options'],
             'correct_answer' => $data['correct_answer'],
+            'mark' => $data['mark'],
             'order' => $exam->questions()->max('order') + 1,
         ]);
 
@@ -163,6 +164,7 @@ class QuestionController extends Controller
             if (isset($row[6])) {
                 $correct = is_numeric($row[6]) ? (int) $row[6] : null;
             }
+            $mark = $row[7];
 
             $errors = [];
             if ($questionText === '')
@@ -179,6 +181,7 @@ class QuestionController extends Controller
                 'question_text' => $questionText,
                 'options' => $options,
                 'correct_answer' => $correct,
+                'mark' => $mark,
                 'errors' => $errors,
             ];
         }
@@ -230,6 +233,7 @@ class QuestionController extends Controller
                     'question_text' => $r['question_text'],
                     'options' => $r['options'],
                     'correct_answer' => $r['correct_answer'],
+                    'mark' => $r['mark'],
                     'order' => $order,
                 ]);
             }

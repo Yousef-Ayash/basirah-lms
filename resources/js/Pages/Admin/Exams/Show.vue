@@ -56,7 +56,10 @@
                     class="flex items-start justify-between p-3"
                 >
                     <div>
-                        <p class="font-medium">{{ question.question_text }}</p>
+                        <p class="font-medium">
+                            {{ question.question_text }}
+                            <span>( العلامة: {{ question.mark }} )</span>
+                        </p>
                         <ul class="mt-1 space-y-1 text-xs text-gray-500">
                             <li
                                 v-for="(option, index) in question.options"

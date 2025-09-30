@@ -1,7 +1,7 @@
 <script>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import StudentLayout from '@/Pages/Student/Layout.vue';
-import { usePage , Head} from '@inertiajs/vue3';
+import { usePage, Head } from '@inertiajs/vue3';
 
 export default {
     layout: (h, page) => {
@@ -30,9 +30,15 @@ const props = defineProps({
 });
 
 // Create computed properties to determine the exam's status
-const hasAttemptsLeft = computed(() => props.attempts_count < props.exam.max_attempts);
-const isNotYetOpen = computed(() => props.exam.open_at && new Date(props.exam.open_at) > new Date());
-const isClosed = computed(() => props.exam.close_at && new Date(props.exam.close_at) < new Date());
+const hasAttemptsLeft = computed(
+    () => props.attempts_count < props.exam.max_attempts,
+);
+const isNotYetOpen = computed(
+    () => props.exam.open_at && new Date(props.exam.open_at) > new Date(),
+);
+const isClosed = computed(
+    () => props.exam.close_at && new Date(props.exam.close_at) < new Date(),
+);
 const hasNoQuestions = computed(() => props.exam.question_count === 0); // <-- New computed property
 
 // Helper for formatting dates
@@ -46,7 +52,12 @@ const alertInfo = computed(() => {
         return { type: 'info', message: __('student.exam_not_ready') };
     }
     if (isNotYetOpen.value) {
-        return { type: 'info', message: __('student.exam_not_open_yet', { date: formatDate(props.exam.open_at) }) };
+        return {
+            type: 'info',
+            message: __('student.exam_not_open_yet', {
+                date: formatDate(props.exam.open_at),
+            }),
+        };
     }
     if (isClosed.value) {
         return { type: 'error', message: __('student.exam_closed') };
@@ -65,14 +76,27 @@ const alertInfo = computed(() => {
     <div class="mx-auto max-w-3xl">
         <Head :title="exam.title" />
         <SectionHeader :title="exam.title" />
-        <p v-if="exam.description" class="mb-6 text-gray-600 dark:text-gray-400">{{ exam.description }}</p>
+        <p
+            v-if="exam.description"
+            class="mb-6 text-gray-600 dark:text-gray-400"
+        >
+            {{ exam.description }}
+        </p>
 
         <Card>
-            <h3 class="mb-4 text-lg font-bold">{{ __('student.exam_rules_status') }}</h3>
-            <ul class="space-y-3 border-t border-b py-4 text-sm dark:border-gray-700">
+            <h3 class="mb-4 text-lg font-bold">
+                {{ __('student.exam_rules_status') }}
+            </h3>
+            <ul
+                class="space-y-3 border-t border-b py-4 text-sm dark:border-gray-700"
+            >
                 <li class="flex justify-between">
                     <span>{{ __('student.time_limit') }}:</span>
-                    <span class="font-semibold">{{ exam.time_limit_minutes ? `${exam.time_limit_minutes} ${__('common.minutes')}` : __('student.no_time_limit') }}</span>
+                    <span class="font-semibold">{{
+                        exam.time_limit_minutes
+                            ? `${exam.time_limit_minutes} ${__('common.minutes')}`
+                            : __('student.no_time_limit')
+                    }}</span>
                 </li>
                 <li class="flex justify-between">
                     <span>{{ __('student.max_attempts') }}:</span>
@@ -82,13 +106,21 @@ const alertInfo = computed(() => {
                     <span>{{ __('student.your_attempts') }}:</span>
                     <span class="font-semibold">{{ attempts_count }}</span>
                 </li>
+                <li class="flex justify-between">
+                    <span>العلامة الكاملة:</span>
+                    <span class="font-semibold">{{ exam.full_mark }}</span>
+                </li>
                 <li v-if="exam.open_at" class="flex justify-between">
                     <span>{{ __('student.opens_on') }}:</span>
-                    <span class="font-semibold">{{ formatDate(exam.open_at) }}</span>
+                    <span class="font-semibold">{{
+                        formatDate(exam.open_at)
+                    }}</span>
                 </li>
                 <li v-if="exam.close_at" class="flex justify-between">
                     <span>{{ __('student.closes_on') }}:</span>
-                    <span class="font-semibold">{{ formatDate(exam.close_at) }}</span>
+                    <span class="font-semibold">{{
+                        formatDate(exam.close_at)
+                    }}</span>
                 </li>
             </ul>
 
@@ -106,7 +138,12 @@ const alertInfo = computed(() => {
                 </Link>
 
                 <div v-if="attempts_count > 0" class="mt-4">
-                    <Link :href="route('attempts.index')" class="text-sm text-blue-500 hover:underline"> {{ __('student.view_past_attempts') }} </Link>
+                    <Link
+                        :href="route('attempts.index')"
+                        class="text-sm text-blue-500 hover:underline"
+                    >
+                        {{ __('student.view_past_attempts') }}
+                    </Link>
                 </div>
             </div>
         </Card>

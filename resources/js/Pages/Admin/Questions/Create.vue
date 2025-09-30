@@ -48,6 +48,14 @@
                         {{ __('labels.option_number', { number: index + 1 }) }}
                     </option>
                 </BaseSelect>
+
+                <BaseInput
+                    label="علامة السؤال"
+                    type="number"
+                    v-model="form.mark"
+                    :error="form.errors.mark"
+                    placeholder="مثال: 4"
+                />
             </Card>
             <div class="mt-4 flex justify-end">
                 <BaseButton type="submit" :disabled="form.processing">{{
@@ -82,6 +90,7 @@ const form = useForm({
     question_text: '',
     options: ['', ''],
     correct_answer: null, // Stored as 1-based index
+    mark: 1,
 });
 
 const adjustChoices = () => {

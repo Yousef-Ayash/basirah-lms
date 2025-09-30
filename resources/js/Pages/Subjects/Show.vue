@@ -28,6 +28,7 @@ const { __ } = useTranslations();
 const props = defineProps({
     subject: Object,
     materials: Object, // Paginated materials
+    vid_materials: Object,
     exams: Array,
     bookmarkedMaterialIds: Array,
 });
@@ -98,7 +99,7 @@ const toggleBookmark = (material) => {
         </div>
 
         <TabGroup
-            :tabs="[__('common.materials'), __('common.exams')]"
+            :tabs="[__('common.materials'), 'محاضرات', __('common.exams')]"
             v-slot="{ active }"
         >
             <div v-show="active === 0" class="space-y-4">
@@ -179,6 +180,83 @@ const toggleBookmark = (material) => {
             </div>
 
             <div v-show="active === 1" class="space-y-4">
+                <div
+                    v-if="vid_materials.data.length"
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                    <Card
+                        v-for="material in vid_materials.data"
+                        :key="material.id"
+                        class="flex flex-col"
+                    >
+                        <a
+                            :href="route('materials.show', material.id)"
+                            target="_blank"
+                            class="block"
+                        >
+                            <img
+                                v-if="material.thumbnail_url"
+                                :src="material.thumbnail_url"
+                                class="h-40 w-full rounded-t-lg object-cover"
+                            />
+                            <div
+                                v-else
+                                class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700"
+                            >
+                                {{ __('student.no_preview') }}
+                            </div>
+                        </a>
+                        <div class="flex flex-grow flex-col p-4">
+                            <h3 class="flex-grow font-medium">
+                                {{ material.title }}
+                            </h3>
+                            <div class="mt-2 flex items-center justify-between">
+                                <span
+                                    class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold uppercase dark:bg-gray-700"
+                                    >{{ material.type }}</span
+                                >
+                                <button
+                                    @click="toggleBookmark(material)"
+                                    class="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                >
+                                    <svg
+                                        v-if="isBookmarked(material.id)"
+                                        class="h-5 w-5 text-yellow-500"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                        ></path>
+                                    </svg>
+                                    <svg
+                                        v-else
+                                        class="h-5 w-5 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                        ></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+                <div v-else class="mt-6">
+                    <EmptyState :message="__('messages.no_materials_yet')" />
+                </div>
+                <div class="mt-6">
+                    <Pagination :links="materials.links" />
+                </div>
+            </div>
+
+            <div v-show="active === 2" class="space-y-4">
                 <div v-if="exams.length">
                     <Card
                         v-for="exam in exams"

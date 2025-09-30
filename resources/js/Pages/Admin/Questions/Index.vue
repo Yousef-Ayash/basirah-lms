@@ -35,6 +35,7 @@
                         <div>
                             <p class="font-semibold">
                                 {{ question.question_text }}
+                                <span>( العلامة: {{ question.mark }} )</span>
                             </p>
                             <ul class="mt-2 space-y-1 text-sm">
                                 <li

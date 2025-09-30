@@ -1,16 +1,16 @@
 <template>
-    <button @click="themeStore.toggleTheme" class="rounded-full p-2 transition hover:bg-gray-200 dark:hover:bg-gray-700">
-        <!-- System Icon -->
-        <svg v-if="themeStore.nextTheme === 'system'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            ></path>
-        </svg>
+    <button
+        @click="themeStore.toggleTheme"
+        class="rounded-full p-2 transition hover:bg-gray-200 dark:hover:bg-gray-700"
+    >
         <!-- Sun Icon -->
-        <svg v-if="themeStore.nextTheme === 'light'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+            v-if="themeStore.nextTheme === 'light'"
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
             <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -19,7 +19,13 @@
             ></path>
         </svg>
         <!-- Moon Icon -->
-        <svg v-if="themeStore.nextTheme === 'dark'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+            v-if="themeStore.nextTheme === 'dark'"
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
             <path
                 stroke-linecap="round"
                 stroke-linejoin="round"

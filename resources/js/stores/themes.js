@@ -2,48 +2,51 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 
 export const useThemeStore = defineStore('theme', () => {
-    // State: Initialize theme from localStorage or default to 'system'
-    const theme = ref(localStorage.getItem('theme') || 'system');
+    let saved = null;
+    try {
+        saved = localStorage.getItem('theme');
+    } catch (e) {
+        // localStorage might be unavailable (SSR or privacy mode) — fall back to detection
+        saved = null;
+    }
 
-    const nextTheme = computed(() => {
-        const themes = ['light', 'dark', 'system'];
-        const currentIndex = themes.indexOf(theme.value);
-        return themes[(currentIndex + 1) % themes.length];
-    });
+    const prefersDark =
+        typeof window !== 'undefined' &&
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // If there is a saved theme use it, otherwise use system preference once
+    const initial = saved || (prefersDark ? 'dark' : 'light');
+
+    // State: Initialize theme from localStorage or default to 'system'
+    const theme = ref(initial);
+
+    const nextTheme = computed(() =>
+        theme.value === 'light' ? 'dark' : 'light',
+    );
 
     // Watch for changes in the theme state
-    watch(theme, (newTheme) => {
-        if (newTheme === 'system') {
-            // Remove local storage item to defer to system preference
-            localStorage.removeItem('theme');
-            applySystemTheme();
-        } else {
-            // Store the user's explicit choice
-            localStorage.setItem('theme', newTheme);
+    watch(
+        theme,
+        (newTheme) => {
+            try {
+                localStorage.setItem('theme', newTheme);
+            } catch (e) {
+                // ignore if localStorage is not available
+            }
             applyTheme(newTheme);
-        }
-    });
+        },
+        { immediate: true },
+    );
 
     // Helper function to apply a specific theme
     function applyTheme(themeValue) {
+        if (typeof document === 'undefined') return;
         if (themeValue === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
-    }
-
-    // Helper to check and apply the system's preferred theme
-    function applySystemTheme() {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        applyTheme(mediaQuery.matches ? 'dark' : 'light');
-
-        // Listen for system theme changes
-        mediaQuery.onchange = (e) => {
-            if (theme.value === 'system') {
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        };
     }
 
     // Action: Cycle through the available themes
@@ -53,11 +56,7 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Action: Initialize the theme when the app loads
     function initTheme() {
-        if (theme.value === 'system') {
-            applySystemTheme();
-        } else {
-            applyTheme(theme.value);
-        }
+        applyTheme(theme.value);
     }
 
     return {

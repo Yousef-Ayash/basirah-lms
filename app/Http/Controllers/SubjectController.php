@@ -58,6 +58,23 @@ class SubjectController extends Controller
     {
         // eager load materials (paginated) and exams
         $materials = $subject->materials()
+            ->where('type', ['pdf', 'picture'])
+            ->orderBy('order')
+            ->paginate(12)
+            ->through(function ($m) {
+                // deja vu: accessor provides preview_url / thumbnail_url
+                return [
+                    'id' => $m->id,
+                    'title' => $m->title,
+                    'type' => $m->type,
+                    'preview_url' => $m->preview_url,
+                    'thumbnail_url' => $m->thumbnail_url,
+                    'order' => $m->order,
+                ];
+            });
+
+        $vid_materials = $subject->materials()
+            ->where('type', 'youtube')
             ->orderBy('order')
             ->paginate(12)
             ->through(function ($m) {
@@ -87,6 +104,7 @@ class SubjectController extends Controller
                 'cover_image' => $subject->cover_image_path ? \Storage::disk('public')->url($subject->cover_image_path) : null,
             ],
             'materials' => $materials,
+            'vid_materials' => $vid_materials,
             'exams' => $exams,
             'bookmarkedMaterialIds' => $bookmarkedMaterialIds,
         ]);

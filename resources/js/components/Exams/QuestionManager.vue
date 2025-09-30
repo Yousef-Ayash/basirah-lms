@@ -1,26 +1,58 @@
 <template>
     <Modal :show="show" @close="close">
         <div class="sticky top-0 z-10 border-b bg-white p-4 dark:bg-gray-800">
-            <h2 class="text-xl font-bold">{{ __('admin.add_questions_to', { title: exam?.title }) }}</h2>
+            <h2 class="text-xl font-bold">
+                {{ __('admin.add_questions_to', { title: exam?.title }) }}
+            </h2>
         </div>
 
         <div class="max-h-[60vh] space-y-6 overflow-y-auto p-4">
             <div>
-                <label class="mb-1 block text-sm font-medium">📄 {{ __('admin.upload_from_excel') }}</label>
-                <div @click="fileInput.click()" class="cursor-pointer rounded-md border-2 border-dashed p-6 text-center hover:border-blue-500">
+                <label class="mb-1 block text-sm font-medium"
+                    >📄 {{ __('admin.upload_from_excel') }}</label
+                >
+                <div
+                    @click="fileInput.click()"
+                    class="cursor-pointer rounded-md border-2 border-dashed p-6 text-center hover:border-blue-500"
+                >
                     <p>{{ __('admin.click_to_select_excel') }}</p>
-                    <input type="file" ref="fileInput" class="hidden" accept=".xlsx,.xls,.csv" @change="handleFileSelect" />
+                    <input
+                        type="file"
+                        ref="fileInput"
+                        class="hidden"
+                        accept=".xlsx,.xls,.csv"
+                        @change="handleFileSelect"
+                    />
                 </div>
-                <p v-if="excelImportForm.errors.file" class="mt-1 text-sm text-red-500">{{ excelImportForm.errors.file }}</p>
-                <p class="mt-1 text-xs text-gray-500">{{ __('admin.import_preview_info') }}</p>
+                <p
+                    v-if="excelImportForm.errors.file"
+                    class="mt-1 text-sm text-red-500"
+                >
+                    {{ excelImportForm.errors.file }}
+                </p>
+                <p class="mt-1 text-xs text-gray-500">
+                    {{ __('admin.import_preview_info') }}
+                </p>
             </div>
 
             <p class="text-center font-semibold">{{ __('common.or') }}</p>
 
             <Card class="space-y-4">
-                <h3 class="font-semibold">{{ __('admin.add_question_manually') }}</h3>
-                <BaseTextarea :label="__('labels.question_text')" v-model="questionForm.question_text" :error="questionForm.errors.question_text" />
-                <BaseInput :label="__('labels.number_of_choices')" :type="'number'" min="2" v-model.number="choiceCount" @input="adjustChoices" />
+                <h3 class="font-semibold">
+                    {{ __('admin.add_question_manually') }}
+                </h3>
+                <BaseTextarea
+                    :label="__('labels.question_text')"
+                    v-model="questionForm.question_text"
+                    :error="questionForm.errors.question_text"
+                />
+                <BaseInput
+                    :label="__('labels.number_of_choices')"
+                    :type="'number'"
+                    min="2"
+                    v-model.number="choiceCount"
+                    @input="adjustChoices"
+                />
 
                 <div v-for="(opt, i) in questionForm.options" :key="i">
                     <BaseInput
@@ -30,21 +62,51 @@
                     />
                 </div>
 
-                <BaseSelect :label="__('labels.correct_answer')" v-model="questionForm.correct_answer" :error="questionForm.errors.correct_answer">
-                    <option :value="null">{{ __('labels.select_correct_option') }}</option>
-                    <option v-for="(opt, i) in questionForm.options" :key="i" :value="i + 1">
+                <BaseSelect
+                    :label="__('labels.correct_answer')"
+                    v-model="questionForm.correct_answer"
+                    :error="questionForm.errors.correct_answer"
+                >
+                    <option :value="null">
+                        {{ __('labels.select_correct_option') }}
+                    </option>
+                    <option
+                        v-for="(opt, i) in questionForm.options"
+                        :key="i"
+                        :value="i + 1"
+                    >
                         {{ __('labels.option_number', { number: i + 1 }) }}
                     </option>
                 </BaseSelect>
 
-                <BaseButton @click="stageQuestion"> {{ __('buttons.add_to_batch') }} </BaseButton>
+                <BaseInput
+                    label="علامة السؤال"
+                    type="number"
+                    v-model="questionForm.mark"
+                    :error="questionForm.errors.mark"
+                    placeholder="مثال: 4"
+                />
+
+                <BaseButton @click="stageQuestion">
+                    {{ __('buttons.add_to_batch') }}
+                </BaseButton>
             </Card>
 
             <div v-if="stagedQuestions.length > 0">
-                <h3 class="mb-2 font-semibold">{{ __('admin.new_questions_batch', { count: stagedQuestions.length }) }}</h3>
+                <h3 class="mb-2 font-semibold">
+                    {{
+                        __('admin.new_questions_batch', {
+                            count: stagedQuestions.length,
+                        })
+                    }}
+                </h3>
                 <Card>
                     <ul class="divide-y dark:divide-gray-700">
-                        <li v-for="(question, index) in stagedQuestions" :key="index" class="p-2 text-sm">
+                        <li
+                            v-for="(question, index) in stagedQuestions"
+                            :key="index"
+                            class="p-2 text-sm"
+                        >
                             {{ question.question_text }}
                         </li>
                     </ul>
@@ -52,8 +114,12 @@
             </div>
         </div>
 
-        <div class="sticky bottom-0 z-10 border-t bg-white p-4 dark:bg-gray-800">
-            <BaseButton class="w-full" @click="submitStagedQuestions"> {{ __('buttons.save_and_close') }} </BaseButton>
+        <div
+            class="sticky bottom-0 z-10 border-t bg-white p-4 dark:bg-gray-800"
+        >
+            <BaseButton class="w-full" @click="submitStagedQuestions">
+                {{ __('buttons.save_and_close') }}
+            </BaseButton>
         </div>
     </Modal>
 </template>
@@ -85,6 +151,7 @@ const questionForm = useForm({
     question_text: '',
     options: ['', ''],
     correct_answer: null,
+    mark: 1,
 });
 
 const excelImportForm = useForm({ file: null });

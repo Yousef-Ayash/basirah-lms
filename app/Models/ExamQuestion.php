@@ -13,6 +13,7 @@ class ExamQuestion extends Model
         'question_text',
         'options',
         'correct_answer',
+        'mark',
         'order',
     ];
 

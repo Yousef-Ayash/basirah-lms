@@ -1,11 +1,15 @@
 <template>
     <div>
         <Head :title="__('admin.create_exam')" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.create_new_exam') }}</h1>
+        <h1 class="mb-4 text-2xl font-bold">
+            {{ __('admin.create_new_exam') }}
+        </h1>
         <form @submit.prevent="submit">
             <ExamForm v-model="form" :subjects="props.subjects" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">{{ __('buttons.create_exam') }}</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">{{
+                    __('buttons.create_exam')
+                }}</BaseButton>
             </div>
         </form>
     </div>
@@ -43,6 +47,7 @@ const form = useForm({
     review_allowed: true,
     show_answers_after_close: false,
     questions_to_display: 0,
+    full_mark: 100,
 });
 
 const submit = () => {

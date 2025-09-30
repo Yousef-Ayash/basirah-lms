@@ -17,6 +17,7 @@ class StoreQuestionRequest extends FormRequest
             'options' => 'required|array|min:2',
             'options.*' => 'required|string',
             'correct_answer' => 'required|integer|min:1',
+            'mark' => 'required|integer|min:1',
         ];
     }
 

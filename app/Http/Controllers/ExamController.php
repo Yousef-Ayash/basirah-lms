@@ -39,6 +39,7 @@ class ExamController extends Controller
                 'review_allowed' => $exam->review_allowed,
                 // 3. Pass the question count to the frontend.
                 'question_count' => $questionCount,
+                'full_mark' => $exam->full_mark
             ],
             'attempts_count' => $attemptsCount,
             'can_start' => $canStart,

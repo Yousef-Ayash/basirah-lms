@@ -17,6 +17,7 @@ class Exam extends Model
         'close_at',
         'max_attempts',
         'questions_to_display',
+        'full_mark',
         'review_allowed',
         'show_answers_after_close',
         'created_by',
