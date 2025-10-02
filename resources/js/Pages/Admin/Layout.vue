@@ -51,6 +51,7 @@ const adminLinks = computed(() => [
     { label: __('common.reports'), to: route('admin.reports.index') },
     { label: __('common.logs'), to: route('admin.logs.exam.index') },
     { label: __('common.teachers'), to: route('admin.teachers.index') },
+    { label: 'المستويات', to: route('admin.levels.index') },
 ]);
 
 const studentLinks = computed(() => [

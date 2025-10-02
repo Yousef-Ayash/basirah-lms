@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
-            $table->unsignedInteger('order')->default(0)->index();
+            $table->unsignedInteger('order')->default(1)->index()->unique();
             $table->timestamps();
         });
     }

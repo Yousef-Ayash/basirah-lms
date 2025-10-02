@@ -22,6 +22,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\Admin\LevelController as AdminLevelController;
 use Inertia\Inertia;
 
 
@@ -148,6 +149,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
 
     // ## Teacher routes
     Route::resource('teachers', AdminTeacherController::class);
+
+    // ## Levels routes
+    Route::resource('levels', AdminLevelController::class)->except(['show']);
 });
 
 require __DIR__ . '/auth.php';
