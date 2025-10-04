@@ -92,7 +92,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     // ## Initial User Approval
     Route::get('/users/pending', [UserController::class, 'index'])->name('users.pending');
     Route::post('/users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
-    Route::delete('/users/{user}/deny', [UserController::class, 'deny'])->name('users.deny');
+    Route::post('/users/{user}/deny', [UserController::class, 'deny'])->name('users.deny');
 
     // ## Subjects & Materials Management
     Route::resource('subjects', AdminSubjectController::class)->except(['show']);

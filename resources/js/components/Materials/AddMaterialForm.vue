@@ -67,7 +67,7 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import BaseFileInput from '@/components/FormElements/BaseFileInput.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
-import BaseTextarea from '@/components/FormElements/BaseTextArea.vue';
+import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import { useTranslations } from '@/composables/useTranslations';

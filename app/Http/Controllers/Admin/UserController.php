@@ -15,28 +15,33 @@ class UserController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-        return Inertia::render('Admin/Users/Index', [
+        return Inertia::render('Admin/Students/Index', [
             'pending' => $pendingUsers,
         ]);
     }
 
     public function approve(User $user)
     {
+        $was_denied = !is_null($user->denied_at);
+
+        if (!$was_denied && is_null($user->level_id)) {
+            $first = \App\Models\Level::orderBy('order')->first();
+            if ($first)
+                $user->level_id = $first->id;
+        }
+
         $user->is_approved = true;
         $user->save();
 
-        // optionally notify the user here (email/notification)
-
-        // return back()->with('success', 'User approved.');
-        return back()->with('success', __('messages.user_approved'));
+        return back()->with('success', 'تم قبول المستخدم.');
     }
 
     public function deny(User $user)
     {
-        // or delete or set a flag
-        $user->delete();
+        $user->is_approved = false;
+        $user->denied_at = now();
+        $user->save();
 
-        // return back()->with('success', 'User deleted.');
-        return back()->with('success', __('messages.user_deleted'));
+        return back()->with('success', 'تم رفض المستخدم.');
     }
 }

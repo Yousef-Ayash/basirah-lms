@@ -193,11 +193,9 @@ watch(
 const toggleApproval = (student) => {
     const action = student.is_approved ? 'deny' : 'approve';
     router.post(
-        route(`admin.students.${action}`, { user: student.id }),
+        route(`admin.users.${action}`, { user: student.id }),
         {},
-        {
-            preserveScroll: true,
-        },
+        { preserveScroll: true },
     );
 };
 
