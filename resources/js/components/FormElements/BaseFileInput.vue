@@ -17,10 +17,7 @@
                 @change="handleFileChange"
             />
             <span>
-                {{
-                    selectedFileName ||
-                    __('placeholders.click_or_drag_to_upload')
-                }}
+                انقر أو اسحب للرفع
             </span>
         </div>
 
@@ -32,9 +29,6 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     modelValue: File,

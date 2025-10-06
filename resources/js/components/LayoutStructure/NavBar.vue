@@ -40,7 +40,7 @@ function logout() {
                 <span class="h-12 w-12">
                     <Logo />
                 </span>
-                <span>{{ __('app_name') }} </span></Link
+                <span>بصيرة</span></Link
             >
         </div>
 
@@ -73,20 +73,18 @@ function logout() {
                 :href="route('admin.view-as-student')"
                 class="hidden text-sm text-blue-500 hover:underline md:block"
             >
-                {{ __('admin.view_as_student') }}
+                عرض كطالب
             </Link>
 
             <Link
                 :href="profileRoute"
                 class="rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
-                :aria-label="__('common.profile')"
+                aria-label="الملف الشخصي"
             >
                 <div
                     class="hidden text-sm text-gray-600 md:block dark:text-gray-300"
                 >
-                    <span class="font-medium">{{
-                        user?.name || __('common.guest')
-                    }}</span>
+                    <span class="font-medium">{{ user?.name || 'زائر' }}</span>
                 </div>
             </Link>
 
@@ -96,7 +94,7 @@ function logout() {
                 @click.prevent="logout"
                 class="hidden text-sm font-medium hover:cursor-pointer hover:text-[#61CE70] md:block"
             >
-                {{ __('common.logout') }}
+                تسجيل الخروج
             </Link>
 
             <button
@@ -160,25 +158,25 @@ function logout() {
                         @click="isOpen = false"
                         class="block text-blue-500 hover:underline"
                     >
-                        {{ __('admin.view_as_student') }}
+                        عرض كطالب
                     </Link>
                 </li>
 
                 <li class="border-t pt-3 dark:border-gray-700">
                     <Link :href="profileRoute" @click="isOpen = false">
                         <span class="me-2 font-medium">{{
-                            user?.name || __('common.guest')
+                            user?.name || 'زائر'
                         }}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        :href="route('logout')"
-                        method="post"
+                        href="#"
                         as="button"
+                        @click.prevent="logout"
                         class="w-full text-start hover:cursor-pointer hover:text-[#61CE70]"
                     >
-                        {{ __('common.logout') }}
+                        تسجيل الخروج
                     </Link>
                 </li>
             </ul>

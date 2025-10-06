@@ -5,12 +5,10 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import axios from 'axios';
 import { reactive, ref, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -73,63 +71,63 @@ const generateLevelReport = () => {
 
 <template>
     <div>
-        <Head :title="__('common.reports')" />
-        <SectionHeader :title="__('admin.system_reports')" />
-        <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">{{ __('admin.reports_description') }}</p>
+        <Head title="التقارير" />
+        <SectionHeader title="تقارير النظام" />
+        <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">إنشاء وعرض تقارير مفصلة عن أداء الطلاب والمحتوى.</p>
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <!-- Card 1: Per Student Exam Report -->
             <Card class="space-y-4">
-                <h3 class="text-lg font-semibold">{{ __('admin.student_exam_report') }}</h3>
-                <p class="text-xs text-gray-500">{{ __('admin.student_exam_report_desc') }}</p>
+                <h3 class="text-lg font-semibold">تقرير اختبار الطالب</h3>
+                <p class="text-xs text-gray-500">عرض جميع المحاولات والدرجات لطالب واحد في اختبار معين.</p>
                 <form @submit.prevent="generateStudentExamReport">
                     <div class="space-y-2">
                         <BaseSelect v-model="studentExamForm.user_id" required>
-                            <option :value="null">{{ __('labels.select_a_student') }}</option>
+                            <option :value="null">اختر طالباً</option>
                             <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                         </BaseSelect>
                         <BaseSelect
-                            :label="__('labels.exam')"
+                            label="الاختبار"
                             v-model="studentExamForm.exam_id"
                             required
                             :disabled="!studentExamForm.user_id || isLoadingExams"
                         >
-                            <option :value="null">{{ isLoadingExams ? __('labels.loading') : __('labels.select_an_exam') }}</option>
+                            <option :value="null">اختر امتحان</option>
                             <option v-for="exam in studentSpecificExams" :key="exam.id" :value="exam.id">{{ exam.title }}</option>
                         </BaseSelect>
-                        <BaseButton type="submit" class="w-full">{{ __('buttons.generate') }}</BaseButton>
+                        <BaseButton type="submit" class="w-full">إنشاء تقرير</BaseButton>
                     </div>
                 </form>
             </Card>
 
             <!-- Card 2: Per Subject Aggregate Report -->
             <Card class="space-y-4">
-                <h3 class="text-lg font-semibold">{{ __('admin.subject_performance') }}</h3>
-                <p class="text-xs text-gray-500">{{ __('admin.subject_performance_desc') }}</p>
+                <h3 class="text-lg font-semibold">أداء المادة</h3>
+                <p class="text-xs text-gray-500">شاهد الإحصائيات المجمعة (متوسط الدرجات، نسبة النجاح) لمادة معينة.</p>
                 <form @submit.prevent="generateSubjectReport">
                     <div class="space-y-2">
                         <BaseSelect v-model="subjectAggregateForm.subject_id" required>
-                            <option :value="null">{{ __('labels.select_a_subject') }}</option>
+                            <option :value="null">اختر مادة</option>
                             <option v-for="subject in subjects" :key="subject.id" :value="subject.id">{{ subject.title }}</option>
                         </BaseSelect>
-                        <BaseInput type="number" :label="__('labels.pass_threshold')" v-model="subjectAggregateForm.pass_threshold" />
-                        <BaseButton type="submit" class="w-full">{{ __('buttons.generate') }}</BaseButton>
+                        <BaseInput type="number" label="عتبة النجاح (%)" v-model="subjectAggregateForm.pass_threshold" />
+                        <BaseButton type="submit" class="w-full">إنشاء تقرير</BaseButton>
                     </div>
                 </form>
             </Card>
 
             <!-- Card 3: Per Level Summary Report -->
             <Card class="space-y-4">
-                <h3 class="text-lg font-semibold">{{ __('admin.level_summary') }}</h3>
-                <p class="text-xs text-gray-500">{{ __('admin.level_summary_desc') }}</p>
+                <h3 class="text-lg font-semibold">ملخص المستوى</h3>
+                <p class="text-xs text-gray-500">احصل على ملخص عالي المستوى للأداء عبر جميع المواد في مستوى معين.</p>
                 <form @submit.prevent="generateLevelReport">
                     <div class="space-y-2">
                         <BaseSelect v-model="levelSummaryForm.level_id" required>
-                            <option :value="null">{{ __('labels.select_a_level') }}</option>
+                            <option :value="null">اختر مستوى</option>
                             <option v-for="level in levels" :key="level.id" :value="level.id">{{ level.name }}</option>
                         </BaseSelect>
-                        <BaseInput type="number" :label="__('labels.pass_threshold')" v-model="levelSummaryForm.pass_threshold" />
-                        <BaseButton type="submit" class="w-full">{{ __('buttons.generate') }}</BaseButton>
+                        <BaseInput type="number" label="عتبة النجاح (%)" v-model="levelSummaryForm.pass_threshold" />
+                        <BaseButton type="submit" class="w-full">إنشاء تقرير</BaseButton>
                     </div>
                 </form>
             </Card>

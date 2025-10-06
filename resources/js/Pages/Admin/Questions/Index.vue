@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head :title="__('admin.questions_for', { title: exam.title })" />
+        <Head :title="`أسئلة لـ ${exam.title}`" />
         <SectionHeader>
             <template #title>
                 <div class="flex items-center space-x-2">
@@ -8,10 +8,10 @@
                         :href="route('admin.exams.show', exam.id)"
                         class="text-blue-500 hover:underline"
                     >
-                        {{ __('common.exam_title', { title: exam.title }) }}
+                        {{ `عنوان الاختبار ${exam.title}` }}
                     </Link>
                     <span class="text-gray-500">/</span>
-                    <span>{{ __('common.questions') }}</span>
+                    <span>الأسئلة</span>
                 </div>
             </template>
             <template #action>
@@ -19,7 +19,7 @@
                     as="a"
                     :href="route('admin.exams.questions.create', exam.id)"
                 >
-                    {{ __('buttons.add_question') }}
+                    + إضافة سؤال
                 </BaseButton>
             </template>
         </SectionHeader>
@@ -62,13 +62,13 @@
                             @click="deleteQuestion(question.id)"
                             class="bg-red-500 hover:bg-red-600"
                         >
-                            {{ __('common.delete') }}
+                            حذف
                         </BaseButton>
                     </div>
                 </li>
             </ul>
         </Card>
-        <EmptyState v-else :message="__('messages.no_questions_yet')" />
+        <EmptyState v-else message="لا توجد أسئلة بعد" />
 
         <div class="mt-6">
             <Pagination :links="questions.links" />
@@ -83,10 +83,8 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, Link, router } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, Link, router } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 
@@ -96,7 +94,7 @@ const props = defineProps({
 });
 
 const deleteQuestion = (questionId) => {
-    if (confirm(__('messages.delete_question_confirm'))) {
+    if (confirm('هل أنت متأكد أنك تريد حذف هذا السؤال؟')) {
         router.delete(
             route('admin.exams.questions.destroy', {
                 exam: props.exam.id,

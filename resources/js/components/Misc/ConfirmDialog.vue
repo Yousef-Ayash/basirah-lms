@@ -12,9 +12,9 @@
 
         <template #footer>
             <div class="mt-4 flex justify-end gap-2">
-                <BaseButton class="bg-gray-200 dark:bg-gray-700" @click="cancel">{{ __('common.cancel') }}</BaseButton>
+                <BaseButton class="bg-gray-200 dark:bg-gray-700" @click="cancel">إلغاء</BaseButton>
                 <BaseButton class="bg-red-500 text-white hover:bg-red-600" @click="confirm">
-                    {{ __('common.confirm') }}
+                    تأكيد
                 </BaseButton>
             </div>
         </template>
@@ -24,9 +24,6 @@
 <script setup>
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Modal from '@/components/LayoutStructure/Modal.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     show: Boolean,

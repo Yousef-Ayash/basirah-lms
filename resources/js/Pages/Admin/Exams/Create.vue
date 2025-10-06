@@ -1,15 +1,13 @@
 <template>
     <div>
-        <Head :title="__('admin.create_exam')" />
+        <Head title="إنشاء اختبار جديد" />
         <h1 class="mb-4 text-2xl font-bold">
-            {{ __('admin.create_new_exam') }}
+            إنشاء اختبار جديد
         </h1>
         <form @submit.prevent="submit">
             <ExamForm v-model="form" :subjects="props.subjects" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">{{
-                    __('buttons.create_exam')
-                }}</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">إنشاء اختبار</BaseButton>
             </div>
         </form>
     </div>
@@ -19,10 +17,8 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import ExamForm from '@/components/Exams/ExamForm.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 

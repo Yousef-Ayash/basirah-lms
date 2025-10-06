@@ -1,14 +1,14 @@
 <template>
     <div>
-        <Head :title="__('admin.manage_subjects')" />
-        <SectionHeader :title="__('common.subjects')">
+        <Head title="إدارة المواد" />
+        <SectionHeader title="المواد الدراسية">
             <template #action>
-                <BaseButton as="a" :href="route('admin.subjects.create')"> {{ __('buttons.new_subject') }} </BaseButton>
+                <BaseButton as="a" :href="route('admin.subjects.create')"> + مادة جديدة </BaseButton>
             </template>
         </SectionHeader>
 
         <div class="mb-4">
-            <BaseInput v-model="search" :placeholder="__('common.search_by_title')" class="w-full sm:w-1/2" />
+            <BaseInput v-model="search" placeholder="البحث عن طريق العنوان..." class="w-full sm:w-1/2" />
         </div>
 
         <Card v-if="subjects.data.length" class="space-y-2">
@@ -20,20 +20,20 @@
                 <div>
                     <h3 class="font-medium text-gray-900 dark:text-white">{{ subject.title }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('common.level') }}: {{ subject.level?.name || 'N/A' }} | {{ __('common.materials') }}: {{ subject.materials_count }} |
-                        {{ __('common.exams') }}: {{ subject.exams_count }}
+                        المستوى: {{ subject.level?.name || 'N/A' }} | مواد: {{ subject.materials_count }} |
+                        الاختبارات: {{ subject.exams_count }}
                     </p>
                 </div>
                 <div class="mt-2 flex items-center gap-2 sm:mt-0">
-                    <BaseButton as="a" :href="route('admin.subjects.edit', subject.id)">{{ __('common.edit') }}</BaseButton>
+                    <BaseButton as="a" :href="route('admin.subjects.edit', subject.id)">تعديل</BaseButton>
                     <BaseButton class="bg-red-500 text-white hover:bg-red-600" @click="confirmDelete(subject)">
-                        {{ __('common.delete') }}
+                        حذف
                     </BaseButton>
                 </div>
             </div>
         </Card>
 
-        <EmptyState v-else :message="__('messages.no_subjects_found')" />
+        <EmptyState v-else message="لم يتم العثور على مواد دراسية." />
 
         <div class="mt-6">
             <Pagination :links="subjects.links" />
@@ -41,8 +41,8 @@
 
         <ConfirmDialog
             :show="showConfirm"
-            :title="__('admin.delete_subject')"
-            :message="__('messages.delete_confirm', { item: subjectToDelete?.title })"
+            title="حذف المادة"
+            :message="`هل أنت متأكد من أنك تريد حذف '${subjectToDelete?.title}'؟ لا يمكن التراجع عن هذا الإجراء.`"
             @confirm="deleteSubject"
             @cancel="showConfirm = false"
         />
@@ -58,11 +58,9 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 

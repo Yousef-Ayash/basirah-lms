@@ -1,11 +1,9 @@
 <script setup>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -34,15 +32,15 @@ const getStudentAnswer = (questionId) => {
 
 <template>
     <div>
-        <Head :title="__('admin.attempt_details')" />
-        <h1 class="text-2xl font-bold">{{ __('admin.attempt_details') }}</h1>
+        <Head title="تفاصيل المحاولة" />
+        <h1 class="text-2xl font-bold">تفاصيل المحاولة</h1>
         <p class="mb-4 text-sm text-gray-500">
-            {{ __('admin.attempt_details_subtitle', { exam: attempt.exam.title, student: attempt.user.name }) }}
+            {{ `الاختبار: ${attempt.exam.title} | الطالب: ${attempt.user.name}` }}
         </p>
 
         <div class="grid gap-6 lg:grid-cols-3">
             <div class="space-y-4 lg:col-span-2">
-                <h2 class="text-lg font-semibold">{{ __('common.answers') }}</h2>
+                <h2 class="text-lg font-semibold">الإجابات</h2>
                 <div class="space-y-4">
                     <!-- Loop through each question passed from the controller -->
                     <Card v-for="question in questions" :key="question.id">
@@ -61,31 +59,26 @@ const getStudentAnswer = (questionId) => {
                             >
                                 {{ option }}
                                 <!-- Indicator for the student's selected answer -->
-                                <span v-if="getStudentAnswer(question.id) === index + 1"> &larr; {{ __('admin.student_answer') }}</span>
+                                <span v-if="getStudentAnswer(question.id) === index + 1"> &larr; إجابة الطالب</span>
                                 <!-- Indicator for the correct answer -->
-                                <span v-if="index + 1 === question.correct_answer"> ✓ ({{ __('student.correct_answer') }})</span>
+                                <span v-if="index + 1 === question.correct_answer"> ✓ (الإجابة الصحيحة)</span>
                             </li>
                         </ul>
                     </Card>
                 </div>
             </div>
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold">{{ __('admin.audit_logs') }}</h2>
+                <h2 class="text-lg font-semibold">سجلات التدقيق</h2>
                 <Card>
                     <ul v-if="logs.length" class="divide-y dark:divide-gray-700">
                         <li v-for="log in logs" :key="log.id" class="p-2 text-xs">
                             <div class="font-semibold">
-                                {{
-                                    __('admin.log_action_at', {
-                                        action: log.action.toUpperCase(),
-                                        time: new Date(log.created_at).toLocaleTimeString(),
-                                    })
-                                }}
+                                {{ `${log.action.toUpperCase()} في ${new Date(log.created_at).toLocaleTimeString()}` }}
                             </div>
-                            <div class="text-gray-500">{{ __('labels.ip_address') }}: {{ log.ip }}</div>
+                            <div class="text-gray-500">عنوان IP: {{ log.ip }}</div>
                         </li>
                     </ul>
-                    <p v-else class="p-4 text-sm text-gray-500">{{ __('admin.no_logs_found') }}</p>
+                    <p v-else class="p-4 text-sm text-gray-500">لم يتم العثور على سجلات لهذه المحاولة.</p>
                 </Card>
             </div>
         </div>

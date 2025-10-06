@@ -1,38 +1,38 @@
 <template>
     <div>
-        <SectionHeader :title="__('admin.add_new_material')" />
+        <SectionHeader title="إضافة مادة جديدة" />
         <form @submit.prevent="submit" enctype="multipart/form-data">
             <Card class="space-y-4">
                 <BaseInput
-                    :label="__('common.title')"
+                    label="العنوان"
                     v-model="form.title"
                     :error="form.errors.title"
                     required
                 />
                 <BaseTextarea
-                    :label="__('labels.key_points_optional')"
+                    label="النقاط الرئيسية (اختياري)"
                     v-model="form.key_points"
                     :error="form.errors.key_points"
                     rows="4"
-                    :placeholder="__('placeholders.key_takeaways')"
+                    placeholder="أدخل النقاط الرئيسية أو ملخصًا للطلاب..."
                 />
                 <BaseSelect
-                    :label="__('labels.material_type')"
+                    label="نوع المادة"
                     v-model="form.type"
                     :error="form.errors.type"
                     required
                 >
-                    <option value="pdf">{{ __('materials.types.pdf') }}</option>
+                    <option value="pdf">ملف PDF</option>
                     <option value="picture">
-                        {{ __('materials.types.picture') }}
+                        صورة
                     </option>
                     <option value="youtube">
-                        {{ __('materials.types.youtube') }}
+                        فيديو YouTube
                     </option>
                 </BaseSelect>
                 <div v-if="form.type === 'pdf'">
                     <BaseFileInput
-                        :label="__('labels.upload_pdf')"
+                        label="رفع ملف PDF"
                         @update:modelValue="form.file = $event"
                         :error="form.errors.file"
                         accept=".pdf"
@@ -40,7 +40,7 @@
                 </div>
                 <div v-if="form.type === 'picture'">
                     <BaseFileInput
-                        :label="__('labels.upload_picture')"
+                        label="رفع صورة"
                         @update:modelValue="form.file = $event"
                         :error="form.errors.file"
                         accept="image/*"
@@ -48,14 +48,14 @@
                 </div>
                 <div v-if="form.type === 'youtube'">
                     <BaseInput
-                        :label="__('labels.youtube_link')"
+                        label="رابط يوتيوب"
                         v-model="form.youtube_link"
                         :error="form.errors.youtube_link"
                         placeholder="https://www.youtube.com/watch?v=..."
                     />
                 </div>
                 <BaseButton type="submit" :disabled="form.processing">
-                    {{ __('buttons.add_material') }}
+                    إضافة مادة
                 </BaseButton>
             </Card>
         </form>
@@ -70,10 +70,8 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { router, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     subjectId: Number,

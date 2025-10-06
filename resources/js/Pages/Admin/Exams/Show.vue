@@ -1,50 +1,44 @@
 <template>
     <div>
-        <Head :title="__('admin.exam_show_title', { title: exam.title })" />
+        <Head :title="`الاختبار: ${exam.title}`" />
         <div
             class="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
         >
             <div>
                 <h1 class="text-2xl font-bold">
-                    {{ __('admin.exam_header', { title: exam.title }) }}
+                    {{ `الاختبار: ${exam.title}` }}
                 </h1>
                 <p class="text-sm text-gray-500">
-                    {{ __('common.subject') }}: {{ exam.subject.title }}
+                    المادة: {{ exam.subject.title }}
                 </p>
             </div>
             <div class="flex flex-shrink-0 gap-2">
                 <BaseButton
                     as="a"
                     :href="route('admin.exams.attempts.index', exam.id)"
-                    >{{ __('buttons.view_attempts') }}</BaseButton
+                    >عرض المحاولات</BaseButton
                 >
                 <BaseButton
                     as="a"
                     :href="route('admin.exams.questions.export', exam.id)"
                     class="bg-gray-700 hover:bg-gray-800"
                 >
-                    {{ __('buttons.export_questions') }}
+                    تصدير الأسئلة
                 </BaseButton>
-                <BaseButton @click="showQuestionManager = true">{{
-                    __('buttons.add_questions')
-                }}</BaseButton>
+                <BaseButton @click="showQuestionManager = true">إضافة أسئلة</BaseButton>
             </div>
         </div>
 
         <div class="mt-6 mb-2 flex items-center justify-between">
             <h2 class="text-lg font-semibold">
-                {{
-                    __('admin.current_questions', {
-                        count: exam.questions.length,
-                    })
-                }}
+                {{ `الأسئلة الحالية (${exam.questions.length})` }}
             </h2>
             <BaseButton
                 v-if="exam.questions.length > 0"
                 @click="showConfirmDeleteAll = true"
                 class="bg-red-700 text-sm hover:bg-red-800"
             >
-                {{ __('buttons.delete_all') }}
+                حذف الكل
             </BaseButton>
         </div>
 
@@ -88,19 +82,19 @@
                             "
                             class="bg-blue-500 text-sm hover:bg-blue-600"
                         >
-                            {{ __('common.edit') }}
+                            تعديل
                         </BaseButton>
                         <BaseButton
                             @click="deleteQuestion(question.id)"
                             class="bg-red-500 text-sm hover:bg-red-600"
                         >
-                            {{ __('common.delete') }}
+                            حذف
                         </BaseButton>
                     </div>
                 </li>
             </ul>
         </Card>
-        <EmptyState v-else :message="__('admin.no_questions_yet')" />
+        <EmptyState v-else message="لم تتم إضافة أي أسئلة لهذا الاختبار بعد." />
 
         <QuestionManager
             :show="showQuestionManager"
@@ -110,8 +104,8 @@
 
         <ConfirmDialog
             :show="showConfirmDeleteAll"
-            :title="__('admin.delete_all_questions_title')"
-            :message="__('messages.delete_all_questions_confirm')"
+            title="حذف جميع الأسئلة"
+            message="هل أنت متأكد من أنك تريد حذف جميع الأسئلة لهذا الاختبار؟ لا يمكن التراجع عن هذا الإجراء."
             @confirm="deleteAllQuestions"
             @cancel="showConfirmDeleteAll = false"
         />
@@ -125,11 +119,9 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -141,7 +133,7 @@ const showQuestionManager = ref(false);
 const showConfirmDeleteAll = ref(false);
 
 const deleteQuestion = (questionId) => {
-    if (confirm(__('messages.delete_question_confirm'))) {
+    if (confirm('هل أنت متأكد أنك تريد حذف هذا السؤال؟')) {
         router.delete(
             route('admin.exams.questions.destroy', {
                 exam: props.exam.id,

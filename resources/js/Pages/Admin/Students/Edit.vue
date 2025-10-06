@@ -3,11 +3,9 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import StudentForm from '@/components/Students/StudentForm.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -58,8 +56,8 @@ const advanceStudent = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.edit_student', { name: student.name })" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.edit_student', { name: student.name }) }}</h1>
+        <Head :title="`تعديل الطالب: ${student.name}`" />
+        <h1 class="mb-4 text-2xl font-bold">{{ `تعديل الطالب: ${student.name}` }}</h1>
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
 
@@ -71,16 +69,16 @@ const advanceStudent = () => {
                     class="bg-blue-600 hover:bg-blue-700"
                     :title="advanceButtonTitle"
                 >
-                    {{ __('buttons.advance_level') }}
+                    ترقية المستوى
                 </BaseButton>
-                <BaseButton type="submit" :disabled="form.processing"> {{ __('buttons.update_student') }} </BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"> تحديث الطالب </BaseButton>
             </div>
         </form>
 
         <ConfirmDialog
             :show="showAdvanceConfirm"
-            :title="__('admin.advance_student_level')"
-            :message="__('messages.advance_student_confirm', { name: student.name, level: nextLevel?.name })"
+            title="ترقية مستوى الطالب"
+            :message="`هل تريد ترقية الطالب ${student.name} إلى المستوى ${nextLevel?.name}؟`"
             @confirm="advanceStudent"
             @cancel="showAdvanceConfirm = false"
         />

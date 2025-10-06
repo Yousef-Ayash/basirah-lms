@@ -19,11 +19,8 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Link } from '@inertiajs/vue3';
-
-const { __ } = useTranslations();
-
 
 const props = defineProps({
     bookmarks: Object, // This is the paginated object from the controller
@@ -32,9 +29,9 @@ const props = defineProps({
 
 <template>
     <div>
-        <Head :title="__('student.my_bookmarks')" />
-        <SectionHeader :title="__('student.my_bookmarks')" />
-        <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">{{ __('student.bookmarks_description') }}</p>
+        <Head title="إشاراتي المرجعية" />
+        <SectionHeader title="إشاراتي المرجعية" />
+        <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">جميع المواد المحفوظة في مكان واحد لسهولة الوصول إليها.</p>
 
         <div v-if="bookmarks.data.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <Card v-for="bookmark in bookmarks.data" :key="bookmark.id" class="flex flex-col">
@@ -47,15 +44,15 @@ const props = defineProps({
                             class="h-40 w-full rounded-t-lg object-cover"
                         />
                         <div v-else class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700">
-                            {{ __('student.no_preview') }}
+                            لا توجد معاينة متاحة
                         </div>
                     </a>
                     <div class="flex flex-grow flex-col p-4">
                         <h3 class="flex-grow font-medium">{{ bookmark.material.title }}</h3>
-                        <p class="mb-2 text-xs text-gray-500">{{ __('student.in_subject', { title: bookmark.material.subject.title }) }}</p>
+                        <p class="mb-2 text-xs text-gray-500">{{ `في مادة: ${bookmark.material.subject.title}` }}</p>
                         <div class="mt-2 flex items-center justify-between">
                             <BaseButton as="a" :href="bookmark.material.preview_url" target="_blank" class="bg-gray-600 text-sm hover:bg-gray-700">
-                                {{ __('common.view') }}
+                                عرض
                             </BaseButton>
                             <Link
                                 :href="route('bookmarks.destroy', { material: bookmark.material.id })"
@@ -64,14 +61,14 @@ const props = defineProps({
                                 class="text-sm text-red-500 hover:underline"
                                 preserve-scroll
                             >
-                                {{ __('student.remove') }}
+                                إزالة
                             </Link>
                         </div>
                     </div>
                 </div>
             </Card>
         </div>
-        <EmptyState v-else :message="__('student.no_bookmarks')" :sub="__('student.no_bookmarks_sub')" />
+        <EmptyState v-else message="لم تقم بإضافة أي مواد إلى الإشارات المرجعية بعد." sub="انقر على أيقونة النجمة على أي مادة لحفظها هنا لوقت لاحق." />
 
         <div class="mt-6">
             <Pagination :links="bookmarks.links" />

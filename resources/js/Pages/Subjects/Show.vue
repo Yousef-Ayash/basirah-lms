@@ -21,9 +21,6 @@ import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     subject: Object,
@@ -99,7 +96,7 @@ const toggleBookmark = (material) => {
         </div>
 
         <TabGroup
-            :tabs="[__('common.materials'), 'محاضرات', __('common.exams')]"
+            :tabs="['مواد', 'محاضرات', 'الاختبارات']"
             v-slot="{ active }"
         >
             <div v-show="active === 0" class="space-y-4">
@@ -126,7 +123,7 @@ const toggleBookmark = (material) => {
                                 v-else
                                 class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700"
                             >
-                                {{ __('student.no_preview') }}
+                                لا توجد معاينة متاحة
                             </div>
                         </a>
                         <div class="flex flex-grow flex-col p-4">
@@ -172,7 +169,7 @@ const toggleBookmark = (material) => {
                     </Card>
                 </div>
                 <div v-else class="mt-6">
-                    <EmptyState :message="__('messages.no_materials_yet')" />
+                    <EmptyState message="لم تتم إضافة أي مواد لهذه المادة بعد." />
                 </div>
                 <div class="mt-6">
                     <Pagination :links="materials.links" />
@@ -203,7 +200,7 @@ const toggleBookmark = (material) => {
                                 v-else
                                 class="flex h-40 w-full items-center justify-center rounded-t-lg bg-gray-200 text-gray-400 dark:bg-gray-700"
                             >
-                                {{ __('student.no_preview') }}
+                                لا توجد معاينة متاحة
                             </div>
                         </a>
                         <div class="flex flex-grow flex-col p-4">
@@ -249,7 +246,7 @@ const toggleBookmark = (material) => {
                     </Card>
                 </div>
                 <div v-else class="mt-6">
-                    <EmptyState :message="__('messages.no_materials_yet')" />
+                    <EmptyState message="لم تتم إضافة أي مواد لهذه المادة بعد." />
                 </div>
                 <div class="mt-6">
                     <Pagination :links="materials.links" />
@@ -268,9 +265,9 @@ const toggleBookmark = (material) => {
                                 {{ exam.title }}
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                {{ __('labels.time_limit') }}
+                                المدة المسموح بها
                                 {{ exam.time_limit_minutes }}
-                                {{ __('common.minutes_short') }}
+                                دق
                             </p>
                         </div>
                         <BaseButton
@@ -278,11 +275,11 @@ const toggleBookmark = (material) => {
                             :href="route('exams.show', exam.id)"
                             class="mt-2 sm:mt-0"
                         >
-                            {{ __('student.view_exam') }}
+                            عرض الاختبار
                         </BaseButton>
                     </Card>
                 </div>
-                <EmptyState v-else :message="__('messages.no_exams_yet')" />
+                <EmptyState v-else message="لا توجد اختبارات متاحة لهذه المادة بعد." />
             </div>
         </TabGroup>
     </div>

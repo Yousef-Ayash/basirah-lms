@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Head :title="__('admin.create_subject')" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.create_subject') }}</h1>
+        <Head title="إنشاء مادة جديدة" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء مادة جديدة</h1>
 
         <form @submit.prevent="submit">
             <SubjectForm v-model="form" :levels="props.levels" />
@@ -9,11 +9,11 @@
             <div class="mt-4 flex justify-between">
                 <div class="justify-start">
                     <BaseButton as="a" :href="route('admin.subjects.index')" class="bg-red-500 text-white hover:bg-red-600">
-                        {{ __('common.cancel') }}
+                        إلغاء
                     </BaseButton>
                 </div>
                 <div class="justify-end">
-                    <BaseButton type="submit" :disabled="form.processing"> {{ __('buttons.create') }} </BaseButton>
+                    <BaseButton type="submit" :disabled="form.processing"> إنشاء </BaseButton>
                 </div>
             </div>
         </form>
@@ -24,10 +24,8 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import SubjectForm from '@/components/Subjects/SubjectForm.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 

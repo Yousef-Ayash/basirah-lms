@@ -1,24 +1,24 @@
 <template>
     <div>
-        <Head :title="__('admin.manage_students')" />
-        <SectionHeader :title="__('admin.students_list')">
+        <Head title="إدارة الطلاب" />
+        <SectionHeader title="قائمة الطلاب">
             <template #action>
                 <div class="flex gap-2">
                     <BaseButton
                         @click="exportStudents"
                         class="bg-gray-700 hover:bg-gray-800"
                     >
-                        {{ __('buttons.export_list') }}
+                        تصدير القائمة
                     </BaseButton>
-                    <BaseButton as="a" :href="route('admin.students.create')">{{
-                        __('buttons.add_student')
-                    }}</BaseButton>
+                    <BaseButton as="a" :href="route('admin.students.create')"
+                        >+ إضافة طالب</BaseButton
+                    >
                     <BaseButton
                         as="a"
                         :href="route('admin.students.import.form')"
                         class="bg-green-600 hover:bg-green-700"
                     >
-                        {{ __('admin.import_students') }}
+                        استيراد الطلاب
                     </BaseButton>
                 </div>
             </template>
@@ -28,10 +28,10 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <BaseInput
                     v-model="filters.q"
-                    :placeholder="__('common.search_name_or_email')"
+                    placeholder="البحث بالاسم أو البريد الإلكتروني..."
                 />
                 <BaseSelect v-model="filters.level_id">
-                    <option value="">{{ __('common.all_levels') }}</option>
+                    <option value="">كل المستويات</option>
                     <option
                         v-for="level in levels"
                         :key="level.id"
@@ -41,11 +41,9 @@
                     </option>
                 </BaseSelect>
                 <BaseSelect v-model="filters.is_approved">
-                    <option value="">
-                        {{ __('common.any_approval_status') }}
-                    </option>
-                    <option value="1">{{ __('common.approved') }}</option>
-                    <option value="0">{{ __('common.pending') }}</option>
+                    <option value="">أي حالة موافقة</option>
+                    <option value="1">تمت الموافقة</option>
+                    <option value="0">قيد الانتظار</option>
                 </BaseSelect>
             </div>
         </Card>
@@ -56,15 +54,11 @@
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
                             <th class="px-4 py-2">ID</th>
-                            <th class="px-4 py-2">{{ __('common.name') }}</th>
-                            <th class="px-4 py-2">{{ __('common.email') }}</th>
-                            <th class="px-4 py-2">{{ __('common.level') }}</th>
-                            <th class="px-4 py-2">
-                                {{ __('common.approved') }}
-                            </th>
-                            <th class="px-4 py-2">
-                                {{ __('common.actions') }}
-                            </th>
+                            <th class="px-4 py-2">الاسم</th>
+                            <th class="px-4 py-2">البريد الإلكتروني</th>
+                            <th class="px-4 py-2">المستوى</th>
+                            <th class="px-4 py-2">تمت الموافقة</th>
+                            <th class="px-4 py-2">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,7 +75,7 @@
                             </td>
                             <td class="px-4 py-2">{{ student.email }}</td>
                             <td class="px-4 py-2">
-                                {{ student.level?.name || 'N/A' }}
+                                {{ student.level?.name || 'بلا مستوى' }}
                             </td>
                             <td class="px-4 py-2">
                                 <span
@@ -93,8 +87,8 @@
                                 >
                                     {{
                                         student.is_approved
-                                            ? __('common.yes')
-                                            : __('common.pending')
+                                            ? 'نعم'
+                                            : 'قيد الانتظار'
                                     }}
                                 </span>
                             </td>
@@ -108,17 +102,15 @@
                                     "
                                     class="bg-blue-500 hover:bg-blue-600"
                                 >
-                                    {{ __('common.edit') }}
+                                    تعديل
                                 </BaseButton>
                                 <BaseButton @click="toggleApproval(student)">{{
-                                    student.is_approved
-                                        ? __('common.deny')
-                                        : __('common.approve')
+                                    student.is_approved ? 'رفض' : 'موافقة'
                                 }}</BaseButton>
                                 <BaseButton
                                     class="bg-red-500 hover:bg-red-600"
                                     @click="confirmDelete(student)"
-                                    >{{ __('common.delete') }}</BaseButton
+                                    >حذف</BaseButton
                                 >
                             </td>
                         </tr>
@@ -126,7 +118,7 @@
                 </table>
             </div>
         </Card>
-        <EmptyState v-else :message="__('admin.no_students_found')" />
+        <EmptyState v-else message="لم يتم العثور على طلاب" />
 
         <div class="mt-6">
             <Pagination :links="students.links" />
@@ -134,12 +126,8 @@
 
         <ConfirmDialog
             :show="showConfirm"
-            :title="__('admin.delete_student')"
-            :message="
-                __('messages.delete_student_confirm', {
-                    name: studentToDelete?.name,
-                })
-            "
+            title="حذف الطالب"
+            :message="`هل أنت متأكد من حذف الطالب ${studentToDelete?.name}؟`"
             @confirm="deleteStudent"
             @cancel="showConfirm = false"
         />
@@ -156,11 +144,9 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, ref, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 

@@ -1,32 +1,32 @@
 <template>
     <div>
-        <Head :title="__('admin.edit_question')" />
+        <Head title="تعديل سؤال" />
         <h1 class="mb-4 text-2xl font-bold">
-            {{ __('admin.edit_question_for', { title: exam.title }) }}
+            {{ `تعديل سؤال لـ: ${exam.title}` }}
         </h1>
         <form @submit.prevent="submit">
             <Card class="space-y-4">
                 <BaseTextarea
-                    :label="__('labels.question_text')"
+                    label="نص السؤال"
                     v-model="form.question_text"
                     :error="form.errors.question_text"
                     required
                     rows="4"
                 />
                 <p class="text-sm">
-                    {{ __('admin.choices_cannot_be_changed') }}
+                    لا يمكن تغيير عدد الخيارات أثناء التعديل.
                 </p>
                 <div v-for="(option, index) in form.options" :key="index">
                     <BaseInput
                         :label="
-                            __('labels.option_number', { number: index + 1 })
+                            `الخيار ${index + 1}`
                         "
                         v-model="form.options[index]"
                         :error="form.errors[`options.${index}`]"
                     />
                 </div>
                 <BaseSelect
-                    :label="__('labels.correct_answer')"
+                    label="الإجابة الصحيحة"
                     v-model="form.correct_answer"
                     :error="form.errors.correct_answer"
                     required
@@ -36,7 +36,7 @@
                         :key="index"
                         :value="index + 1"
                     >
-                        {{ __('labels.option_number', { number: index + 1 }) }}
+                        {{ `الخيار ${index + 1}` }}
                     </option>
                 </BaseSelect>
                 <BaseInput
@@ -48,9 +48,7 @@
                 />
             </Card>
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">{{
-                    __('buttons.save_changes')
-                }}</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">حفظ التغييرات</BaseButton>
             </div>
         </form>
     </div>
@@ -63,11 +61,9 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 

@@ -1,9 +1,10 @@
 <template>
     <div>
-        <Head title="Welcome" />
-        <h1>Welcome</h1>
+        <Head title="اهلا وسهلا" />
+        <h1>أهلا وسهلا</h1>
         <br />
-        <a href="/login">Login</a> <span> | </span> <a href="/register">Register</a>
+        <a href="/login">تسجيل الدخول</a> <span> | </span>
+        <a href="/register">تسجيل جساب جديد</a>
     </div>
 </template>
 

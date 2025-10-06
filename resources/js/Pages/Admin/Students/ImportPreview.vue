@@ -5,11 +5,9 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -33,23 +31,23 @@ const submitCommit = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.confirm_student_import')" />
-        <SectionHeader :title="__('admin.confirm_student_import')" />
-        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">{{ __('admin.import_preview_review') }}</p>
+        <Head title="تأكيد استيراد الطلاب" />
+        <SectionHeader title="تأكيد استيراد الطلاب" />
+        <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">مراجعة الاستيراد</p>
 
-        <Alert v-if="hasErrors" type="error" :message="__('messages.file_contains_errors')" class="mb-4" />
-        <Alert v-else type="success" :message="__('messages.no_errors_found')" class="mb-4" />
+        <Alert v-if="hasErrors" type="error" message="يحتوي ملفك على أخطاء (محددة باللون الأحمر). يرجى تصحيح الملف وإعادة تحميله." class="mb-4" />
+        <Alert v-else type="success" message="لم يتم العثور على أخطاء. راجع البيانات أدناه وانقر على 'تأكيد الاستيراد' للإنهاء." class="mb-4" />
 
         <Card>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.name') }}</th>
-                            <th class="p-2">{{ __('common.email') }}</th>
-                            <th class="p-2">{{ __('common.level') }}</th>
-                            <th class="p-2">{{ __('common.approved') }}</th>
-                            <th class="p-2">{{ __('admin.status_errors') }}</th>
+                            <th class="p-2">الاسم</th>
+                            <th class="p-2">البريد الإلكتروني</th>
+                            <th class="p-2">المستوى</th>
+                            <th class="p-2">تمت الموافقة</th>
+                            <th class="p-2">أخطاء الحالة</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,22 +55,16 @@ const submitCommit = () => {
                             <td class="p-2">{{ row.name }}</td>
                             <td class="p-2">{{ row.email }}</td>
                             <td class="p-2">{{ row.level?.name || 'N/A' }}</td>
-                            <td class="p-2">{{ row.is_approved ? __('common.yes') : __('common.no') }}</td>
-                            <td class="p-2">
-                                <ul v-if="row.errors.length" class="text-red-500">
+                            <td class="p-2">لا                            <ul v-if="row.errors.length" class="text-red-500">
                                     <li v-for="(error, i) in row.errors" :key="i">{{ error }}</li>
                                 </ul>
                                 <span v-else-if="row.existing_user_id" class="text-yellow-500">
-                                    {{
-                                        __('admin.existing_user_status', {
-                                            policy: __(
+                                    {{ `حالة المستخدم الحالية: ${__(
                                                 'admin.on_duplicate_' +
                                                     commitForm.on_duplicate.replace('(Default)', '').trim().toLowerCase().replace(' ', '_'),
-                                            ),
-                                        })
-                                    }}
+                                            )}` }}
                                 </span>
-                                <span v-else class="text-green-500">{{ __('admin.ready_to_import') }}</span>
+                                <span v-else class="text-green-500">جاهز للاستيراد</span>
                             </td>
                         </tr>
                     </tbody>
@@ -82,18 +74,16 @@ const submitCommit = () => {
 
         <div class="mt-6 flex flex-col items-center justify-between gap-4 rounded-lg bg-gray-50 p-4 sm:flex-row dark:bg-gray-800">
             <div>
-                <label class="font-semibold">{{ __('admin.on_duplicate_label') }}</label>
+                <label class="font-semibold">عند التكرار</label>
                 <BaseSelect v-model="commitForm.on_duplicate" class="mt-1">
-                    <option value="fail">{{ __('admin.on_duplicate_fail') }}</option>
-                    <option value="skip">{{ __('admin.on_duplicate_skip') }}</option>
-                    <option value="update">{{ __('admin.on_duplicate_update') }}</option>
+                    <option value="fail">فشل</option>
+                    <option value="skip">تخطي</option>
+                    <option value="update">تحديث</option>
                 </BaseSelect>
             </div>
             <div class="flex gap-4">
-                <BaseButton as="a" :href="route('admin.students.import.form')" class="bg-gray-500 hover:bg-gray-600">{{
-                    __('common.cancel')
-                }}</BaseButton>
-                <BaseButton @click="submitCommit" :disabled="!canCommit || commitForm.processing"> {{ __('buttons.commit_import') }} </BaseButton>
+                <BaseButton as="a" :href="route('admin.students.import.form')" class="bg-gray-500 hover:bg-gray-600">إلغاء</BaseButton>
+                <BaseButton @click="submitCommit" :disabled="!canCommit || commitForm.processing"> تأكيد الاستيراد </BaseButton>
             </div>
         </div>
     </div>

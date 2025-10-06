@@ -2,20 +2,20 @@
     <Modal :show="show" @close="close">
         <div class="sticky top-0 z-10 border-b bg-white p-4 dark:bg-gray-800">
             <h2 class="text-xl font-bold">
-                {{ __('admin.add_questions_to', { title: exam?.title }) }}
+                {{ `إضافة أسئلة إلى: ${exam?.title}` }}
             </h2>
         </div>
 
         <div class="max-h-[60vh] space-y-6 overflow-y-auto p-4">
             <div>
                 <label class="mb-1 block text-sm font-medium"
-                    >📄 {{ __('admin.upload_from_excel') }}</label
+                    >📄 رفع من ملف إكسل</label
                 >
                 <div
                     @click="fileInput.click()"
                     class="cursor-pointer rounded-md border-2 border-dashed p-6 text-center hover:border-blue-500"
                 >
-                    <p>{{ __('admin.click_to_select_excel') }}</p>
+                    <p>انقر لاختيار ملف إكسل (.xlsx)</p>
                     <input
                         type="file"
                         ref="fileInput"
@@ -31,23 +31,23 @@
                     {{ excelImportForm.errors.file }}
                 </p>
                 <p class="mt-1 text-xs text-gray-500">
-                    {{ __('admin.import_preview_info') }}
+                    سينقلك هذا إلى شاشة معاينة لتأكيد الاستيراد.
                 </p>
             </div>
 
-            <p class="text-center font-semibold">{{ __('common.or') }}</p>
+            <p class="text-center font-semibold">أو</p>
 
             <Card class="space-y-4">
                 <h3 class="font-semibold">
-                    {{ __('admin.add_question_manually') }}
+                    إضافة سؤال يدويًا
                 </h3>
                 <BaseTextarea
-                    :label="__('labels.question_text')"
+                    label="نص السؤال"
                     v-model="questionForm.question_text"
                     :error="questionForm.errors.question_text"
                 />
                 <BaseInput
-                    :label="__('labels.number_of_choices')"
+                    label="عدد الخيارات"
                     :type="'number'"
                     min="2"
                     v-model.number="choiceCount"
@@ -56,26 +56,26 @@
 
                 <div v-for="(opt, i) in questionForm.options" :key="i">
                     <BaseInput
-                        :label="__('labels.option_number', { number: i + 1 })"
+                        :label="`الخيار ${i + 1}`"
                         v-model="questionForm.options[i]"
                         :error="questionForm.errors[`options.${i}`]"
                     />
                 </div>
 
                 <BaseSelect
-                    :label="__('labels.correct_answer')"
+                    label="الإجابة الصحيحة"
                     v-model="questionForm.correct_answer"
                     :error="questionForm.errors.correct_answer"
                 >
                     <option :value="null">
-                        {{ __('labels.select_correct_option') }}
+                        اختر الإجابة الصحيحة
                     </option>
                     <option
                         v-for="(opt, i) in questionForm.options"
                         :key="i"
                         :value="i + 1"
                     >
-                        {{ __('labels.option_number', { number: i + 1 }) }}
+                        {{ `الخيار ${i + 1}` }}
                     </option>
                 </BaseSelect>
 
@@ -88,17 +88,13 @@
                 />
 
                 <BaseButton @click="stageQuestion">
-                    {{ __('buttons.add_to_batch') }}
+                    + إضافة إلى الدفعة
                 </BaseButton>
             </Card>
 
             <div v-if="stagedQuestions.length > 0">
                 <h3 class="mb-2 font-semibold">
-                    {{
-                        __('admin.new_questions_batch', {
-                            count: stagedQuestions.length,
-                        })
-                    }}
+                    {{ `أسئلة جديدة ستتم إضافتها (${stagedQuestions.length})` }}
                 </h3>
                 <Card>
                     <ul class="divide-y dark:divide-gray-700">
@@ -118,7 +114,7 @@
             class="sticky bottom-0 z-10 border-t bg-white p-4 dark:bg-gray-800"
         >
             <BaseButton class="w-full" @click="submitStagedQuestions">
-                {{ __('buttons.save_and_close') }}
+                ✅ حفظ وإغلاق
             </BaseButton>
         </div>
     </Modal>
@@ -131,11 +127,9 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Modal from '@/components/LayoutStructure/Modal.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { router, useForm } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     show: Boolean,

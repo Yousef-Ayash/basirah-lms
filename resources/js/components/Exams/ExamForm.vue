@@ -1,25 +1,25 @@
 <template>
     <Card class="space-y-4">
         <BaseInput
-            :label="__('labels.exam_title')"
+            label="عنوان الاختبار"
             v-model="modelValue.title"
             :error="modelValue.errors.title"
             required
         />
         <BaseTextarea
-            :label="__('labels.description_optional')"
+            label="الوصف (اختياري)"
             v-model="modelValue.description"
             :error="modelValue.errors.description"
             rows="3"
         />
         <BaseSelect
-            :label="__('common.subject')"
+            label="المادة"
             v-model="modelValue.subject_id"
             :error="modelValue.errors.subject_id"
             required
         >
             <option disabled :value="null">
-                {{ __('labels.select_a_subject') }}
+                اختر مادة
             </option>
             <option
                 v-for="subject in subjects"
@@ -31,14 +31,14 @@
         </BaseSelect>
         <div class="grid gap-4 sm:grid-cols-3">
             <BaseInput
-                :label="__('labels.time_limit_minutes')"
+                label="الوقت المحدد (بالدقائق)"
                 type="number"
                 v-model="modelValue.time_limit_minutes"
                 :error="modelValue.errors.time_limit_minutes"
-                :placeholder="__('placeholders.minutes_example')"
+                placeholder="مثال: 60"
             />
             <BaseInput
-                :label="__('labels.max_attempts')"
+                label="أقصى عدد للمحاولات"
                 type="number"
                 v-model="modelValue.max_attempts"
                 :error="modelValue.errors.max_attempts"
@@ -60,14 +60,14 @@
         <div class="grid gap-4 sm:grid-cols-2">
             <div>
                 <BaseInput
-                    :label="__('labels.number_of_questions_to_display')"
+                    label="عدد الأسئلة المراد عرضها"
                     type="number"
                     v-model="modelValue.questions_to_display"
                     :error="modelValue.errors.questions_to_display"
-                    :placeholder="`${__('placeholders.eg')} 20`"
+                    :placeholder="`${'مثال:'} 20`"
                 />
                 <p class="mt-1 text-xs text-gray-500">
-                    {{ __('labels.questions_to_display_note') }}
+                    اتركه فارغاً أو 0 لإظهار كافة الأسئلة من بنك الأسئلة.
                 </p>
             </div>
             <BaseInput
@@ -75,19 +75,19 @@
                 type="number"
                 v-model="modelValue.full_mark"
                 :error="modelValue.errors.full_mark"
-                :placeholder="`${__('placeholders.eg')} 60`"
+                :placeholder="`${'مثال:'} 60`"
             />
         </div>
         <div class="grid gap-4 sm:grid-cols-2">
             <BaseInput
-                :label="__('labels.opens_at_optional')"
+                label="يفتح في (اختياري)"
                 type="datetime-local"
                 :model-value="formatDateForInput(modelValue.open_at)"
                 @input="modelValue.open_at = $event.target.value"
                 :error="modelValue.errors.open_at"
             />
             <BaseInput
-                :label="__('labels.closes_at_optional')"
+                label="يغلق في (اختياري)"
                 type="datetime-local"
                 :model-value="formatDateForInput(modelValue.close_at)"
                 @input="modelValue.close_at = $event.target.value"
@@ -102,9 +102,7 @@
                     v-model="modelValue.review_allowed"
                     class="rounded accent-[#61CE70]"
                 />
-                <label for="review_allowed">{{
-                    __('labels.allow_review')
-                }}</label>
+                <label for="review_allowed">السماح للطلاب بمراجعة محاولاتهم</label>
             </div>
             <div class="flex items-center space-x-2">
                 <input
@@ -113,9 +111,7 @@
                     v-model="modelValue.show_answers_after_close"
                     class="rounded accent-[#61CE70]"
                 />
-                <label for="show_answers_after_close">{{
-                    __('labels.show_answers_after_close')
-                }}</label>
+                <label for="show_answers_after_close">إظهار الإجابات الصحيحة بعد إغلاق الاختبار</label>
             </div>
         </div>
     </Card>
@@ -126,9 +122,6 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 defineProps({
     modelValue: Object, // Inertia form object

@@ -6,11 +6,11 @@
             v-if="viewingAsStudent"
             class="bg-yellow-400 p-2 text-center text-sm text-black"
         >
-            {{ __('admin.viewing_as_student_banner') }}
+            أنت تعرض التطبيق حالياً كطالب،
             <Link
                 :href="route('admin.view-as-admin')"
                 class="font-bold underline"
-                >{{ __('admin.return_to_admin') }}</Link
+                >العودة إلى العرض كمسؤول.</Link
             >
         </div>
 
@@ -43,22 +43,22 @@ const flashSuccess = computed(() => page.props.flash.success);
 const viewingAsStudent = computed(() => page.props.auth.viewingAsStudent);
 
 const adminLinks = computed(() => [
-    { label: __('common.dashboard'), to: route('dashboard') },
-    { label: __('common.subjects'), to: route('admin.subjects.index') },
-    { label: __('common.exams'), to: route('admin.exams.index') },
-    { label: __('common.students'), to: route('admin.students.index') },
-    { label: __('common.marks'), to: route('admin.marks.index') },
-    { label: __('common.reports'), to: route('admin.reports.index') },
-    { label: __('common.logs'), to: route('admin.logs.exam.index') },
-    { label: __('common.teachers'), to: route('admin.teachers.index') },
+    { label: 'لوحة التحكم', to: route('dashboard') },
+    { label: 'المواد الدراسية', to: route('admin.subjects.index') },
+    { label: 'الاختبارات', to: route('admin.exams.index') },
+    { label: 'الطلاب', to: route('admin.students.index') },
+    { label: 'الدرجات', to: route('admin.marks.index') },
+    { label: 'التقارير', to: route('admin.reports.index') },
+    { label: 'السجلات', to: route('admin.logs.exam.index') },
+    { label: 'المدرسون', to: route('admin.teachers.index') },
     { label: 'المستويات', to: route('admin.levels.index') },
 ]);
 
 const studentLinks = computed(() => [
-    { label: __('common.dashboard'), to: route('dashboard') },
-    { label: __('common.subjects'), to: route('subjects.index') },
-    { label: __('student.my_marks_and_attempts'), to: route('attempts.index') },
-    { label: __('student.my_bookmarks'), to: route('bookmarks.index') },
+    { label: 'لوحة التحكم', to: route('dashboard') },
+    { label: 'المواد الدراسية', to: route('subjects.index') },
+    { label: 'درجاتي ومحاولاتي', to: route('attempts.index') },
+    { label: 'إشاراتي المرجعية', to: route('bookmarks.index') },
 ]);
 
 const navLinks = computed(() =>

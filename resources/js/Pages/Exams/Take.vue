@@ -3,11 +3,9 @@ import StudentLayout from '@/Pages/Student/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: StudentLayout });
 
@@ -91,7 +89,7 @@ onUnmounted(() => clearInterval(timerInterval));
 
 <template>
     <div v-if="questions.length > 0">
-        <Head :title="__('student.taking_exam', { title: exam.title })" />
+        <Head :title="`جاري الاختبار: ${exam.title}`" />
         <div class="mb-4 flex items-center justify-between">
             <h1 class="text-2xl font-bold">{{ exam.title }}</h1>
             <div
@@ -132,32 +130,27 @@ onUnmounted(() => clearInterval(timerInterval));
             <BaseButton
                 @click="currentIndex--"
                 :disabled="currentIndex === 0"
-                >{{ __('student.previous_question') }}</BaseButton
+                >السابق</BaseButton
             >
-            <span>{{
-                __('student.question_of_total', {
-                    current: currentIndex + 1,
-                    total: questions.length,
-                })
-            }}</span>
+            <span>{{ `سؤال ${currentIndex + 1} من ${questions.length}` }}</span>
             <BaseButton
                 v-if="currentIndex < questions.length - 1"
                 @click="currentIndex++"
-                >{{ __('student.next_question') }}</BaseButton
+                >التالي</BaseButton
             >
             <BaseButton
                 v-else
                 @click="showConfirm = true"
                 class="bg-green-600 hover:bg-green-700"
-                >{{ __('buttons.submit_exam') }}</BaseButton
+                >إرسال الاختبار</BaseButton
             >
         </div>
 
         <!-- submit confirmation -->
         <ConfirmDialog
             :show="showConfirm"
-            :title="__('student.submit_exam_title')"
-            :message="__('student.submit_exam_confirm')"
+            title="تسليم الاختبار"
+            message="هل أنت متأكد من أنك تريد تسليم إجاباتك؟ لا يمكن التراجع عن هذا الإجراء."
             @confirm="submitExam"
             @cancel="showConfirm = false"
         />
@@ -165,11 +158,8 @@ onUnmounted(() => clearInterval(timerInterval));
         <!-- reload notification (simple modal; uses same ConfirmDialog component) -->
         <ConfirmDialog
             :show="showReloadModal"
-            :title="__('student.page_refreshed_title') || 'Page reloaded'"
-            :message="
-                __('student.page_refreshed_message') ||
-                'It looks like you refreshed the page while taking the exam. Your answers may not have been saved — please continue and save frequently.'
-            "
+            title="تم تحديث الصفحة"
+            message="تم تحديث الصفحة. يرجى إعادة المحاولة."
             @confirm="showReloadModal = false"
             @cancel="showReloadModal = false"
         />
@@ -177,10 +167,10 @@ onUnmounted(() => clearInterval(timerInterval));
     <div v-else>
         <Card class="p-8 text-center">
             <h1 class="text-xl font-bold text-red-500">
-                {{ __('common.error') }}
+                خطأ
             </h1>
             <p class="mt-2 text-gray-600 dark:text-gray-400">
-                {{ __('student.exam_load_error') }}
+                تعذر تحميل هذا الاختبار لأنه لا يحتوي على أسئلة.
             </p>
         </Card>
     </div>

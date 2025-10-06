@@ -1,20 +1,20 @@
 <template>
     <div>
-        <Head :title="__('admin.import_preview_for', { title: exam.title })" />
+        <Head :title="`معاينة الاستيراد لـ ${exam.title}`" />
         <SectionHeader
-            :title="__('admin.import_questions_for', { title: exam.title })"
+            :title="`استيراد أسئلة لـ ${exam.title}`"
         />
-        <p class="mb-4">{{ __('admin.import_preview_instructions') }}</p>
+        <p class="mb-4">راجع الأسئلة المستخرجة من ملفك. إذا كانت هناك أخطاء، يرجى تصحيح ملفك وإعادة تحميله.</p>
 
         <Alert
             v-if="hasErrors"
             type="error"
-            :message="__('messages.import_preview_error')"
+            message="يحتوي ملفك على أخطاء (محددة باللون الأحمر). يجب عليك اختيار 'تخطي' أو 'تحديث' التكرارات للمتابعة."
         />
         <Alert
             v-else
             type="success"
-            :message="__('messages.import_preview_success')"
+            message="لم يتم العثور على أخطاء. راجع البيانات أدناه وانقر على 'تأكيد الاستيراد' للإنهاء."
         />
 
         <Card class="mt-4">
@@ -22,14 +22,14 @@
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-gray-100 text-start dark:bg-gray-700">
-                            <th class="p-2">{{ __('labels.row_number') }}</th>
+                            <th class="p-2">صف</th>
                             <th class="p-2">
-                                {{ __('labels.question_text') }}
+                                نص السؤال
                             </th>
-                            <th class="p-2">{{ __('labels.options') }}</th>
-                            <th class="p-2">{{ __('labels.correct') }}</th>
+                            <th class="p-2">الخيارات</th>
+                            <th class="p-2">صحيح</th>
                             <th class="p-2">علامة السؤال</th>
-                            <th class="p-2">{{ __('common.errors') }}</th>
+                            <th class="p-2">الأخطاء</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,9 +64,7 @@
                                         {{ error }}
                                     </li>
                                 </ul>
-                                <span v-else class="text-green-500">{{
-                                    __('messages.ready')
-                                }}</span>
+                                <span v-else class="text-green-500">✓ جاهز</span>
                             </td>
                         </tr>
                     </tbody>
@@ -79,13 +77,13 @@
                 as="a"
                 :href="route('admin.exams.show', exam.id)"
                 class="bg-gray-500 hover:bg-gray-600"
-                >{{ __('common.cancel') }}</BaseButton
+                >إلغاء</BaseButton
             >
             <BaseButton
                 @click="submit"
                 :disabled="hasErrors || form.processing"
             >
-                {{ __('buttons.commit_import') }}
+                تأكيد الاستيراد
             </BaseButton>
         </div>
     </div>
@@ -97,10 +95,8 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 

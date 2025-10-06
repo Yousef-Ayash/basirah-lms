@@ -46,23 +46,14 @@ class HandleInertiaRequests extends Middleware
             ],
             // 'translations' => function () {
             //     $locale = app()->getLocale();
-            //     return [
-            //         'php' => \Illuminate\Support\Facades\Lang::get('lms', [], $locale),
-            //         'json' => file_exists(lang_path("{$locale}.json"))
-            //             ? json_decode(file_get_contents(lang_path("{$locale}.json")), true)
-            //             : [],
-            //     ];
+            //     $jsonFile = lang_path("{$locale}.json");
+
+            //     if (!file_exists($jsonFile)) {
+            //         return [];
+            //     }
+
+            //     return json_decode(file_get_contents($jsonFile), true);
             // },
-            'translations' => function () {
-                $locale = app()->getLocale();
-                $jsonFile = lang_path("{$locale}.json");
-
-                if (!file_exists($jsonFile)) {
-                    return [];
-                }
-
-                return json_decode(file_get_contents($jsonFile), true);
-            },
         ];
     }
 }

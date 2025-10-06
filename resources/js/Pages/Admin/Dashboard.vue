@@ -1,35 +1,55 @@
 <template>
     <div class="space-y-10">
-        <Head :title="__('admin.admin_dashboard')" />
-        <SectionHeader :title="__('admin.admin_dashboard')" />
+        <Head title="لوحة تحكم المسؤول" />
+        <SectionHeader title="لوحة تحكم المسؤول" />
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-            <Link v-for="card in summaryCards" :key="card.label" :href="card.href">
-                <Card class="text-center transition hover:border-gray-300 dark:hover:border-gray-600">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ card.label }}</p>
-                    <h2 class="text-3xl font-bold text-[#61CE70]">{{ card.value }}</h2>
+            <Link
+                v-for="card in summaryCards"
+                :key="card.label"
+                :href="card.href"
+            >
+                <Card
+                    class="text-center transition hover:border-gray-300 dark:hover:border-gray-600"
+                >
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ card.label }}
+                    </p>
+                    <h2 class="text-3xl font-bold text-[#61CE70]">
+                        {{ card.value }}
+                    </h2>
                 </Card>
             </Link>
         </div>
 
-        <SectionHeader :title="__('admin.recent_students')" />
+        <SectionHeader title="الطلاب المسجلون حديثاً" />
         <Card v-if="recentStudents.length">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-100 text-start dark:bg-gray-700">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
-                            <th class="px-4 py-2">{{ __('common.name') }}</th>
-                            <th class="px-4 py-2">{{ __('common.email') }}</th>
-                            <th class="px-4 py-2">{{ __('common.approved') }}</th>
+                            <th class="px-4 py-2">الاسم</th>
+                            <th class="px-4 py-2">البريد الإلكتروني</th>
+                            <th class="px-4 py-2">تمت الموافقة</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="student in recentStudents" :key="student.id" class="border-t border-gray-200 dark:border-gray-700">
+                        <tr
+                            v-for="student in recentStudents"
+                            :key="student.id"
+                            class="border-t border-gray-200 dark:border-gray-700"
+                        >
                             <td class="px-4 py-2">{{ student.name }}</td>
                             <td class="px-4 py-2">{{ student.email }}</td>
                             <td class="px-4 py-2">
-                                <span :class="student.is_approved ? 'text-green-500' : 'text-yellow-500'">
-                                    {{ student.is_approved ? __('common.yes') : __('common.pending') }}
+                                <span
+                                    :class="
+                                        student.is_approved
+                                            ? 'text-green-500'
+                                            : 'text-yellow-500'
+                                    "
+                                >
+                                    {{ student.is_approved ? 'نعم' : 'لا' }}
                                 </span>
                             </td>
                         </tr>
@@ -37,26 +57,50 @@
                 </table>
             </div>
         </Card>
-        <EmptyState v-else :message="__('admin.no_recent_students')" />
+        <EmptyState v-else message="لم يسجل أي طالب جديد مؤخراً." />
 
-        <SectionHeader :title="__('admin.quick_actions')" />
+        <SectionHeader title="إجراءات سريعة" />
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Link :href="route('admin.subjects.create')">
-                <Card class="h-full transition hover:border-gray-300 dark:hover:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.create_subject') }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('admin.organize_new_topics') }}</p>
+                <Card
+                    class="h-full transition hover:border-gray-300 dark:hover:border-gray-600"
+                >
+                    <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                        إنشاء مادة جديدة
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        تنظيم مواضيع ودروس جديدة.
+                    </p>
                 </Card>
             </Link>
             <Link :href="route('admin.students.index')">
-                <Card class="h-full transition hover:border-gray-300 dark:hover:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.manage_students') }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('admin.approve_edit_import') }}</p>
+                <Card
+                    class="h-full transition hover:border-gray-300 dark:hover:border-gray-600"
+                >
+                    <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                        إدارة الطلاب
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        الموافقة على حسابات الطلاب أو تعديلها أو استيرادها.
+                    </p>
                 </Card>
             </Link>
             <Link :href="route('admin.exams.index')">
-                <Card class="h-full transition hover:border-gray-300 dark:hover:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ __('admin.manage_exams') }}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('admin.build_manage_exams') }}</p>
+                <Card
+                    class="h-full transition hover:border-gray-300 dark:hover:border-gray-600"
+                >
+                    <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                        إدارة الاختبارات
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        إنشاء وإدارة محتوى الاختبارات والأسئلة.
+                    </p>
                 </Card>
             </Link>
         </div>
@@ -86,17 +130,17 @@ const props = defineProps({
 // The summary card data is now derived from the 'stats' prop
 const summaryCards = computed(() => [
     {
-        label: __('admin.total_students'),
+        label: 'إجمالي الطلاب',
         value: props.stats.studentsCount,
         href: route('admin.students.index'),
     },
     {
-        label: __('admin.total_subjects'),
+        label: 'إجمالي المواد',
         value: props.stats.subjectsCount,
         href: route('admin.subjects.index'),
     },
     {
-        label: __('admin.pending_approvals'),
+        label: 'الموافقات المعلقة',
         value: props.stats.pendingCount,
         href: route('admin.students.index', { is_approved: '0' }), // Link to a filtered view
     },

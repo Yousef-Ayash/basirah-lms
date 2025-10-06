@@ -22,9 +22,6 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Link, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     subjects: Object, // Paginated subjects object
@@ -53,19 +50,17 @@ watch(
 
 <template>
     <div>
-        <Head :title="__('common.subjects')" />
-        <SectionHeader :title="__('student.browse_subjects')" />
+        <Head title="المواد الدراسية" />
+        <SectionHeader title="تصفح المواد" />
 
         <Card class="mb-6">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <BaseInput
                     v-model="filters.q"
-                    :placeholder="
-                        __('placeholders.search_by_title_or_description')
-                    "
+                    placeholder="البحث بالعنوان أو الوصف..."
                 />
                 <BaseSelect v-model="filters.level_id">
-                    <option value="">{{ __('common.all_levels') }}</option>
+                    <option value="">كل المستويات</option>
                     <option
                         v-for="level in levels"
                         :key="level.id"
@@ -92,9 +87,7 @@ watch(
                     <div
                         class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700"
                     >
-                        <span class="text-sm text-gray-400">{{
-                            __('labels.no_image')
-                        }}</span>
+                        <span class="text-sm text-gray-400">لا توجد صورة</span>
                     </div>
                     <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">
                         {{ subject.title }}
@@ -107,12 +100,12 @@ watch(
                     <div class="mt-2 text-xs text-gray-500">
                         <span
                             >{{ subject.materials_count }}
-                            {{ __('common.materials') }}</span
+                            مواد</span
                         >
                         |
                         <span
                             >{{ subject.exams_count }}
-                            {{ __('common.exams') }}</span
+                            الاختبارات</span
                         >
                     </div>
                 </Card>
@@ -120,8 +113,8 @@ watch(
         </div>
         <EmptyState
             v-else
-            :message="__('messages.no_subjects_found')"
-            :sub="__('messages.try_adjusting_filters')"
+            message="لم يتم العثور على مواد دراسية."
+            sub="حاول تعديل فلاتر البحث."
         />
 
         <div class="mt-6">

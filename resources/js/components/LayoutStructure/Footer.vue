@@ -6,20 +6,14 @@
             class="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-6 text-sm text-gray-600 md:flex-row dark:text-gray-400"
         >
             <p>
-                &copy; {{ new Date().getFullYear() }}
-                {{ __('footer.copyright') }}
+                جميع الحقوق محفوظة | لمركز بصيرة &copy;
+                {{ new Date().getFullYear() }}
             </p>
 
             <div class="mt-3 flex space-x-4 md:mt-0">
-                <span class="hover:text-[#61CE70]">{{
-                    __('footer.about_basirah')
-                }}</span>
-                <span class="hover:text-[#61CE70]">{{
-                    __('footer.contact_us')
-                }}</span>
-                <span class="hover:text-[#61CE70]">{{
-                    __('footer.help')
-                }}</span>
+                <span class="hover:text-[#61CE70]">عن بصيرة</span>
+                <span class="hover:text-[#61CE70]">تواصل معنا</span>
+                <span class="hover:text-[#61CE70]">مساعدة</span>
             </div>
         </div>
     </footer>

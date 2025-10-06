@@ -40,9 +40,9 @@ class ProfileController extends Controller
 
         $user->save();
 
-        if ($user->isDirty('locale')) {
-            app()->setLocale($user->locale);
-        }
+        // if ($user->isDirty('locale')) {
+        //     app()->setLocale($user->locale);
+        // }
 
         return Redirect::route('profile.edit');
     }

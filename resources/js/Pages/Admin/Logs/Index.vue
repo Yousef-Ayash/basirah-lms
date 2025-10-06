@@ -5,11 +5,9 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -43,28 +41,28 @@ watch(
 
 <template>
     <div>
-        <Head :title="__('admin.exam_logs')" />
-        <SectionHeader :title="__('admin.exam_audit_logs')" />
+        <Head title="سجلات الاختبارات" />
+        <SectionHeader title="سجلات تدقيق الاختبار" />
 
         <Card class="mb-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <BaseSelect v-model="filters.user_id">
-                    <option value="">{{ __('labels.filter_by_student_placeholder') }}</option>
+                    <option value="">تصفية حسب الطالب...</option>
                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                 </BaseSelect>
                 <BaseSelect v-model="filters.exam_id">
-                    <option value="">{{ __('labels.filter_by_exam_placeholder') }}</option>
+                    <option value="">تصفية حسب الاختبار...</option>
                     <option v-for="exam in exams" :key="exam.id" :value="exam.id">{{ exam.title }}</option>
                 </BaseSelect>
                 <BaseSelect v-model="filters.action">
-                    <option value="">{{ __('labels.filter_by_action') }}</option>
-                    <option value="start">{{ __('labels.action_start') }}</option>
-                    <option value="autosave">{{ __('labels.action_autosave') }}</option>
-                    <option value="submit">{{ __('labels.action_submit') }}</option>
+                    <option value="">تصفية حسب الإجراء...</option>
+                    <option value="start">بدء</option>
+                    <option value="autosave">حفظ تلقائي</option>
+                    <option value="submit">إرسال</option>
                 </BaseSelect>
-                <BaseInput v-model="filters.ip" :placeholder="__('labels.filter_by_ip')" />
-                <BaseInput type="date" :label="__('labels.date_from')" v-model="filters.date_from" />
-                <BaseInput type="date" :label="__('labels.date_to')" v-model="filters.date_to" />
+                <BaseInput v-model="filters.ip" placeholder="تصفية حسب عنوان IP..." />
+                <BaseInput type="date" label="من تاريخ" v-model="filters.date_from" />
+                <BaseInput type="date" label="إلى تاريخ" v-model="filters.date_to" />
             </div>
         </Card>
 
@@ -73,11 +71,11 @@ watch(
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.user') }}</th>
-                            <th class="p-2">{{ __('common.action') }}</th>
-                            <th class="p-2">{{ __('common.exam') }}</th>
-                            <th class="p-2">{{ __('labels.ip_address') }}</th>
-                            <th class="p-2">{{ __('common.timestamp') }}</th>
+                            <th class="p-2">المستخدم</th>
+                            <th class="p-2">الإجراء</th>
+                            <th class="p-2">الاختبار</th>
+                            <th class="p-2">عنوان IP</th>
+                            <th class="p-2">الطابع الزمني</th>
                         </tr>
                     </thead>
                     <tbody>

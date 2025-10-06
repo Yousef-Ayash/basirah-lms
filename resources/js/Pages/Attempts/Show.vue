@@ -17,9 +17,6 @@ export default {
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     attempt: Object,
@@ -34,24 +31,24 @@ const answerMap = new Map(Object.entries(props.answers));
 
 <template>
     <div class="mx-auto max-w-3xl">
-        <Head :title="__('student.result_for', { title: exam.title })" />
-        <SectionHeader :title="__('student.exam_result')">
+        <Head :title="`نتيجة اختبار: ${exam.title}`" />
+        <SectionHeader title="نتيجة الاختبار">
             <template #action>
-                <BaseButton as="a" :href="route('attempts.download', attempt.id)"> {{ __('buttons.download_pdf') }} </BaseButton>
+                <BaseButton as="a" :href="route('attempts.download', attempt.id)"> تحميل كـ PDF </BaseButton>
             </template>
         </SectionHeader>
 
         <Card class="mb-6 text-center">
             <h2 class="text-xl font-bold">{{ exam.title }}</h2>
-            <p class="text-gray-500">{{ __('student.submitted_on', { date: new Date(attempt.submitted_at).toLocaleString() }) }}</p>
+            <p class="text-gray-500">{{ `تم الإرسال في ${new Date(attempt.submitted_at).toLocaleString()}` }}</p>
             <div class="my-4">
-                <p class="text-lg">{{ __('student.your_score') }}</p>
+                <p class="text-lg">درجتك:</p>
                 <p class="text-5xl font-bold text-green-500">{{ attempt.score }}%</p>
             </div>
         </Card>
 
         <div v-if="exam.review_allowed">
-            <h3 class="mb-2 text-lg font-semibold">{{ __('student.answer_review') }}</h3>
+            <h3 class="mb-2 text-lg font-semibold">مراجعة الإجابات</h3>
             <div class="space-y-4">
                 <Card v-for="question in questions" :key="question.id">
                     <p class="mb-2 border-b pb-2 font-semibold dark:border-gray-700">{{ question.question_text }}</p>
@@ -65,9 +62,9 @@ const answerMap = new Map(Object.entries(props.answers));
                             }"
                         >
                             {{ option }}
-                            <span v-if="index + 1 === question.correct_answer"> ✓ ({{ __('student.correct_answer') }})</span>
+                            <span v-if="index + 1 === question.correct_answer"> ✓ (الإجابة الصحيحة)</span>
                             <span v-if="index + 1 === answerMap.get(String(question.id)) && index + 1 !== question.correct_answer">
-                                ✗ ({{ __('student.your_answer') }})</span
+                                ✗ (إجابتك)</span
                             >
                         </li>
                     </ul>

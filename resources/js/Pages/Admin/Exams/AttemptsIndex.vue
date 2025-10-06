@@ -1,17 +1,17 @@
 <template>
     <div>
-        <Head :title="__('admin.attempts_for', { title: exam.title })" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.attempts_for', { title: exam.title }) }}</h1>
+        <Head :title="`محاولات لـ: ${exam.title}`" />
+        <h1 class="mb-4 text-2xl font-bold">{{ `محاولات لـ: ${exam.title}` }}</h1>
         <Card>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.student') }}</th>
-                            <th class="p-2">{{ __('admin.attempt_number') }}</th>
-                            <th class="p-2">{{ __('common.score') }}</th>
-                            <th class="p-2">{{ __('common.submitted_at') }}</th>
-                            <th class="p-2">{{ __('common.actions') }}</th>
+                            <th class="p-2">الطالب</th>
+                            <th class="p-2">المحاولة رقم</th>
+                            <th class="p-2">الدرجة</th>
+                            <th class="p-2">وقت التسليم</th>
+                            <th class="p-2">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,7 +22,7 @@
                             <td class="p-2">{{ new Date(attempt.submitted_at).toLocaleString() }}</td>
                             <td class="p-2">
                                 <BaseButton as="a" :href="route('admin.exams.attempts.show', { exam: exam.id, attempt: attempt.id })">
-                                    {{ __('student.view_details') }}
+                                    عرض التفاصيل
                                 </BaseButton>
                             </td>
                         </tr>
@@ -41,9 +41,6 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 

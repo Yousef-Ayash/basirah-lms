@@ -3,9 +3,6 @@ import StudentLayout from '@/Pages/Student/Layout.vue';
 import { Head } from '@inertiajs/vue3';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: StudentLayout });
 
@@ -16,8 +13,8 @@ defineProps({
 
 <template>
     <div>
-        <Head :title="__('student.our_teachers')" />
-        <SectionHeader :title="__('student.our_teachers')" />
+        <Head title="مدرّسونا" />
+        <SectionHeader title="مدرّسونا" />
 
         <div
             class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"

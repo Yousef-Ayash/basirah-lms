@@ -2,10 +2,8 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import MarkForm from '@/components/Marks/MarkForm.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 
@@ -28,12 +26,12 @@ const submit = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.add_mark')" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.add_new_mark') }}</h1>
+        <Head title="إضافة درجة" />
+        <h1 class="mb-4 text-2xl font-bold">إضافة درجة جديدة</h1>
         <form @submit.prevent="submit">
             <MarkForm v-model="form" :users="users" :exams="exams" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">{{ __('buttons.save_mark') }}</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">حفظ الدرجة</BaseButton>
             </div>
         </form>
     </div>

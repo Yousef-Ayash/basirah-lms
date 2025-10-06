@@ -1,31 +1,21 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}"
-    @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+{{-- <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}" --}}
+<html lang="ar" dir="rtl" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia>{{ config('app.name', 'بصيرة') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    @if (app()->getLocale() == 'ar')
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap"
-            rel="stylesheet">
-    @else
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-            rel="stylesheet">
-    @endif
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            @if (app()->getLocale() == 'ar')
-                --font-sans: 'Noto Kufi Arabic', ui-sans-serif, system-ui, sans-serif;
-            @else
-                --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
-            @endif
+            --font-sans: 'Noto Kufi Arabic', ui-sans-serif, system-ui, sans-serif;
         }
     </style>
 

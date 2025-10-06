@@ -7,11 +7,9 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, ref, watch } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -83,31 +81,31 @@ const exportMarks = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.manage_marks')" />
-        <SectionHeader :title="__('admin.marks_management')">
+        <Head title="إدارة الدرجات" />
+        <SectionHeader title="إدارة الدرجات">
             <template #action>
                 <div class="flex gap-2">
-                    <BaseButton @click="exportMarks" class="bg-gray-700 hover:bg-gray-800"> {{ __('buttons.export_marks') }} </BaseButton>
+                    <BaseButton @click="exportMarks" class="bg-gray-700 hover:bg-gray-800"> تصدير الدرجات </BaseButton>
                     <BaseButton as="a" :href="route('admin.marks.import.form')" class="bg-green-600 hover:bg-green-700">
-                        {{ __('buttons.import_marks') }}
+                        استيراد الدرجات
                     </BaseButton>
-                    <BaseButton as="a" :href="route('admin.marks.create')"> {{ __('buttons.add_mark_manually') }} </BaseButton>
+                    <BaseButton as="a" :href="route('admin.marks.create')"> + إضافة درجة يدوياً </BaseButton>
                 </div>
             </template>
         </SectionHeader>
 
         <Card class="mb-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <BaseSelect v-model="filters.user_id" :label="__('labels.filter_by_student')">
-                    <option value="" disabled>{{ __('labels.filter_by_student_placeholder') }}</option>
+                <BaseSelect v-model="filters.user_id" label="تصفية حسب الطالب">
+                    <option value="" disabled>تصفية حسب الطالب...</option>
                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                 </BaseSelect>
-                <BaseSelect v-model="filters.exam_id" :label="__('labels.filter_by_exam')">
-                    <option value="" disabled>{{ __('labels.filter_by_exam_placeholder') }}</option>
+                <BaseSelect v-model="filters.exam_id" label="تصفية حسب الاختبار">
+                    <option value="" disabled>تصفية حسب الاختبار...</option>
                     <option v-for="exam in exams" :key="exam.id" :value="exam.id">{{ exam.title }}</option>
                 </BaseSelect>
-                <BaseInput type="date" :label="__('labels.date_from')" v-model="filters.date_from" />
-                <BaseInput type="date" :label="__('labels.date_to')" v-model="filters.date_to" />
+                <BaseInput type="date" label="من تاريخ" v-model="filters.date_from" />
+                <BaseInput type="date" label="إلى تاريخ" v-model="filters.date_to" />
             </div>
         </Card>
 
@@ -116,12 +114,12 @@ const exportMarks = () => {
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.student') }}</th>
-                            <th class="p-2">{{ __('common.exam') }}</th>
-                            <th class="p-2">{{ __('common.marks') }}</th>
-                            <th class="p-2">{{ __('labels.added_by') }}</th>
-                            <th class="p-2">{{ __('labels.date') }}</th>
-                            <th class="p-2">{{ __('common.actions') }}</th>
+                            <th class="p-2">الطالب</th>
+                            <th class="p-2">الاختبار</th>
+                            <th class="p-2">الدرجات</th>
+                            <th class="p-2">أضيف بواسطة</th>
+                            <th class="p-2">التاريخ</th>
+                            <th class="p-2">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,11 +130,9 @@ const exportMarks = () => {
                             <td class="p-2">{{ mark.creator.name }}</td>
                             <td class="p-2">{{ new Date(mark.created_at).toLocaleDateString() }}</td>
                             <td class="p-2">
-                                <BaseButton as="a" :href="route('admin.marks.edit', mark.id)" class="bg-blue-500 hover:bg-blue-600">{{
-                                    __('common.edit')
-                                }}</BaseButton>
+                                <BaseButton as="a" :href="route('admin.marks.edit', mark.id)" class="bg-blue-500 hover:bg-blue-600">تعديل</BaseButton>
                                 <BaseButton @click="confirmDelete(mark)" class="ms-2 bg-red-500 hover:bg-red-600">
-                                    {{ __('common.delete') }}
+                                    حذف
                                 </BaseButton>
                             </td>
                         </tr>
@@ -150,8 +146,8 @@ const exportMarks = () => {
 
         <ConfirmDialog
             :show="showConfirm"
-            :title="__('admin.delete_mark')"
-            :message="__('admin.delete_mark_confirm', { name: markToDelete?.user.name })"
+            title="حذف العلامة"
+            :message="`هل أنت متأكد من حذف العلامة للمستخدم ${markToDelete?.user.name}؟`"
             @confirm="deleteMark"
             @cancel="showConfirm = false"
         />

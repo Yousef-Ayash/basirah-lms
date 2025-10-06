@@ -1,17 +1,17 @@
 <template>
     <div>
-        <Head :title="__('admin.create_student')" />
-        <h1 class="mb-4 text-2xl font-bold">{{ __('admin.create_student') }}</h1>
+        <Head title="إنشاء طالب جديد" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء طالب جديد</h1>
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
             <div class="mt-4 flex justify-between">
                 <div class="justify-start">
                     <BaseButton as="a" :href="route('admin.students.index')" class="bg-red-500 text-white hover:bg-red-600">
-                        {{ __('common.cancel') }}
+                        إلغاء
                     </BaseButton>
                 </div>
                 <div class="justify-end">
-                    <BaseButton type="submit" :disabled="form.processing">{{ __('buttons.create') }}</BaseButton>
+                    <BaseButton type="submit" :disabled="form.processing">إنشاء</BaseButton>
                 </div>
             </div>
         </form>
@@ -22,10 +22,8 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import StudentForm from '@/components/Students/StudentForm.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 

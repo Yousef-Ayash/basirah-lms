@@ -4,10 +4,8 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import BaseFileInput from '@/components/FormElements/BaseFileInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 
@@ -22,19 +20,19 @@ const submit = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.import_marks')" />
-        <SectionHeader :title="__('admin.import_marks')" />
+        <Head title="استيراد الدرجات" />
+        <SectionHeader title="استيراد الدرجات" />
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div class="md:col-span-1">
                 <Card>
-                    <h3 class="mb-2 font-semibold">{{ __('admin.student_import_instructions_header') }}</h3>
-                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">{{ __('admin.marks_import_instructions_p1') }}</p>
+                    <h3 class="mb-2 font-semibold">تعليمات</h3>
+                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">قم بتحميل ملف Excel (.xlsx) أو CSV بالأعمدة التالية:</p>
                     <ul class="list-inside list-disc space-y-1 text-sm">
-                        <li>{{ __('admin.marks_import_instructions_c1') }}</li>
-                        <li>{{ __('admin.marks_import_instructions_c2') }}</li>
-                        <li>{{ __('admin.marks_import_instructions_c3') }}</li>
-                        <li>{{ __('admin.marks_import_instructions_c4') }}</li>
+                        <li>**user_identifier** (مطلوب: بريد الطالب الإلكتروني أو معرفه)</li>
+                        <li>**exam_identifier** (مطلوب: عنوان الاختبار أو معرفه)</li>
+                        <li>**marks** (مطلوب: رقم من 0 إلى 100)</li>
+                        <li>**notes** (اختياري)</li>
                     </ul>
                 </Card>
             </div>
@@ -43,15 +41,15 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <Card class="space-y-4">
                         <BaseFileInput
-                            :label="__('labels.marks_data_file')"
-                            :hint="__('admin.file_hint')"
+                            label="ملف بيانات الدرجات"
+                            hint="حجم الملف الأقصى: 50 ميجابايت. الصيغ المدعومة: .xlsx, .xls, .csv"
                             v-model="form.file"
                             :error="form.errors.file"
                             accept=".xlsx,.xls,.csv"
                             required
                         />
                         <div class="flex justify-end">
-                            <BaseButton type="submit" :disabled="form.processing"> {{ __('buttons.upload_and_preview') }} </BaseButton>
+                            <BaseButton type="submit" :disabled="form.processing"> رفع ومعاينة </BaseButton>
                         </div>
                     </Card>
                 </form>

@@ -19,10 +19,8 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Link } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     attempts: Object, // Paginated attempts object
@@ -31,10 +29,10 @@ const props = defineProps({
 
 <template>
     <div>
-        <Head :title="__('student.my_marks_and_attempts')" />
-        <SectionHeader :title="__('student.exam_history')">
+        <Head title="درجاتي ومحاولاتي" />
+        <SectionHeader title="سجل اختباراتي">
             <template #action>
-                <BaseButton as="a" :href="route('attempts.export')" class="bg-gray-700 hover:bg-gray-800"> {{ __('buttons.export_marks') }} </BaseButton>
+                <BaseButton as="a" :href="route('attempts.export')" class="bg-gray-700 hover:bg-gray-800"> تصدير الدرجات </BaseButton>
             </template>
         </SectionHeader>
 
@@ -43,9 +41,9 @@ const props = defineProps({
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.exam_title') }}</th>
-                            <th class="p-2">{{ __('common.score') }}</th>
-                            <th class="p-2">{{ __('common.submitted_at') }}</th>
+                            <th class="p-2">عنوان الاختبار</th>
+                            <th class="p-2">الدرجة</th>
+                            <th class="p-2">وقت التسليم</th>
                             <th class="p-2"></th>
                         </tr>
                     </thead>
@@ -54,18 +52,18 @@ const props = defineProps({
                             <td class="p-2">{{ attempt.exam.title }}</td>
                             <td class="p-2 font-semibold">
                                 <span v-if="attempt.score !== null">{{ attempt.score }}%</span>
-                                <span v-else class="text-gray-400">{{ __('common.pending') }}</span>
+                                <span v-else class="text-gray-400">قيد الانتظار</span>
                             </td>
                             <td class="p-2">{{ new Date(attempt.submitted_at).toLocaleString() }}</td>
                             <td class="p-2 text-end">
-                                <Link :href="route('attempts.show', attempt.id)" class="text-blue-500 hover:underline"> {{ __('student.view_details') }} </Link>
+                                <Link :href="route('attempts.show', attempt.id)" class="text-blue-500 hover:underline"> عرض التفاصيل </Link>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </Card>
-        <EmptyState v-else :message="__('student.no_exams_completed')" />
+        <EmptyState v-else message="لم تكمل أي اختبارات بعد." />
 
         <div class="mt-6">
             <Pagination :links="attempts.links" />

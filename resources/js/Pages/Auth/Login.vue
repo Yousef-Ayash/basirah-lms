@@ -2,11 +2,11 @@
     <div
         class="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900"
     >
-        <Head :title="__('common.login')" />
+        <Head title="تسجيل الدخول" />
         <div class="w-full max-w-md">
             <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
                 <h1 class="mb-4 text-2xl font-semibold text-[#61CE70]">
-                    {{ __('common.login') }}
+                    تسجيل الدخول
                 </h1>
 
                 <div
@@ -17,12 +17,12 @@
                     "
                     class="mb-4 text-sm text-red-500"
                 >
-                    {{ __('common.error_submission') }}
+                    حدث خطأ في الإرسال.
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-4">
                     <BaseInput
-                        :label="__('common.email')"
+                        label="البريد الإلكتروني"
                         v-model="form.email"
                         :error="form.errors.email"
                         placeholder="you@example.com"
@@ -31,7 +31,7 @@
                     />
 
                     <BaseInput
-                        :label="__('common.password')"
+                        label="كلمة المرور"
                         type="password"
                         v-model="form.password"
                         :error="form.errors.password"
@@ -46,28 +46,26 @@
                             class="rounded bg-[#61CE70] px-4 py-2 font-medium text-white hover:cursor-pointer disabled:opacity-60"
                             :disabled="form.processing"
                         >
-                            <span v-if="form.processing">{{
-                                __('auth.signing_in')
-                            }}</span>
-                            <span v-else>{{ __('auth.sign_in') }}</span>
+                            <span v-if="form.processing">جارٍ تسجيل الدخول...</span>
+                            <span v-else>تسجيل الدخول</span>
                         </button>
 
                         <Link
                             :href="route('password.request')"
                             class="text-sm text-gray-600 hover:underline dark:text-gray-300"
                         >
-                            {{ __('auth.forgot_password') }}
+                            هل نسيت كلمة المرور؟
                         </Link>
                     </div>
                 </form>
                 <p
                     class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400"
                 >
-                    {{ __('auth.dont_have_account') }}
+                    ليس لديك حساب؟
                     <Link
                         :href="route('register')"
                         class="text-[#61CE70] hover:underline"
-                        >{{ __('common.register') }}</Link
+                        >تسجيل</Link
                     >
                 </p>
             </div>
@@ -77,10 +75,8 @@
 
 <script setup>
 import BaseInput from '@/components/FormElements/BaseInput.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 // 1. Initialize the form with Inertia's helper
 const form = useForm({

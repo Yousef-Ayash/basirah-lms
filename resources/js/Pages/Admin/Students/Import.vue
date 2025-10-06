@@ -4,10 +4,8 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import BaseFileInput from '@/components/FormElements/BaseFileInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { Head, useForm } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
+import { Head, useForm } from '@inertiajs/vue3';
 
 defineOptions({ layout: AdminLayout });
 
@@ -22,20 +20,20 @@ const submit = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.import_students')" />
-        <SectionHeader :title="__('admin.import_students')" />
+        <Head title="استيراد الطلاب" />
+        <SectionHeader title="استيراد الطلاب" />
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div class="md:col-span-1">
                 <Card>
-                    <h3 class="mb-2 font-semibold">{{ __('admin.import_students_instructions_title') }}</h3>
-                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">{{ __('admin.import_students_instructions_intro') }}</p>
+                    <h3 class="mb-2 font-semibold">تعليمات استيراد الطلاب</h3>
+                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">ملاحظات حول استيراد الطلاب</p>
                     <ul class="list-inside list-disc space-y-1 text-sm">
-                        <li>{{ __('admin.import_students_col_name') }}</li>
-                        <li>{{ __('admin.import_students_col_email') }}</li>
-                        <li>{{ __('admin.import_students_col_level') }}</li>
-                        <li>{{ __('admin.import_students_col_approved') }}</li>
-                        <li>{{ __('admin.import_students_col_password') }}</li>
+                        <li>الاسم</li>
+                        <li>البريد الإلكتروني</li>
+                        <li>المستوى</li>
+                        <li>موافق عليه</li>
+                        <li>كلمة المرور</li>
                     </ul>
                 </Card>
             </div>
@@ -44,15 +42,15 @@ const submit = () => {
                 <form @submit.prevent="submit">
                     <Card class="space-y-4">
                         <BaseFileInput
-                            :label="__('labels.student_data_file')"
-                            :hint="__('labels.student_data_file_hint')"
+                            label="ملف بيانات الطلاب"
+                            hint="ملف بيانات الطلاب (CSV/Excel)"
                             v-model="form.file"
                             :error="form.errors.file"
                             accept=".xlsx,.xls,.csv"
                             required
                         />
                         <div class="flex justify-end">
-                            <BaseButton type="submit" :disabled="form.processing"> {{ __('buttons.upload_and_preview') }} </BaseButton>
+                            <BaseButton type="submit" :disabled="form.processing"> رفع ومعاينة </BaseButton>
                         </div>
                     </Card>
                 </form>

@@ -4,11 +4,9 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: StudentLayout });
 
@@ -35,25 +33,25 @@ const viewMaterial = (material) => {
 
 <template>
     <div class="min-h-screen space-y-8">
-        <Head :title="__('common.dashboard')" />
-        <SectionHeader :title="__('common.welcome_name', { name: studentName })" />
+        <Head title="لوحة التحكم" />
+        <SectionHeader :title="`أهلاً بك، ${studentName}!`" />
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('student.enrolled_subjects') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">المواد المسجلة</p>
                 <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.enrolledSubjects }}</h2>
             </Card>
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('student.exams_taken') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">الاختبارات التي تم إجراؤها</p>
                 <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.examsTaken }}</h2>
             </Card>
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('student.average_score') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">متوسط الدرجات</p>
                 <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.averageScore }}%</h2>
             </Card>
         </div>
 
-        <SectionHeader :title="__('student.upcoming_exams')" />
+        <SectionHeader title="الاختبارات القادمة" />
         <Card v-if="upcomingExams.length">
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 <li v-for="exam in upcomingExams" :key="exam.id" class="flex items-center justify-between py-3">
@@ -61,13 +59,13 @@ const viewMaterial = (material) => {
                         <p class="font-medium text-gray-900 dark:text-white">{{ exam.title }}</p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ exam.subject.title }}</p>
                     </div>
-                    <BaseButton @click="startExam(exam)">{{ __('student.view_exam') }}</BaseButton>
+                    <BaseButton @click="startExam(exam)">عرض الاختبار</BaseButton>
                 </li>
             </ul>
         </Card>
-        <EmptyState v-else :message="__('student.no_upcoming_exams')" />
+        <EmptyState v-else message="لا توجد اختبارات قادمة." />
 
-        <SectionHeader :title="__('student.recent_materials')" />
+        <SectionHeader title="المواد الأخيرة" />
         <Card v-if="recentMaterials.length" class="space-y-4">
             <div
                 v-for="mat in recentMaterials"
@@ -85,13 +83,13 @@ const viewMaterial = (material) => {
                         <p class="text-sm text-gray-500 dark:text-gray-400">{{ mat.subject.title }}</p>
                     </div>
                 </div>
-                <BaseButton size="sm" @click="viewMaterial(mat)">{{ __('common.view') }}</BaseButton>
+                <BaseButton size="sm" @click="viewMaterial(mat)">عرض</BaseButton>
             </div>
 
             <div class="text-end">
-                <Link :href="route('subjects.index')" class="text-sm text-[#61CE70] hover:underline">{{ __('student.view_all_materials') }}</Link>
+                <Link :href="route('subjects.index')" class="text-sm text-[#61CE70] hover:underline">عرض كل المواد →</Link>
             </div>
         </Card>
-        <EmptyState v-else :message="__('student.no_recent_materials')" />
+        <EmptyState v-else message="لا توجد مواد حديثة متاحة." />
     </div>
 </template>

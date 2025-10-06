@@ -19,9 +19,6 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 const props = defineProps({
     exam: Object,
@@ -62,26 +59,24 @@ const formatDate = (dateString) => {
 
 const alertInfo = computed(() => {
     if (hasNoQuestions.value) {
-        return { type: 'info', message: __('student.exam_not_ready') };
+        return { type: 'info', message: 'هذا الاختبار قيد الإعداد وغير متاح للبدء بعد.' };
     }
     if (isNotYetOpen.value) {
         return {
             type: 'info',
-            message: __('student.exam_not_open_yet', {
-                date: formatDate(props.exam.open_at),
-            }),
+            message: `هذا الاختبار غير متاح بعد. سيفتح في ${formatDate(props.exam.open_at)}.`,
         };
     }
     if (isClosed.value) {
-        return { type: 'error', message: __('student.exam_closed') };
+        return { type: 'error', message: 'تم إغلاق هذا الاختبار ولم يعد متاحًا لمحاولات جديدة.' };
     }
     if (!hasAttemptsLeft.value) {
-        return { type: 'error', message: __('student.no_attempts_left') };
+        return { type: 'error', message: 'لقد استنفدت جميع المحاولات المتاحة لهذا الاختبار.' };
     }
     if (props.can_start) {
-        return { type: 'success', message: __('student.exam_ready') };
+        return { type: 'success', message: 'هذا الاختبار مفتوح وأنت جاهز للبدء.' };
     }
-    return { type: 'error', message: __('student.not_eligible') };
+    return { type: 'error', message: 'أنت غير مؤهل لبدء هذا الاختبار في الوقت الحالي.' };
 });
 </script>
 
@@ -98,25 +93,17 @@ const alertInfo = computed(() => {
 
         <Card>
             <h3 class="mb-4 text-lg font-bold">
-                {{ __('student.exam_rules_status') }}
+                قواعد وحالة الاختبار
             </h3>
             <ul
                 class="space-y-3 border-t border-b py-4 text-sm dark:border-gray-700"
             >
                 <li class="flex justify-between">
-                    <span>{{ __('student.time_limit') }}:</span>
-                    <span class="font-semibold">{{
-                        exam.time_limit_minutes
-                            ? `${exam.time_limit_minutes} ${__('common.minutes')}`
-                            : __('student.no_time_limit')
-                    }}</span>
+                    <span>الوقت المحدد:</span>
+                    <span class="font-semibold">لا يوجد حد للوقتn>
                 </li>
                 <li class="flex justify-between">
-                    <span>{{ __('student.max_attempts') }}:</span>
-                    <span class="font-semibold">{{ exam.max_attempts }}</span>
-                </li>
-                <li class="flex justify-between">
-                    <span>{{ __('student.your_attempts') }}:</span>
+                    <span>محاولاتك:</span>
                     <span class="font-semibold">{{ attempts_count }}</span>
                 </li>
                 <li class="flex justify-between">
@@ -133,13 +120,13 @@ const alertInfo = computed(() => {
                     <span class="font-semibold">{{ next_attempt_date }}</span>
                 </li>
                 <li v-if="exam.open_at" class="flex justify-between">
-                    <span>{{ __('student.opens_on') }}:</span>
+                    <span>يفتح في:</span>
                     <span class="font-semibold">{{
                         formatDate(exam.open_at)
                     }}</span>
                 </li>
                 <li v-if="exam.close_at" class="flex justify-between">
-                    <span>{{ __('student.closes_on') }}:</span>
+                    <span>يغلق في:</span>
                     <span class="font-semibold">{{
                         formatDate(exam.close_at)
                     }}</span>
@@ -156,7 +143,7 @@ const alertInfo = computed(() => {
                     :disabled="!can_start"
                     class="mt-4 inline-flex items-center justify-center rounded-lg bg-[#61CE70] px-6 py-3 font-semibold text-white transition hover:bg-[#4CAF60] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    {{ __('buttons.start_exam') }}
+                    بدء الاختبار
                 </Link>
 
                 <div v-if="attempts_count > 0" class="mt-4">
@@ -164,7 +151,7 @@ const alertInfo = computed(() => {
                         :href="route('attempts.index')"
                         class="text-sm text-blue-500 hover:underline"
                     >
-                        {{ __('student.view_past_attempts') }}
+                        عرض محاولاتك السابقة
                     </Link>
                 </div>
             </div>

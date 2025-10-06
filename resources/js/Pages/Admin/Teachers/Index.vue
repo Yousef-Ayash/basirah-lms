@@ -5,9 +5,6 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -18,12 +15,10 @@ defineProps({
 
 <template>
     <div>
-        <Head :title="__('admin.manager_teachers')" />
-        <SectionHeader :title="__('common.teachers')">
+        <Head title="إدارة المدرسين" />
+        <SectionHeader title="المدرسون">
             <template #action>
-                <BaseButton as="a" :href="route('admin.teachers.create')">{{
-                    __('buttons.add_teacher')
-                }}</BaseButton>
+                <BaseButton as="a" :href="route('admin.teachers.create')">إضافة مدرس +</BaseButton>
             </template>
         </SectionHeader>
 
@@ -32,9 +27,9 @@ defineProps({
                 <table class="w-full text-sm">
                     <thead>
                         <tr class="bg-gray-100 text-start dark:bg-gray-700">
-                            <th class="p-2">{{ __('common.photo') }}</th>
-                            <th class="p-2">{{ __('common.name') }}</th>
-                            <th class="p-2">{{ __('common.actions') }}</th>
+                            <th class="p-2">صورة</th>
+                            <th class="p-2">الاسم</th>
+                            <th class="p-2">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,7 +53,7 @@ defineProps({
                                         route('admin.teachers.edit', teacher.id)
                                     "
                                     class="bg-blue-500 hover:bg-blue-600"
-                                    >{{ __('common.edit') }}</BaseButton
+                                    >تعديل</BaseButton
                                 >
                             </td>
                         </tr>

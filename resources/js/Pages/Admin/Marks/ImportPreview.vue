@@ -4,11 +4,9 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 
@@ -30,21 +28,21 @@ const submit = () => {
 
 <template>
     <div>
-        <Head :title="__('admin.confirm_marks_import')" />
-        <SectionHeader :title="__('admin.confirm_marks_import')" />
-        <Alert v-if="hasErrors" type="error" :message="__('messages.file_contains_errors')" class="mb-4" />
-        <Alert v-else type="success" :message="__('messages.no_errors_found')" class="mb-4" />
+        <Head title="تأكيد استيراد الدرجات" />
+        <SectionHeader title="تأكيد استيراد الدرجات" />
+        <Alert v-if="hasErrors" type="error" message="يحتوي ملفك على أخطاء (محددة باللون الأحمر). يرجى تصحيح الملف وإعادة تحميله." class="mb-4" />
+        <Alert v-else type="success" message="لم يتم العثور على أخطاء. راجع البيانات أدناه وانقر على 'تأكيد الاستيراد' للإنهاء." class="mb-4" />
 
         <Card>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-start dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">{{ __('common.student') }}</th>
-                            <th class="p-2">{{ __('common.exam') }}</th>
-                            <th class="p-2">{{ __('common.marks') }}</th>
-                            <th class="p-2">{{ __('labels.notes') }}</th>
-                            <th class="p-2">{{ __('common.status') }} / {{ __('common.errors') }}</th>
+                            <th class="p-2">الطالب</th>
+                            <th class="p-2">الاختبار</th>
+                            <th class="p-2">الدرجات</th>
+                            <th class="p-2">ملاحظات</th>
+                            <th class="p-2">الحالة / الأخطاء</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +55,7 @@ const submit = () => {
                                 <ul v-if="row.errors.length" class="text-red-500">
                                     <li v-for="(error, i) in row.errors" :key="i">{{ error }}</li>
                                 </ul>
-                                <span v-else class="text-green-500">{{ __('messages.ready') }}</span>
+                                <span v-else class="text-green-500">✓ جاهز</span>
                             </td>
                         </tr>
                     </tbody>
@@ -66,8 +64,8 @@ const submit = () => {
         </Card>
 
         <div class="mt-6 flex justify-end gap-4">
-            <BaseButton as="a" :href="route('admin.marks.index')" class="bg-gray-500 hover:bg-gray-600">{{ __('common.cancel') }}</BaseButton>
-            <BaseButton @click="submit" :disabled="hasErrors || form.processing"> {{ __('buttons.commit_import') }} </BaseButton>
+            <BaseButton as="a" :href="route('admin.marks.index')" class="bg-gray-500 hover:bg-gray-600">إلغاء</BaseButton>
+            <BaseButton @click="submit" :disabled="hasErrors || form.processing"> تأكيد الاستيراد </BaseButton>
         </div>
     </div>
 </template>

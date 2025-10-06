@@ -1,20 +1,20 @@
 <template>
     <div>
-        <Head :title="__('admin.add_questions_to', { title: exam.title })" />
+        <Head :title="`إضافة أسئلة إلى: ${exam.title}`" />
         <h1 class="mb-4 text-2xl font-bold">
-            {{ __('admin.add_questions_to', { title: exam.title }) }}
+            {{ `إضافة أسئلة إلى: ${exam.title}` }}
         </h1>
         <form @submit.prevent="submit">
             <Card class="space-y-4">
                 <BaseTextarea
-                    :label="__('labels.question_text')"
+                    label="نص السؤال"
                     v-model="form.question_text"
                     :error="form.errors.question_text"
                     required
                     rows="4"
                 />
                 <BaseInput
-                    :label="__('labels.number_of_choices')"
+                    label="عدد الخيارات"
                     type="number"
                     min="2"
                     v-model.number="choiceCount"
@@ -24,7 +24,7 @@
                 <div v-for="(option, index) in form.options" :key="index">
                     <BaseInput
                         :label="
-                            __('labels.option_number', { number: index + 1 })
+                            `الخيار ${index + 1}`
                         "
                         v-model="form.options[index]"
                         :error="form.errors[`options.${index}`]"
@@ -32,20 +32,20 @@
                 </div>
 
                 <BaseSelect
-                    :label="__('correct_answer')"
+                    label="الإجابة الصحيحة"
                     v-model="form.correct_answer"
                     :error="form.errors.correct_answer"
                     required
                 >
                     <option :value="null">
-                        {{ __('labels.select_correct_option') }}
+                        اختر الإجابة الصحيحة
                     </option>
                     <option
                         v-for="(option, index) in form.options"
                         :key="index"
                         :value="index + 1"
                     >
-                        {{ __('labels.option_number', { number: index + 1 }) }}
+                        {{ `الخيار ${index + 1}` }}
                     </option>
                 </BaseSelect>
 
@@ -58,9 +58,7 @@
                 />
             </Card>
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">{{
-                    __('buttons.save_question')
-                }}</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">حفظ السؤال</BaseButton>
             </div>
         </form>
     </div>
@@ -73,11 +71,9 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
-const { __ } = useTranslations();
 
 defineOptions({ layout: AdminLayout });
 

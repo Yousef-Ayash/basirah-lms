@@ -1,7 +1,4 @@
 import { reactive } from 'vue';
-import { useTranslations } from './useTranslations';
-
-const { __ } = useTranslations();
 
 /**
  * Rule must be a function returning true or an error message string.
@@ -11,22 +8,21 @@ const { __ } = useTranslations();
  */
 
 export function required(fieldName = 'Field') {
-    return (value) =>
-        value || value === 0
-            ? true
-            : __('validation.required', { field: fieldName });
+    return (value) => (value || value === 0 ? true : `مطلوب ${fieldName}`);
 }
 
 export function minLength(n, fieldName = 'Field') {
     return (value) =>
         value && value.toString().length >= n
             ? true
-            : __('validation.min_length', { field: fieldName, n: n });
+            : `يجب أن يتكون ${fieldName} من ${n} أحرف على الأقل`;
 }
 
 export function isEmail(value) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(value).toLowerCase()) ? true : __('validation.email');
+    return re.test(String(value).toLowerCase())
+        ? true
+        : `أدخل بريدًا إلكترونيًا صالحًا`;
 }
 
 /**

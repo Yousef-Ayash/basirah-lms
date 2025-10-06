@@ -14,16 +14,14 @@
 <script setup>
 import Footer from '@/components/LayoutStructure/Footer.vue';
 import NavBar from '@/components/LayoutStructure/NavBar.vue';
-import { useTranslations } from '@/composables/useTranslations';
+
 import { computed } from 'vue';
 
-const { __ } = useTranslations();
-
 const navLinks = computed(() => [
-    { label: __('common.dashboard'), to: route('dashboard') },
-    { label: __('common.subjects'), to: route('subjects.index') },
-    { label: __('common.teachers'), to: route('teachers.index') },
-    { label: __('student.my_marks'), to: route('attempts.index') },
-    { label: __('student.my_bookmarks'), to: route('bookmarks.index') },
+    { label: 'لوحة التحكم', to: route('dashboard') },
+    { label: 'المواد الدراسية', to: route('subjects.index') },
+    { label: 'المدرسون', to: route('teachers.index') },
+    { label: 'درجاتي', to: route('attempts.index') },
+    { label: 'إشاراتي المرجعية', to: route('bookmarks.index') },
 ]);
 </script>
