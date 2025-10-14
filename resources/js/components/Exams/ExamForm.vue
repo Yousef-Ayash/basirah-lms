@@ -18,9 +18,7 @@
             :error="modelValue.errors.subject_id"
             required
         >
-            <option disabled :value="null">
-                اختر مادة
-            </option>
+            <option disabled :value="null">اختر مادة</option>
             <option
                 v-for="subject in subjects"
                 :key="subject.id"
@@ -57,7 +55,7 @@
                 </p>
             </div>
         </div>
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-3">
             <div>
                 <BaseInput
                     label="عدد الأسئلة المراد عرضها"
@@ -75,8 +73,22 @@
                 type="number"
                 v-model="modelValue.full_mark"
                 :error="modelValue.errors.full_mark"
-                :placeholder="`${'مثال:'} 60`"
+                placeholder="مثال: 60"
             />
+            <div>
+                <BaseInput
+                    label="العلامة الدنيا للنجاح"
+                    type="number"
+                    :max="modelValue.full_mark - 1"
+                    min="0"
+                    v-model="modelValue.pass_threshold"
+                    :error="modelValue.errors.pass_threshold"
+                    placeholder="مثال: 60"
+                />
+                <p class="mt-1 text-xs text-gray-500">
+                    يجب أن تكون اقل من العلامة الكاملة.
+                </p>
+            </div>
         </div>
         <div class="grid gap-4 sm:grid-cols-2">
             <BaseInput
@@ -102,7 +114,9 @@
                     v-model="modelValue.review_allowed"
                     class="rounded accent-[#61CE70]"
                 />
-                <label for="review_allowed">السماح للطلاب بمراجعة محاولاتهم</label>
+                <label for="review_allowed"
+                    >السماح للطلاب بمراجعة محاولاتهم</label
+                >
             </div>
             <div class="flex items-center space-x-2">
                 <input
@@ -111,7 +125,9 @@
                     v-model="modelValue.show_answers_after_close"
                     class="rounded accent-[#61CE70]"
                 />
-                <label for="show_answers_after_close">إظهار الإجابات الصحيحة بعد إغلاق الاختبار</label>
+                <label for="show_answers_after_close"
+                    >إظهار الإجابات الصحيحة بعد إغلاق الاختبار</label
+                >
             </div>
         </div>
     </Card>

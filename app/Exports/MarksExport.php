@@ -22,7 +22,7 @@ class MarksExport implements FromCollection, WithHeadings, WithMapping
      */
     public function collection()
     {
-        $query = MarksReport::query()->with(['user.level', 'exam.subject', 'creator']);
+        $query = MarksReport::query()->with(['user.level', 'exam.subject', 'creator', 'updater']);
 
         if (!empty($this->filters['user_id'])) {
             $query->where('user_id', $this->filters['user_id']);
@@ -73,6 +73,7 @@ class MarksExport implements FromCollection, WithHeadings, WithMapping
             $mark->marks,
             $mark->notes,
             $mark->creator->name ?? 'N/A',
+            $mark->updater->name ?? 'N/A',
             $mark->created_at->toDateTimeString(),
         ];
     }

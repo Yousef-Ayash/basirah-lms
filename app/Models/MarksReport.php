@@ -12,9 +12,19 @@ class MarksReport extends Model
     protected $fillable = [
         'user_id',
         'exam_id',
+        'attempt_id',
         'marks',
+        'score',
         'notes',
         'created_by',
+        'updated_by',
+        'official',
+        'published_at'
+    ];
+
+    protected $casts = [
+        'official' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function user()
@@ -30,5 +40,15 @@ class MarksReport extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function attempt()
+    {
+        return $this->belongsTo(StudentExamAttempt::class, 'attempt_id');
     }
 }

@@ -51,7 +51,7 @@
         <Card v-if="students.data.length">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-100 text-start dark:bg-gray-700">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="px-4 py-2">ID</th>
                             <th class="px-4 py-2">الاسم</th>

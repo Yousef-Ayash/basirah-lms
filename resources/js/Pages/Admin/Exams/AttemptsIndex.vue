@@ -1,11 +1,13 @@
 <template>
     <div>
         <Head :title="`محاولات لـ: ${exam.title}`" />
-        <h1 class="mb-4 text-2xl font-bold">{{ `محاولات لـ: ${exam.title}` }}</h1>
+        <h1 class="mb-4 text-2xl font-bold">
+            {{ `محاولات لـ: ${exam.title}` }}
+        </h1>
         <Card>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-100 text-start dark:bg-gray-700">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="p-2">الطالب</th>
                             <th class="p-2">المحاولة رقم</th>
@@ -15,13 +17,33 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="attempt in attempts.data" :key="attempt.id" class="border-t dark:border-gray-700">
+                        <tr
+                            v-for="attempt in attempts.data"
+                            :key="attempt.id"
+                            class="border-t dark:border-gray-700"
+                        >
                             <td class="p-2">{{ attempt.user.name }}</td>
                             <td class="p-2">{{ attempt.attempt_number }}</td>
-                            <td class="p-2 font-semibold">{{ attempt.score }}%</td>
-                            <td class="p-2">{{ new Date(attempt.submitted_at).toLocaleString() }}</td>
+                            <td class="p-2 font-semibold">
+                                {{ attempt.score }}%
+                            </td>
                             <td class="p-2">
-                                <BaseButton as="a" :href="route('admin.exams.attempts.show', { exam: exam.id, attempt: attempt.id })">
+                                {{
+                                    new Date(
+                                        attempt.submitted_at,
+                                    ).toLocaleString()
+                                }}
+                            </td>
+                            <td class="p-2">
+                                <BaseButton
+                                    as="a"
+                                    :href="
+                                        route('admin.exams.attempts.show', {
+                                            exam: exam.id,
+                                            attempt: attempt.id,
+                                        })
+                                    "
+                                >
                                     عرض التفاصيل
                                 </BaseButton>
                             </td>

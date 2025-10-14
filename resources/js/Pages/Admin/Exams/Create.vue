@@ -1,13 +1,13 @@
 <template>
     <div>
         <Head title="إنشاء اختبار جديد" />
-        <h1 class="mb-4 text-2xl font-bold">
-            إنشاء اختبار جديد
-        </h1>
+        <h1 class="mb-4 text-2xl font-bold">إنشاء اختبار جديد</h1>
         <form @submit.prevent="submit">
             <ExamForm v-model="form" :subjects="props.subjects" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">إنشاء اختبار</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >إنشاء اختبار</BaseButton
+                >
             </div>
         </form>
     </div>
@@ -45,6 +45,7 @@ const form = useForm({
     show_answers_after_close: false,
     questions_to_display: 0,
     full_mark: 100,
+    pass_threshold: 50,
 });
 
 const submit = () => {

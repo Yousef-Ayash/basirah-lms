@@ -1,10 +1,11 @@
 <template>
     <div>
         <Head :title="`معاينة الاستيراد لـ ${exam.title}`" />
-        <SectionHeader
-            :title="`استيراد أسئلة لـ ${exam.title}`"
-        />
-        <p class="mb-4">راجع الأسئلة المستخرجة من ملفك. إذا كانت هناك أخطاء، يرجى تصحيح ملفك وإعادة تحميله.</p>
+        <SectionHeader :title="`استيراد أسئلة لـ ${exam.title}`" />
+        <p class="mb-4">
+            راجع الأسئلة المستخرجة من ملفك. إذا كانت هناك أخطاء، يرجى تصحيح ملفك
+            وإعادة تحميله.
+        </p>
 
         <Alert
             v-if="hasErrors"
@@ -21,11 +22,9 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="bg-gray-100 text-start dark:bg-gray-700">
+                        <tr class="bg-gray-100 text-right dark:bg-gray-700">
                             <th class="p-2">صف</th>
-                            <th class="p-2">
-                                نص السؤال
-                            </th>
+                            <th class="p-2">نص السؤال</th>
                             <th class="p-2">الخيارات</th>
                             <th class="p-2">صحيح</th>
                             <th class="p-2">علامة السؤال</th>
@@ -64,7 +63,9 @@
                                         {{ error }}
                                     </li>
                                 </ul>
-                                <span v-else class="text-green-500">✓ جاهز</span>
+                                <span v-else class="text-green-500"
+                                    >✓ جاهز</span
+                                >
                             </td>
                         </tr>
                     </tbody>

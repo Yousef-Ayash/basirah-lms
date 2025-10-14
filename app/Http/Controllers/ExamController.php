@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
+use App\Models\MarksReport;
 use App\Models\StudentExamAttempt;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,13 +30,32 @@ class ExamController extends Controller
                 ->toDateString();
         }
 
+        // $passedAttempts = StudentExamAttempt::where('user_id', $user->id)->where('exam_id', $exam->id)->where('mark', '>=', $exam->pass_threshold)->get()->count();
+
+        $officialReport = MarksReport::where('user_id', $user->id)
+            ->where('exam_id', $exam->id)
+            ->where('official', true)
+            ->latest('published_at', 'created_at')
+            ->first();
+
+        if ($officialReport) {
+            $isPassed = ($officialReport->marks >= ($exam->pass_threshold ?? 50));
+        } else {
+            $passedAttempts = StudentExamAttempt::where('user_id', $user->id)
+                ->where('exam_id', $exam->id)
+                ->where('mark', '>=', $exam->pass_threshold)
+                ->exists();
+            $isPassed = $passedAttempts;
+        }
+
         // Determine eligibility to start
         $now = Carbon::now();
-        $canStart = $questionCount > 0 // <-- Add this condition
+
+        $canStart = $questionCount > 0
             && (!$exam->open_at || $now->gte($exam->open_at))
             && (!$exam->close_at || $now->lte($exam->close_at))
             && $attemptsCount < $exam->max_attempts
-            && ($last_attempt && $submittedDate->lte($now->subDays($exam->distance_between_attempts)));
+            && !$isPassed;
 
         return Inertia::render('Exams/Show', [
             'exam' => [
@@ -47,13 +67,14 @@ class ExamController extends Controller
                 'close_at' => $exam->close_at,
                 'max_attempts' => $exam->max_attempts,
                 'review_allowed' => $exam->review_allowed,
-                // 3. Pass the question count to the frontend.
                 'question_count' => $questionCount,
-                'full_mark' => $exam->full_mark
+                'full_mark' => $exam->full_mark,
+                'pass_threshold' => $exam->pass_threshold
             ],
             'attempts_count' => $attemptsCount,
             'can_start' => $canStart,
-            'next_attempt_date' => $next_attempt_date,
+            'next_attempt_date' => $next_attempt_date ?? Carbon::parse(now())->toDateString(),
+            'is_passed' => $isPassed
         ]);
     }
 }

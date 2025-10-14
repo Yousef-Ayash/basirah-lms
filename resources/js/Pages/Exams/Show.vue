@@ -25,6 +25,7 @@ const props = defineProps({
     attempts_count: Number,
     can_start: Boolean,
     next_attempt_date: Date,
+    is_passed: Boolean,
 });
 
 function getLocalToday() {
@@ -50,6 +51,7 @@ const isClosed = computed(
     () => props.exam.close_at && new Date(props.exam.close_at) < new Date(),
 );
 const hasNoQuestions = computed(() => props.exam.question_count === 0);
+const passed = computed(() => props.is_passed);
 
 // Helper for formatting dates
 const formatDate = (dateString) => {
@@ -59,7 +61,10 @@ const formatDate = (dateString) => {
 
 const alertInfo = computed(() => {
     if (hasNoQuestions.value) {
-        return { type: 'info', message: 'هذا الاختبار قيد الإعداد وغير متاح للبدء بعد.' };
+        return {
+            type: 'info',
+            message: 'هذا الاختبار قيد الإعداد وغير متاح للبدء بعد.',
+        };
     }
     if (isNotYetOpen.value) {
         return {
@@ -68,15 +73,33 @@ const alertInfo = computed(() => {
         };
     }
     if (isClosed.value) {
-        return { type: 'error', message: 'تم إغلاق هذا الاختبار ولم يعد متاحًا لمحاولات جديدة.' };
+        return {
+            type: 'error',
+            message: 'تم إغلاق هذا الاختبار ولم يعد متاحًا لمحاولات جديدة.',
+        };
     }
     if (!hasAttemptsLeft.value) {
-        return { type: 'error', message: 'لقد استنفدت جميع المحاولات المتاحة لهذا الاختبار.' };
+        return {
+            type: 'error',
+            message: 'لقد استنفدت جميع المحاولات المتاحة لهذا الاختبار.',
+        };
+    }
+    if (passed.value) {
+        return {
+            type: 'info',
+            message: 'لقد اجتزت هذا الاختبار ولا يمكنك تقديمه مجدداً',
+        };
     }
     if (props.can_start) {
-        return { type: 'success', message: 'هذا الاختبار مفتوح وأنت جاهز للبدء.' };
+        return {
+            type: 'success',
+            message: 'هذا الاختبار مفتوح وأنت جاهز للبدء.',
+        };
     }
-    return { type: 'error', message: 'أنت غير مؤهل لبدء هذا الاختبار في الوقت الحالي.' };
+    return {
+        type: 'error',
+        message: 'أنت غير مؤهل لبدء هذا الاختبار في الوقت الحالي.',
+    };
 });
 </script>
 
@@ -92,15 +115,13 @@ const alertInfo = computed(() => {
         </p>
 
         <Card>
-            <h3 class="mb-4 text-lg font-bold">
-                قواعد وحالة الاختبار
-            </h3>
+            <h3 class="mb-4 text-lg font-bold">قواعد وحالة الاختبار</h3>
             <ul
                 class="space-y-3 border-t border-b py-4 text-sm dark:border-gray-700"
             >
                 <li class="flex justify-between">
                     <span>الوقت المحدد:</span>
-                    <span class="font-semibold">لا يوجد حد للوقتn>
+                    <span class="font-semibold">لا يوجد حد للوقت </span>
                 </li>
                 <li class="flex justify-between">
                     <span>محاولاتك:</span>
@@ -109,6 +130,10 @@ const alertInfo = computed(() => {
                 <li class="flex justify-between">
                     <span>العلامة الكاملة:</span>
                     <span class="font-semibold">{{ exam.full_mark }}</span>
+                </li>
+                <li class="flex justify-between">
+                    <span>الحد الأدنى للنجاح:</span>
+                    <span class="font-semibold">{{ exam.pass_threshold }}</span>
                 </li>
                 <li
                     v-if="
@@ -141,7 +166,7 @@ const alertInfo = computed(() => {
                     method="post"
                     as="button"
                     :disabled="!can_start"
-                    class="mt-4 inline-flex items-center justify-center rounded-lg bg-[#61CE70] px-6 py-3 font-semibold text-white transition hover:bg-[#4CAF60] disabled:cursor-not-allowed disabled:opacity-50"
+                    class="mt-4 inline-flex items-center justify-center rounded-lg bg-[#61CE70] px-6 py-3 font-semibold text-white transition hover:cursor-pointer hover:bg-[#4CAF60] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     بدء الاختبار
                 </Link>

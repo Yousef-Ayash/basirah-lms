@@ -32,14 +32,20 @@ const props = defineProps({
         <Head title="درجاتي ومحاولاتي" />
         <SectionHeader title="سجل اختباراتي">
             <template #action>
-                <BaseButton as="a" :href="route('attempts.export')" class="bg-gray-700 hover:bg-gray-800"> تصدير الدرجات </BaseButton>
+                <BaseButton
+                    as="a"
+                    :href="route('attempts.export')"
+                    class="bg-gray-700 hover:bg-gray-800"
+                >
+                    تصدير الدرجات
+                </BaseButton>
             </template>
         </SectionHeader>
 
         <Card v-if="attempts.data.length">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-100 text-start dark:bg-gray-700">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="p-2">عنوان الاختبار</th>
                             <th class="p-2">الدرجة</th>
@@ -48,15 +54,34 @@ const props = defineProps({
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="attempt in attempts.data" :key="attempt.id" class="border-t dark:border-gray-700">
+                        <tr
+                            v-for="attempt in attempts.data"
+                            :key="attempt.id"
+                            class="border-t dark:border-gray-700"
+                        >
                             <td class="p-2">{{ attempt.exam.title }}</td>
                             <td class="p-2 font-semibold">
-                                <span v-if="attempt.score !== null">{{ attempt.score }}%</span>
-                                <span v-else class="text-gray-400">قيد الانتظار</span>
+                                <span v-if="attempt.score !== null"
+                                    >{{ attempt.score }}%</span
+                                >
+                                <span v-else class="text-gray-400"
+                                    >قيد الانتظار</span
+                                >
                             </td>
-                            <td class="p-2">{{ new Date(attempt.submitted_at).toLocaleString() }}</td>
+                            <td class="p-2">
+                                {{
+                                    new Date(
+                                        attempt.submitted_at,
+                                    ).toLocaleString()
+                                }}
+                            </td>
                             <td class="p-2 text-end">
-                                <Link :href="route('attempts.show', attempt.id)" class="text-blue-500 hover:underline"> عرض التفاصيل </Link>
+                                <Link
+                                    :href="route('attempts.show', attempt.id)"
+                                    class="text-blue-500 hover:underline"
+                                >
+                                    عرض التفاصيل
+                                </Link>
                             </td>
                         </tr>
                     </tbody>

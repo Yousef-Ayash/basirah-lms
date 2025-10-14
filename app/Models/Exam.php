@@ -20,6 +20,7 @@ class Exam extends Model
         'questions_to_display',
         'full_mark',
         'review_allowed',
+        'pass_threshold',
         'show_answers_after_close',
         'created_by',
     ];
@@ -30,6 +31,15 @@ class Exam extends Model
         'review_allowed' => 'boolean',
         'show_answers_after_close' => 'boolean',
     ];
+
+    public function getPassThresholdAttribute($value)
+    {
+        if ($value === null) {
+            return 50;
+        }
+
+        return (int) $value;
+    }
 
     public function subject()
     {

@@ -25,6 +25,24 @@ class StoreExamRequest extends FormRequest
             'full_mark' => 'nullable|integer|min:0',
             'review_allowed' => 'boolean',
             'show_answers_after_close' => 'boolean',
+            'pass_threshold' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $fullMark = (int) $this->input('full_mark', 0);
+
+                    if ($value < 0) {
+                        $fail(__('The :attribute must be at least 0.', ['attribute' => $attribute]));
+                    }
+
+                    if ($fullMark > 0 && $value >= $fullMark) {
+                        $fail(__('The :attribute must be less than the full mark (:full).', [
+                            'attribute' => $attribute,
+                            'full' => $fullMark,
+                        ]));
+                    }
+                },
+            ],
         ];
     }
 }

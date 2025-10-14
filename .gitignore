@@ -25,3 +25,9 @@ Homestead.yaml
 Thumbs.db
 .combineignore
 combined_output.md
+*_old.*
+/stubs
+storage/debugbar
+docker
+*/views/vendor
+sail

@@ -10,10 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Carbon\Carbon;
-use App\Exports\MyMarksExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Str;
+use App\Models\MarksReport;
+use App\Exports\MyAttemptsExport;
 
 class ExamAttemptController extends Controller
 {
@@ -48,9 +47,9 @@ class ExamAttemptController extends Controller
 
         if ($last_attempt) {
             $submittedDate = Carbon::parse($last_attempt)->startOfDay();
-            $now = now()->startOfDay();
+            $nowDay = now()->startOfDay();
 
-            if (!$submittedDate->lte($now->subDays($exam->distance_between_attempts))) {
+            if (!$submittedDate->lte($nowDay->subDays($exam->distance_between_attempts))) {
                 return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'لم يحن موعد محاولة التقديم التالية.']);
             }
         }
@@ -93,15 +92,6 @@ class ExamAttemptController extends Controller
         ]);
 
         // load questions without correct answers
-        // $questions = $exam->questions()->orderBy('order')->get()->map(function (ExamQuestion $q) {
-        //     return [
-        //         'id' => $q->id,
-        //         'question_text' => $q->question_text,
-        //         'options' => $q->options,
-        //         'order' => $q->order,
-        //     ];
-        // });
-
         $displayQuestions = $questions->map(function (ExamQuestion $q) {
             return [
                 'id' => $q->id,
@@ -132,80 +122,132 @@ class ExamAttemptController extends Controller
     // GET attempts list for user
     public function index(Request $request)
     {
-        $attempts = StudentExamAttempt::with('exam')->where('user_id', $request->user()->id)
-            ->orderBy('created_at', 'desc')->paginate(15);
-
-        return Inertia::render('Exams/MyAttempts', ['attempts' => $attempts]);
-    }
-
-    // GET /attempts/{attempt}
-    public function show(Request $request, StudentExamAttempt $attempt)
-    {
         $user = $request->user();
-        if ($attempt->user_id !== $user->id && !$user->hasRole('admin')) {
-            abort(403);
+
+        // 1. collect filters from request (keeps it tidy and consistent)
+        $filters = $request->only(['q', 'exam_id', 'status', 'from', 'to', 'per_page']);
+
+        // default per page
+        $perPage = (int) ($filters['per_page'] ?? 15);
+        if ($perPage <= 0)
+            $perPage = 15;
+
+        // 2. base query scoped to current user with eager loads
+        $query = StudentExamAttempt::with([
+            'exam',
+            'marksReport' => function ($q) {
+                $q->with('creator');
+            },
+        ])->where('user_id', $user->id);
+
+        // 3. apply filters (search by exam title)
+        if (!empty($filters['q'])) {
+            $q = $filters['q'];
+            $query->whereHas('exam', function ($qb) use ($q) {
+                $qb->where('title', 'like', "%{$q}%");
+            });
         }
 
-        // if not submitted, show attempt-in-progress page
-        $exam = $attempt->exam()->first();
-        $questions = $attempt->exam->questions()->orderBy('order')->get()->map(function ($q) {
-            return [
-                'id' => $q->id,
-                'question_text' => $q->question_text,
-                'options' => $q->options,
-                'order' => $q->order,
-            ];
-        });
+        // 4. filter by a specific exam id (dropdown)
+        if (!empty($filters['exam_id'])) {
+            $query->where('exam_id', $filters['exam_id']);
+        }
 
-        $answers = $attempt->answers()->pluck('selected_option', 'question_id')->toArray();
+        // 5. date range filter (filter by created_at; change to submitted_at if preferred)
+        if (!empty($filters['from'])) {
+            $query->whereDate('created_at', '>=', $filters['from']);
+        }
+        if (!empty($filters['to'])) {
+            $query->whereDate('created_at', '<=', $filters['to']);
+        }
 
-        // return Inertia::render('Exams/AttemptShow', [
-        return Inertia::render('Attempts/Show', [
-            'attempt' => $attempt,
-            'exam' => $exam,
-            'questions' => $questions,
-            'answers' => $answers,
+        // 6. status filter - kept intentionally simple and performant for common cases
+        if (!empty($filters['status']) && $filters['status'] !== 'all') {
+            switch ($filters['status']) {
+                case 'in_progress':
+                    $query->whereNull('submitted_at');
+                    break;
+
+                case 'submitted':
+                    $query->whereNotNull('submitted_at');
+                    break;
+
+                case 'passed':
+                    // prefer marks_report when present (official), otherwise use attempt.passed/score
+                    $query->where(function ($qb) {
+                        $qb->whereHas('marksReport', function ($m) {
+                            $m->where('official', true)
+                                // compare marks against exam.pass_threshold using subquery
+                                ->whereColumn('marks_reports.marks', '>=', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
+                        })->orWhere('passed', true)->orWhere(function ($sub) {
+                            $sub->whereNotNull('score')->where('score', '>=', 50);
+                        });
+                    });
+                    break;
+
+                case 'failed':
+                    $query->where(function ($qb) {
+                        $qb->whereHas('marksReport', function ($m) {
+                            $m->where('official', true)
+                                ->whereColumn('marks_reports.marks', '<', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
+                        })->orWhere('passed', false)->orWhere(function ($sub) {
+                            $sub->whereNotNull('score')->where('score', '<', 50);
+                        });
+                    });
+                    break;
+            }
+        }
+
+        // 7. ordering + pagination, preserve query string
+        $attempts = $query->orderBy('created_at', 'desc')
+            ->paginate($perPage)
+            ->withQueryString();
+
+        // 8. provide lightweight exam list for the exam filter dropdown
+        $examOptions = Exam::orderBy('title')->get(['id', 'title']);
+
+        // 9. return to Inertia with attempts, filters and exam options
+        return Inertia::render('Attempts/Index', [
+            'attempts' => $attempts,
+            'filters' => $filters,
+            'examOptions' => $examOptions,
         ]);
     }
 
-    public function export(Request $request)
+    /**
+     * Download the student's attempts listing (the same page they see) as XLSX.
+     * Query params:
+     *  - page (optional) : int (paginates same as UI)
+     *  - per_page (optional): int (items per page)
+     *  - user_id (optional, admin-only): export for specific user
+     */
+    public function exportAttemptsExcel(Request $request)
     {
         $user = $request->user();
-        $fileName = 'my-marks-' . now()->format('Ymd') . '.xlsx';
 
-        // The export is always scoped to the authenticated user
-        return Excel::download(new MyMarksExport($user), $fileName);
-    }
-
-    public function download(Request $request, StudentExamAttempt $attempt)
-    {
-        // Authorize: Ensure the user owns the attempt or is an admin
-        $user = $request->user();
-        if ($attempt->user_id !== $user->id && !$user->hasRole('admin')) {
-            abort(403);
+        // Optionally allow admins to pass ?user_id=123 to export other user's list
+        $targetUserId = $request->query('user_id');
+        if ($targetUserId && $user->hasRole('admin')) {
+            $scopedUserId = (int) $targetUserId;
+        } else {
+            $scopedUserId = $user->id;
         }
 
-        // Fetch all the same data as the show() method
-        $exam = $attempt->exam;
-        $questions = $exam->questions()->orderBy('order')->get();
-        $answers = $attempt->answers()->pluck('selected_option', 'question_id')->toArray();
-        $canReview = $exam->review_allowed;
-        $showAnswers = $exam->show_answers_after_close && $exam->close_at && now()->gt($exam->close_at);
+        $page = (int) $request->query('page', 1);
+        $perPage = (int) $request->query('per_page', 15);
 
-        // Load the Blade view with the data
-        $pdf = PDF::loadView('pdfs.exam_result', [
-            'attempt' => $attempt->load('user'),
-            'exam' => $exam,
-            'questions' => $questions,
-            'answers' => $answers,
-            'canReview' => $canReview,
-            'showAnswers' => $showAnswers,
-        ]);
+        // Query attempts exactly as in your index (eager load marksReport)
+        $query = StudentExamAttempt::with(['exam', 'marksReport.creator'])
+            ->where('user_id', $scopedUserId)
+            ->orderBy('created_at', 'desc');
 
-        $fileName = 'exam-result-' . Str::slug($exam->title) . '-' . $attempt->id . '.pdf';
+        // apply pagination to match the UI page
+        $attemptsPage = $query->paginate($perPage, ['*'], 'page', $page);
 
-        // Stream the PDF to the browser for download
-        return $pdf->stream($fileName);
+        $fileName = 'my-attempts-' . ($scopedUserId === $user->id ? 'me' : 'user-' . $scopedUserId) . '-' . now()->format('Ymd_His') . '.xlsx';
+
+        // Use a small export class that accepts a Collection or array of attempts
+        return Excel::download(new MyAttemptsExport($attemptsPage->items()), $fileName);
     }
 
     // POST /attempts/{attempt}/autosave
@@ -278,6 +320,7 @@ class ExamAttemptController extends Controller
         }
 
         // time limit check if exists
+
         if ($exam->time_limit_minutes) {
             $expires = $attempt->started_at->copy()->addMinutes($exam->time_limit_minutes);
             if ($now->gt($expires)) {
@@ -287,9 +330,12 @@ class ExamAttemptController extends Controller
         }
 
         // MAKE SURE THIS IS NULLABLE OR ELSE THE SUBMIT WILL BREAK;
-        $data = $request->validate(['answers' => 'nullable|array']);
+        $data = $request->validate([
+            'answers' => 'nullable|array',
+            'answers.*' => 'nullable|integer'
+        ]);
 
-        $answersPayload = $data['answers'];
+        $answersPayload = $data['answers'] ?? [];
 
         DB::beginTransaction();
         try {
@@ -297,28 +343,36 @@ class ExamAttemptController extends Controller
             // Get the specific question IDs that were part of this attempt from metadata
             $questionIdsForThisAttempt = $attempt->metadata['question_ids'] ?? null;
 
-            if ($questionIdsForThisAttempt) {
+            $questions = $questionIdsForThisAttempt ?
                 // If specific questions were stored, fetch only those
-                $questions = \App\Models\ExamQuestion::whereIn('id', $questionIdsForThisAttempt)->get()->keyBy('id');
-            } else {
+                ExamQuestion::whereIn('id', $questionIdsForThisAttempt)
+                    ->get()
+                    ->keyBy('id')
                 // Fallback for older attempts: get all questions for the exam
-                $questions = $exam->questions()->get()->keyBy('id');
-            }
-            // $questions = $exam->questions()->get()->keyBy('id');
+                : $exam->questions()->get()->keyBy('id');
 
             $total = $questions->count();
             $correct = 0;
+            $mark = 0;
 
             foreach ($answersPayload as $qid => $sel) {
+                $qid = (int) $qid;
                 if (!isset($questions[$qid]))
                     continue;
                 $q = $questions[$qid];
                 $isCorrect = ((int) $sel === (int) $q->correct_answer);
-                if ($isCorrect)
+                if ($isCorrect) {
                     $correct++;
+                    $mark += $q->mark;
+                }
                 StudentExamAnswer::updateOrCreate(
                     ['attempt_id' => $attempt->id, 'question_id' => $qid],
-                    ['selected_option' => $sel, 'is_correct' => $isCorrect]
+                    [
+                        'selected_option' => $sel === null ? null : (int) $sel,
+                        'is_correct' => $isCorrect,
+                        'score_awarded' => $isCorrect ? $q->mark : 0,
+                        'graded_at' => now()
+                    ]
                 );
             }
 
@@ -327,7 +381,26 @@ class ExamAttemptController extends Controller
             $attempt->submitted_at = $now;
             $attempt->scored_at = $now;
             $attempt->score = $score;
+            $attempt->mark = $mark;
+            $passThreshold = $exam->pass_threshold ?? $exam->full_mark * 0.5; // your model uses pass_threshold
+            $attempt->passed = ($score >= $passThreshold);
+            $attempt->passed_at = $attempt->passed ? now() : null;
             $attempt->save();
+
+            $mark_report = MarksReport::updateOrCreate(
+                ['attempt_id' => $attempt->id],
+                [
+                    'user_id' => $attempt->user_id,
+                    'exam_id' => $exam->id,
+                    'marks' => $mark,
+                    'score' => $score,
+                    'notes' => null,
+                    'created_by' => null,
+                    'updated_by' => null,
+                    'official' => true,
+                    'published_at' => null,
+                ]
+            );
 
             // create log
             ExamLog::create([
@@ -356,7 +429,13 @@ class ExamAttemptController extends Controller
                 ->with('show_answers', $showAnswers);
         } catch (\Throwable $e) {
             DB::rollBack();
-            \Log::error('Exam submission failed: ' . $e->getMessage());
+            \Log::error('Exam submission failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'attempt_id' => $attempt->id ?? null,
+                'user_id' => $user->id ?? null,
+                'exam_id' => $exam->id ?? null,
+                'answers_payload' => $answersPayload ?? null
+            ]);
             // return redirect()->route('exams.show', $exam)->withErrors(['submit' => 'Unable to submit exam — please try again.']);
             return redirect()->route('exams.show', $exam)->withErrors(['submit' => __('errors.exam_submit_failed')]);
         }

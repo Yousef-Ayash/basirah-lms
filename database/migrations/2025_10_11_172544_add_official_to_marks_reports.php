@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // $table->string('locale', 2)->default('ar')->after('is_approved'); // Add locale column
+        Schema::table('marks_reports', function (Blueprint $table) {
+            $table->boolean('official')->default(true)->after('marks');
         });
     }
 
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // $table->dropColumn(['local']);
+        Schema::table('marks_reports', function (Blueprint $table) {
+            $table->dropColumn('official');
         });
     }
 };

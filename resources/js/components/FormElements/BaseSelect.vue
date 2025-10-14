@@ -1,6 +1,10 @@
 <template>
     <div class="space-y-1">
-        <label v-if="label" :for="id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label
+            v-if="label"
+            :for="id"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
             {{ label }}
         </label>
         <select
@@ -8,7 +12,7 @@
             v-bind="$attrs"
             :value="modelValue"
             @change="$emit('update:modelValue', $event.target.value)"
-            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:ring-2 focus:ring-[#61CE70] dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            class="h-[45px] w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 hover:cursor-pointer focus:ring-2 focus:ring-[#61CE70] dark:border-gray-600 dark:bg-gray-700 dark:text-white"
         >
             <slot />
         </select>

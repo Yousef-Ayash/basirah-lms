@@ -5,7 +5,9 @@
         <form @submit.prevent="submit">
             <ExamForm v-model="form" :subjects="subjects" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">حفظ التغييرات</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >حفظ التغييرات</BaseButton
+                >
             </div>
         </form>
     </div>
@@ -37,7 +39,8 @@ const form = useForm({
     review_allowed: props.exam.review_allowed,
     show_answers_after_close: props.exam.show_answers_after_close,
     questions_to_display: props.exam.questions_to_display || 0,
-    questions_to_display: props.exam.full_mark || 100,
+    full_mark: props.exam.full_mark || 100,
+    pass_threshold: props.exam.pass_threshold || 50,
 });
 
 const submit = () => {

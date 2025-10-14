@@ -4,7 +4,7 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 
-defineProps({
+const props = defineProps({
     modelValue: Object, // The Inertia form object
     users: Array,
     exams: Array,
@@ -15,24 +15,60 @@ defineEmits(['update:modelValue']);
 
 <template>
     <Card class="space-y-4">
-        <BaseSelect label="الطالب" v-model="modelValue.user_id" :error="modelValue.errors.user_id" required>
+        <BaseSelect
+            label="الطالب"
+            v-model="modelValue.user_id"
+            :error="modelValue.errors.user_id"
+            required
+        >
             <option disabled :value="null">اختر طالباً</option>
-            <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }} ({{ user.email }})</option>
+            <option v-for="user in users" :key="user.id" :value="user.id">
+                {{ user.name }} ({{ user.email }})
+            </option>
         </BaseSelect>
 
-        <BaseSelect label="الاختبار" v-model="modelValue.exam_id" :error="modelValue.errors.exam_id" required>
+        <BaseSelect
+            label="الاختبار"
+            v-model="modelValue.exam_id"
+            :error="modelValue.errors.exam_id"
+            required
+        >
             <option disabled :value="null">اختر اختباراً</option>
-            <option v-for="exam in exams" :key="exam.id" :value="exam.id">{{ exam.title }}</option>
+            <option v-for="exam in exams" :key="exam.id" :value="exam.id">
+                {{ exam.title }}
+            </option>
         </BaseSelect>
 
         <BaseInput
-            label="الدرجات (من 100)"
+            :label="`الدرجات (من ${props.exams ? props.exams.find((exam) => exam.id === props.modelValue.exam_id).full_mark : '100'})`"
             type="number"
-            step="0.01"
+            min="0"
+            :max="
+                props.exams
+                    ? props.exams.find(
+                          (exam) => exam.id === props.modelValue.exam_id,
+                      ).full_mark
+                    : '100'
+            "
             v-model="modelValue.marks"
             :error="modelValue.errors.marks"
             required
         />
-        <BaseTextarea label="ملاحظات (اختياري)" v-model="modelValue.notes" :error="modelValue.errors.notes" rows="3" />
+        <!-- <BaseInput
+            label="النسبة (من 100)"
+            type="number"
+            min="0"
+            max="100"
+            step="0.01"
+            v-model="modelValue.score"
+            :error="modelValue.errors.score"
+            required
+        /> -->
+        <BaseTextarea
+            label="ملاحظات (اختياري)"
+            v-model="modelValue.notes"
+            :error="modelValue.errors.notes"
+            rows="3"
+        />
     </Card>
 </template>

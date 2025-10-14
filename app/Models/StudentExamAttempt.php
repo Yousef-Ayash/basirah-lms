@@ -14,6 +14,7 @@ class StudentExamAttempt extends Model
         'user_id',
         'started_at',
         'submitted_at',
+        'mark',
         'score',
         'scored_at',
         'attempt_number',
@@ -45,5 +46,10 @@ class StudentExamAttempt extends Model
     public function logs()
     {
         return $this->hasMany(ExamLog::class, 'exam_attempt_id');
+    }
+
+    public function marksReport()
+    {
+        return $this->hasOne(MarksReport::class, 'attempt_id');
     }
 }

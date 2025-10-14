@@ -3,13 +3,19 @@
         <Head title="إدارة المواد" />
         <SectionHeader title="المواد الدراسية">
             <template #action>
-                <BaseButton as="a" :href="route('admin.subjects.create')"> + مادة جديدة </BaseButton>
+                <BaseButton as="a" :href="route('admin.subjects.create')">
+                    + مادة جديدة
+                </BaseButton>
             </template>
         </SectionHeader>
 
-        <div class="mb-4">
-            <BaseInput v-model="search" placeholder="البحث عن طريق العنوان..." class="w-full sm:w-1/2" />
-        </div>
+        <Card class="mb-4">
+            <BaseInput
+                v-model="search"
+                placeholder="البحث عن طريق العنوان..."
+                class="w-full sm:w-2/3"
+            />
+        </Card>
 
         <Card v-if="subjects.data.length" class="space-y-2">
             <div
@@ -18,21 +24,30 @@
                 class="flex flex-col items-start justify-between border-b p-4 last:border-b-0 sm:flex-row sm:items-center dark:border-gray-700"
             >
                 <div>
-                    <h3 class="font-medium text-gray-900 dark:text-white">{{ subject.title }}</h3>
+                    <h3 class="font-medium text-gray-900 dark:text-white">
+                        {{ subject.title }}
+                    </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        المستوى: {{ subject.level?.name || 'N/A' }} | مواد: {{ subject.materials_count }} |
-                        الاختبارات: {{ subject.exams_count }}
+                        المستوى: {{ subject.level?.name || 'N/A' }} | مواد:
+                        {{ subject.materials_count }} | الاختبارات:
+                        {{ subject.exams_count }}
                     </p>
                 </div>
                 <div class="mt-2 flex items-center gap-2 sm:mt-0">
-                    <BaseButton as="a" :href="route('admin.subjects.edit', subject.id)">تعديل</BaseButton>
-                    <BaseButton class="bg-red-500 text-white hover:bg-red-600" @click="confirmDelete(subject)">
+                    <BaseButton
+                        as="a"
+                        :href="route('admin.subjects.edit', subject.id)"
+                        >تعديل</BaseButton
+                    >
+                    <BaseButton
+                        class="bg-red-500 text-white hover:bg-red-600"
+                        @click="confirmDelete(subject)"
+                    >
                         حذف
                     </BaseButton>
                 </div>
             </div>
         </Card>
-
         <EmptyState v-else message="لم يتم العثور على مواد دراسية." />
 
         <div class="mt-6">
@@ -91,12 +106,15 @@ const confirmDelete = (subject) => {
 
 const deleteSubject = () => {
     if (subjectToDelete.value) {
-        router.delete(route('admin.subjects.destroy', subjectToDelete.value.id), {
-            onFinish: () => {
-                showConfirm.value = false;
-                subjectToDelete.value = null;
+        router.delete(
+            route('admin.subjects.destroy', subjectToDelete.value.id),
+            {
+                onFinish: () => {
+                    showConfirm.value = false;
+                    subjectToDelete.value = null;
+                },
             },
-        });
+        );
     }
 };
 </script>

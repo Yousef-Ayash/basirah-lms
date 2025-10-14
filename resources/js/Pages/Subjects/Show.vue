@@ -95,10 +95,7 @@ const toggleBookmark = (material) => {
             </p>
         </div>
 
-        <TabGroup
-            :tabs="['مواد', 'محاضرات', 'الاختبارات']"
-            v-slot="{ active }"
-        >
+        <TabGroup :tabs="['مواد', 'محاضرات', 'الاختبارات']" v-slot="{ active }">
             <div v-show="active === 0" class="space-y-4">
                 <div
                     v-if="materials.data.length"
@@ -169,7 +166,9 @@ const toggleBookmark = (material) => {
                     </Card>
                 </div>
                 <div v-else class="mt-6">
-                    <EmptyState message="لم تتم إضافة أي مواد لهذه المادة بعد." />
+                    <EmptyState
+                        message="لم تتم إضافة أي مواد لهذه المادة بعد."
+                    />
                 </div>
                 <div class="mt-6">
                     <Pagination :links="materials.links" />
@@ -246,7 +245,9 @@ const toggleBookmark = (material) => {
                     </Card>
                 </div>
                 <div v-else class="mt-6">
-                    <EmptyState message="لم تتم إضافة أي مواد لهذه المادة بعد." />
+                    <EmptyState
+                        message="لم تتم إضافة أي مواد لهذه المادة بعد."
+                    />
                 </div>
                 <div class="mt-6">
                     <Pagination :links="materials.links" />
@@ -279,7 +280,10 @@ const toggleBookmark = (material) => {
                         </BaseButton>
                     </Card>
                 </div>
-                <EmptyState v-else message="لا توجد اختبارات متاحة لهذه المادة بعد." />
+                <EmptyState
+                    v-else
+                    message="لا توجد اختبارات متاحة لهذه المادة بعد."
+                />
             </div>
         </TabGroup>
     </div>

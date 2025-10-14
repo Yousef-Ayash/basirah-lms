@@ -98,15 +98,9 @@ watch(
                         {{ subject.description }}
                     </p>
                     <div class="mt-2 text-xs text-gray-500">
-                        <span
-                            >{{ subject.materials_count }}
-                            مواد</span
-                        >
+                        <span>{{ subject.materials_count }} مواد</span>
                         |
-                        <span
-                            >{{ subject.exams_count }}
-                            الاختبارات</span
-                        >
+                        <span>{{ subject.exams_count }} الاختبارات</span>
                     </div>
                 </Card>
             </Link>

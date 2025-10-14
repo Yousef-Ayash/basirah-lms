@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ExamAttemptController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubjectController;
@@ -73,13 +74,14 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::get('exams/{exam}', [ExamController::class, 'show'])->name('exams.show');
     Route::post('exams/{exam}/start', [ExamAttemptController::class, 'start'])->name('exams.start');
     Route::get('my-attempts', [ExamAttemptController::class, 'index'])->name('attempts.index');
-    Route::get('my-attempts/export', [ExamAttemptController::class, 'export'])->name('attempts.export');
-    Route::get('attempts/{attempt}', [ExamAttemptController::class, 'show'])->name('attempts.show');
-    Route::get('attempts/{attempt}/download', [ExamAttemptController::class, 'download'])->name('attempts.download');
     Route::post('attempts/{attempt}/autosave', [ExamAttemptController::class, 'autosave'])->name('attempts.autosave');
     Route::post('attempts/{attempt}/submit', [ExamAttemptController::class, 'submit'])->name('attempts.submit');
 
-    // # Teachers
+    // ## Export and download attempts
+    Route::get('/attempts/export.xlsx', [ExamAttemptController::class, 'exportAttemptsExcel'])->name('attempts.export.xlsx');
+    Route::get('/attempts/export_ar.pdf', [ExportController::class, 'exportAttemptsPdf'])->name('attempts.export.pdf');
+
+    // ## Teachers
     Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
 });
 

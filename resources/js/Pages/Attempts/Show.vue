@@ -1,7 +1,96 @@
+<template>
+    <Card>
+        <div class="flex items-start justify-between">
+            <div>
+                <h2 class="text-lg font-semibold">
+                    {{ attempt.exam?.title ?? 'Attempt' }} — Attempt #{{
+                        attempt.id
+                    }}
+                </h2>
+                <div class="text-xs text-gray-500">
+                    Started: {{ formatDate(attempt.started_at) }}
+                </div>
+            </div>
+
+            <div class="text-right">
+                <div class="text-sm">
+                    Auto score:
+                    {{ attempt.score !== null ? attempt.score + '%' : '-' }}
+                </div>
+
+                <div v-if="officialMark" class="mt-2 text-green-700">
+                    Final mark: <strong>{{ officialMark.marks }}</strong>
+                    <div class="text-xs text-gray-500">
+                        Source: {{ officialMark.source }}
+                    </div>
+                </div>
+
+                <div v-else class="mt-2 text-sm text-yellow-600">
+                    Final mark: Pending (no official report)
+                </div>
+            </div>
+        </div>
+
+        <TabGroup :tabs="['Answers', 'Mark Details']" v-slot="{ active }">
+            <div class="mt-4 space-y-3" v-show="active === 0">
+                <div
+                    v-for="(ans, idx) in attempt.answers"
+                    :key="ans.id"
+                    class="rounded border p-3"
+                >
+                    <div class="font-medium">
+                        Q{{ idx + 1 }}.
+                        {{ ans.question?.question_text ?? ans.question_text }}
+                    </div>
+                    <div class="mt-1">
+                        Your answer:
+                        {{ formatSelected(ans.selected_option) }}
+                    </div>
+                    <div class="mt-1 text-xs text-gray-500">
+                        Correct:
+                        {{
+                            formatSelected(
+                                ans.question?.correct_answer ??
+                                    ans.correct_answer,
+                            )
+                        }}
+                    </div>
+                    <div
+                        class="mt-1"
+                        :class="
+                            ans.is_correct ? 'text-green-600' : 'text-red-600'
+                        "
+                    >
+                        {{ ans.is_correct ? 'Correct' : 'Wrong' }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2" v-show="active === 1">
+                <div v-if="officialMark">
+                    <div class="text-sm">
+                        Official mark:
+                        <strong>{{ officialMark.marks }}</strong>
+                    </div>
+                    <div v-if="officialMark.notes" class="mt-2 text-sm">
+                        Notes: {{ officialMark.notes }}
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="text-sm text-gray-500">
+                        No official mark is available yet. Auto-score shown
+                        above is provisional.
+                    </div>
+                </div>
+            </div>
+        </TabGroup>
+    </Card>
+</template>
+
 <script>
+import { usePage, Head } from '@inertiajs/vue3';
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import StudentLayout from '@/Pages/Student/Layout.vue';
-import { usePage, Head } from '@inertiajs/vue3';
 
 export default {
     layout: (h, page) => {
@@ -14,62 +103,36 @@ export default {
 </script>
 
 <script setup>
-import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
     attempt: Object,
-    exam: Object,
-    questions: Array,
-    answers: Object, // Key-value pair of { question_id: selected_option }
+    // officialMark is optional; server can pass it to avoid client logic
+    officialMark: Object,
 });
 
-// Create a map for quick answer lookup
-const answerMap = new Map(Object.entries(props.answers));
+const computedOfficial = computed(() => {
+    if (props.officialMark) return props.officialMark;
+    // fallback: if attempt has marks_report and it's official, return it
+    const mr = props.attempt?.marks_report;
+    if (mr && mr.official) {
+        return {
+            marks: mr.marks,
+            notes: mr.notes,
+            source: mr.created_by_name ?? mr.creator?.name ?? 'admin',
+        };
+    }
+    return null;
+});
+
+function formatDate(iso) {
+    return iso ? new Date(iso).toLocaleString() : '-';
+}
+function formatSelected(v) {
+    if (v === null || v === undefined) return '—';
+    if (Array.isArray(v)) return v.join(', ');
+    return String(v);
+}
 </script>
-
-<template>
-    <div class="mx-auto max-w-3xl">
-        <Head :title="`نتيجة اختبار: ${exam.title}`" />
-        <SectionHeader title="نتيجة الاختبار">
-            <template #action>
-                <BaseButton as="a" :href="route('attempts.download', attempt.id)"> تحميل كـ PDF </BaseButton>
-            </template>
-        </SectionHeader>
-
-        <Card class="mb-6 text-center">
-            <h2 class="text-xl font-bold">{{ exam.title }}</h2>
-            <p class="text-gray-500">{{ `تم الإرسال في ${new Date(attempt.submitted_at).toLocaleString()}` }}</p>
-            <div class="my-4">
-                <p class="text-lg">درجتك:</p>
-                <p class="text-5xl font-bold text-green-500">{{ attempt.score }}%</p>
-            </div>
-        </Card>
-
-        <div v-if="exam.review_allowed">
-            <h3 class="mb-2 text-lg font-semibold">مراجعة الإجابات</h3>
-            <div class="space-y-4">
-                <Card v-for="question in questions" :key="question.id">
-                    <p class="mb-2 border-b pb-2 font-semibold dark:border-gray-700">{{ question.question_text }}</p>
-                    <ul class="space-y-1 text-sm">
-                        <li
-                            v-for="(option, index) in question.options"
-                            :key="index"
-                            :class="{
-                                'font-bold text-green-500': index + 1 === question.correct_answer, // Correct answer
-                                'text-red-500': index + 1 === answerMap.get(String(question.id)) && index + 1 !== question.correct_answer, // Incorrect student answer
-                            }"
-                        >
-                            {{ option }}
-                            <span v-if="index + 1 === question.correct_answer"> ✓ (الإجابة الصحيحة)</span>
-                            <span v-if="index + 1 === answerMap.get(String(question.id)) && index + 1 !== question.correct_answer">
-                                ✗ (إجابتك)</span
-                            >
-                        </li>
-                    </ul>
-                </Card>
-            </div>
-        </div>
-    </div>
-</template>

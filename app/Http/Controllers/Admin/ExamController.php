@@ -54,6 +54,10 @@ class ExamController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
+        if (!isset($data['pass_threshold'])) {
+            $data['pass_threshold'] = 50;
+        }
+
         Exam::create($data);
 
         // return redirect()->route('admin.exams.index')->with('success', 'Exam created.');
@@ -88,6 +92,7 @@ class ExamController extends Controller
     public function update(StoreExamRequest $request, Exam $exam)
     {
         $exam->update($request->validated());
+
         // return redirect()->route('admin.exams.index')->with('success', 'Exam updated.');
         return redirect()->route('admin.exams.index')->with('success', __('messages.exam_updated'));
     }
@@ -102,32 +107,47 @@ class ExamController extends Controller
     // Admin: attempt list
     public function attempts(Exam $exam)
     {
-        $attempts = $exam->attempts()->with('user')->orderBy('created_at', 'desc')->paginate(15);
-        return Inertia::render('Admin/Exams/AttemptsIndex', [
+        // $attempts = $exam->attempts()->with('user')->orderBy('created_at', 'desc')->paginate(15);
+        $attempts = $exam->attempts()
+            ->with([
+                'user',
+                'marksReport' => function ($q) {
+                    $q->with('creator');
+                }
+            ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(25);
+
+        // return Inertia::render('Admin/Exams/AttemptsIndex', [
+        //     'exam' => $exam,
+        //     'attempts' => $attempts,
+        // ]);
+
+        return Inertia::render('Admin/Attempts/Index', [
             'exam' => $exam,
-            'attempts' => $attempts,
+            'attempts' => $attempts // Laravel paginator with ->with('user','marksReport.creator')
         ]);
     }
 
     // Admin: show single attempt with logs
     public function attemptShow(Exam $exam, $attemptId)
     {
-        // Fetch the specific attempt and eager-load all necessary relationships at once
-        // to prevent N+1 query issues and ensure the view has all its data.
+        // Fetch the attempt and eager-load all relationships needed for the view.
+        // This prevents N+1 query problems.
         $attempt = $exam->attempts()
             ->with([
-                'user',
-                'answers',
-                'logs' => fn($query) => $query->orderBy('created_at', 'desc'),
-                'exam.questions' => fn($query) => $query->orderBy('order'),
+                'user:id,name,email', // Only get needed columns from user
+                'answers.question',   // Get answers and their corresponding questions
+                'logs' => fn($query) => $query->orderBy('created_at', 'desc'), // Get logs in order
+                'marksReport.creator:id,name', // Get the linked marks report and who created it
             ])
             ->where('id', $attemptId)
             ->firstOrFail();
 
-        return Inertia::render('Admin/Exams/AttemptShow', [
+        // Pass the fully loaded attempt object to the Vue component.
+        return Inertia::render('Admin/Attempts/Show', [
             'attempt' => $attempt,
-            'logs' => $attempt->logs,
-            'questions' => $attempt->exam->questions, // Pass the questions to the view
+            'exam' => $exam // Pass the exam too for context
         ]);
     }
 }

@@ -18,7 +18,9 @@ defineProps({
         <Head title="إدارة المدرسين" />
         <SectionHeader title="المدرسون">
             <template #action>
-                <BaseButton as="a" :href="route('admin.teachers.create')">إضافة مدرس +</BaseButton>
+                <BaseButton as="a" :href="route('admin.teachers.create')"
+                    >إضافة مدرس +</BaseButton
+                >
             </template>
         </SectionHeader>
 
@@ -26,7 +28,7 @@ defineProps({
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="bg-gray-100 text-start dark:bg-gray-700">
+                        <tr class="bg-gray-100 text-right dark:bg-gray-700">
                             <th class="p-2">صورة</th>
                             <th class="p-2">الاسم</th>
                             <th class="p-2">الإجراءات</th>

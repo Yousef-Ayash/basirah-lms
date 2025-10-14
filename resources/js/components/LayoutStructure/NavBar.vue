@@ -1,12 +1,9 @@
 <script setup>
 import ThemeSwitcher from '@/components/Misc/ThemeSwitcher.vue';
-import { useTranslations } from '@/composables/useTranslations';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import Logo from '../Logo.vue';
 import { Inertia } from '@inertiajs/inertia';
-
-const { __ } = useTranslations();
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -30,7 +27,7 @@ function logout() {
 
 <template>
     <nav
-        class="sticky top-0 z-50 mb-6 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 shadow backdrop-blur-sm transition-colors duration-300 md:grid md:grid-cols-3 dark:border-gray-800 dark:bg-gray-800/80"
+        class="sticky top-0 z-50 mb-6 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-3 shadow backdrop-blur-sm transition-colors duration-300 md:grid md:grid-cols-[1fr_70%_1fr] dark:border-gray-800 dark:bg-gray-800/80"
     >
         <div class="flex justify-start">
             <Link
@@ -40,12 +37,12 @@ function logout() {
                 <span class="h-12 w-12">
                     <Logo />
                 </span>
-                <span>بصيرة</span></Link
-            >
+                <span>بصيرة</span>
+            </Link>
         </div>
 
         <div
-            class="hidden items-center justify-center space-x-4 text-sm font-medium md:flex"
+            class="hidden items-center justify-center space-x-4 text-sm font-medium md:flex md:w-auto"
         >
             <ul class="flex space-x-4">
                 <li v-for="(item, index) in props.links" :key="index">
@@ -174,7 +171,7 @@ function logout() {
                         href="#"
                         as="button"
                         @click.prevent="logout"
-                        class="w-full text-start hover:cursor-pointer hover:text-[#61CE70]"
+                        class="w-full text-right hover:cursor-pointer hover:text-[#61CE70]"
                     >
                         تسجيل الخروج
                     </Link>

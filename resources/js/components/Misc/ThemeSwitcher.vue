@@ -1,7 +1,7 @@
 <template>
     <button
         @click="themeStore.toggleTheme"
-        class="rounded-full p-2 transition hover:bg-gray-200 dark:hover:bg-gray-700"
+        class="rounded-full p-2 transition hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
     >
         <!-- Sun Icon -->
         <svg

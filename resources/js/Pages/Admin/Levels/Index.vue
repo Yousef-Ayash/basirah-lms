@@ -8,6 +8,7 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
+import EmptyState from '@/components/Misc/EmptyState.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -73,7 +74,7 @@ const deleteLevel = () => {
         <Card v-if="levels.data.length" class="space-y-2">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-100 text-start dark:bg-gray-700">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="p-2">ID</th>
                             <th class="p-2">اسم المستوى</th>
@@ -109,6 +110,7 @@ const deleteLevel = () => {
                 </table>
             </div>
         </Card>
+        <EmptyState v-else message="لا يوجد مستويات لعرضها." />
 
         <div class="mt-6">
             <Pagination :links="levels.links" />
