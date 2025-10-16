@@ -17,7 +17,7 @@ class SubjectFactory extends Factory
             'description' => fake()->paragraph(),
             'created_by' => User::inRandomOrder()->first()?->id ?? User::factory(),
             'level_id' => Level::inRandomOrder()->first()?->id ?? Level::factory(),
-            'cover_image_path' => null,
+            // 'cover_image_path' => null,
         ];
     }
 }

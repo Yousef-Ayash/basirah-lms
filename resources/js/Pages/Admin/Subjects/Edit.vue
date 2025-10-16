@@ -1,14 +1,21 @@
 <template>
     <div>
         <Head :title="`تعديل المادة: ${subject.title}`" />
-        <h1 class="mb-4 text-2xl font-bold">{{ `تعديل المادة: ${subject.title}` }}</h1>
+        <h1 class="mb-4 text-2xl font-bold">
+            {{ `تعديل المادة: ${subject.title}` }}
+        </h1>
 
         <TabGroup :tabs="tabLabels" v-slot="{ active }">
             <div v-show="active === 0">
-                <form @submit.prevent="updateSubjectDetails">
+                <form
+                    @submit.prevent="updateSubjectDetails"
+                    enctype="multipart/form-data"
+                >
                     <SubjectForm v-model="form" :levels="levels" />
                     <div class="mt-4 flex justify-end">
-                        <BaseButton type="submit" :disabled="form.processing"> حفظ التغييرات </BaseButton>
+                        <BaseButton type="submit" :disabled="form.processing">
+                            حفظ التغييرات
+                        </BaseButton>
                     </div>
                 </form>
             </div>
@@ -19,14 +26,32 @@
                 <SectionHeader title="المواد الموجودة" />
                 <Card v-if="subject.materials.length">
                     <ul class="divide-y dark:divide-gray-700">
-                        <li v-for="material in subject.materials" :key="material.id" class="flex items-center justify-between p-2">
-                            <span>{{ material.title }} ({{ material.type }})</span>
+                        <li
+                            v-for="material in subject.materials"
+                            :key="material.id"
+                            class="flex items-center justify-between p-2"
+                        >
+                            <span
+                                >{{ material.title }} ({{
+                                    material.type
+                                }})</span
+                            >
                             <div class="flex gap-2">
-                                <BaseButton as="a" :href="route('materials.show', material.id)" target="_blank" class="bg-gray-500 hover:bg-gray-600">
+                                <BaseButton
+                                    as="a"
+                                    :href="route('materials.show', material.id)"
+                                    target="_blank"
+                                    class="bg-gray-500 hover:bg-gray-600"
+                                >
                                     عرض
                                 </BaseButton>
                                 <Link
-                                    :href="route('admin.materials.destroy', material.id)"
+                                    :href="
+                                        route(
+                                            'admin.materials.destroy',
+                                            material.id,
+                                        )
+                                    "
                                     method="delete"
                                     as="button"
                                     class="inline-flex items-center justify-center rounded-lg bg-red-500 px-4 py-2 font-semibold text-white transition hover:bg-red-600"
@@ -38,30 +63,57 @@
                         </li>
                     </ul>
                 </Card>
-                <EmptyState v-else message="لم تتم إضافة أي مواد لهذه المادة بعد." />
+                <EmptyState
+                    v-else
+                    message="لم تتم إضافة أي مواد لهذه المادة بعد."
+                />
             </div>
 
             <div v-show="active === 2" class="space-y-6">
                 <SectionHeader title="الاختبارات الخاصة بالمادة">
                     <template #action>
-                        <BaseButton as="a" :href="route('admin.exams.create', { subject_id: subject.id })"> + اختبار جديد </BaseButton>
+                        <BaseButton
+                            as="a"
+                            :href="
+                                route('admin.exams.create', {
+                                    subject_id: subject.id,
+                                })
+                            "
+                        >
+                            + اختبار جديد
+                        </BaseButton>
                     </template>
                 </SectionHeader>
 
                 <Card v-if="subject.exams.length">
                     <ul class="divide-y dark:divide-gray-700">
-                        <li v-for="exam in subject.exams" :key="exam.id" class="flex items-center justify-between p-2">
+                        <li
+                            v-for="exam in subject.exams"
+                            :key="exam.id"
+                            class="flex items-center justify-between p-2"
+                        >
                             <span>{{ exam.title }}</span>
                             <div class="flex gap-2">
-                                <BaseButton as="a" :href="route('admin.exams.show', exam.id)">إدارة الأسئلة</BaseButton>
-                                <BaseButton as="a" :href="route('admin.exams.edit', exam.id)" class="bg-blue-500 hover:bg-blue-600">
+                                <BaseButton
+                                    as="a"
+                                    :href="route('admin.exams.show', exam.id)"
+                                    >إدارة الأسئلة</BaseButton
+                                >
+                                <BaseButton
+                                    as="a"
+                                    :href="route('admin.exams.edit', exam.id)"
+                                    class="bg-blue-500 hover:bg-blue-600"
+                                >
                                     تعديل التفاصيل
                                 </BaseButton>
                             </div>
                         </li>
                     </ul>
                 </Card>
-                <EmptyState v-else message="لا توجد اختبارات متاحة لهذه المادة بعد." />
+                <EmptyState
+                    v-else
+                    message="لا توجد اختبارات متاحة لهذه المادة بعد."
+                />
             </div>
         </TabGroup>
     </div>
@@ -88,20 +140,15 @@ const props = defineProps({
 });
 
 const form = useForm({
-    title: props.subject.title,
-    description: props.subject.description,
-    level_id: props.subject.level_id,
+    title: props.subject.title || '',
+    description: props.subject.description || '',
+    level_id: props.subject.level_id || '',
     cover: null,
 });
 
-const tabLabels = computed(() => ['تفاصيل', 'مواد', 'الاختبارات']);
+const tabLabels = computed(() => ['التفاصيل', 'المقرر', 'الاختبارات']);
 
 const updateSubjectDetails = () => {
-    form.put(route('admin.subjects.update', props.subject.id), {
-        _method: 'put',
-        onSuccess: () => {
-            form.reset('cover');
-        },
-    });
+    form.put(route('admin.subjects.update', props.subject.id));
 };
 </script>

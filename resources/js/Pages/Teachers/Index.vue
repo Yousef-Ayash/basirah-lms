@@ -6,7 +6,7 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 
 defineOptions({ layout: StudentLayout });
 
-defineProps({
+const props = defineProps({
     teachers: Array,
 });
 </script>

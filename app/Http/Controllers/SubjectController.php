@@ -5,6 +5,7 @@ use App\Models\Subject;
 use App\Models\Level;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class SubjectController extends Controller
 {
@@ -57,12 +58,29 @@ class SubjectController extends Controller
     public function show(Subject $subject, Request $request)
     {
         // eager load materials (paginated) and exams
+        // $materials = $subject->materials()
+        //     ->where('type', ['pdf', 'picture'])
+        //     ->orderBy('order')
+        //     ->paginate(12)
+        //     ->through(function ($m) {
+        //         // deja vu: accessor provides preview_url / thumbnail_url
+        //         return [
+        //             'id' => $m->id,
+        //             'title' => $m->title,
+        //             'type' => $m->type,
+        //             'preview_url' => $m->preview_url,
+        //             'thumbnail_url' => $m->thumbnail_url,
+        //             'order' => $m->order,
+        //         ];
+        //     });
+
         $materials = $subject->materials()
-            ->where('type', ['pdf', 'picture'])
+            // CORRECT: use whereIn for multiple possible values
+            ->whereIn('type', ['pdf', 'picture'])
             ->orderBy('order')
             ->paginate(12)
+            // avoid N+1 when accessors use media library: load media for each item
             ->through(function ($m) {
-                // deja vu: accessor provides preview_url / thumbnail_url
                 return [
                     'id' => $m->id,
                     'title' => $m->title,
@@ -78,7 +96,6 @@ class SubjectController extends Controller
             ->orderBy('order')
             ->paginate(12)
             ->through(function ($m) {
-                // deja vu: accessor provides preview_url / thumbnail_url
                 return [
                     'id' => $m->id,
                     'title' => $m->title,
@@ -88,6 +105,7 @@ class SubjectController extends Controller
                     'order' => $m->order,
                 ];
             });
+
 
         $exams = $subject->exams()
             ->orderBy('created_at', 'desc')
@@ -101,7 +119,8 @@ class SubjectController extends Controller
                 'id' => $subject->id,
                 'title' => $subject->title,
                 'description' => $subject->description,
-                'cover_image' => $subject->cover_image_path ? \Storage::disk('public')->url($subject->cover_image_path) : null,
+                // 'cover_image' => $subject->cover_image_path ? \Storage::disk('public')->url($subject->cover_image_path) : null,
+                'cover_image' => $subject->cover_url,
             ],
             'materials' => $materials,
             'vid_materials' => $vid_materials,

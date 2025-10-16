@@ -51,6 +51,7 @@ class MarksExport implements FromCollection, WithHeadings, WithMapping
             'Marks',
             'Notes',
             'Created By',
+            'Updated By',
             'Date Added',
         ];
     }

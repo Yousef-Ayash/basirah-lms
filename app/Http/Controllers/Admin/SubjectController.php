@@ -41,30 +41,13 @@ class SubjectController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
-        // handle cover image
-        if ($request->hasFile('cover')) {
-            $cover = $request->file('cover');
-            $basename = Str::uuid()->toString();
-            $ext = $cover->getClientOriginalExtension();
-            $filename = "{$basename}.{$ext}";
-            $path = $cover->storeAs('covers', $filename, 'public');
-
-            // generate small cover thumbnail synchronously
-            try {
-                $img = Image::make($cover->getRealPath());
-                $img->fit(1200, 400, function ($c) {
-                    $c->upsize();
-                });
-                $thumbPath = "covers/thumbnails/{$basename}.jpg";
-                Storage::disk('public')->put($thumbPath, (string) $img->encode('jpg', 80));
-            } catch (\Throwable $e) {
-                \Log::warning("Cover thumbnail creation failed: " . $e->getMessage());
-            }
-
-            $data['cover_image_path'] = $path;
-        }
-
         $subject = Subject::create($data);
+
+        if ($request->hasFile('cover')) {
+            $subject->addMediaFromRequest('cover')->toMediaCollection('cover');
+            $subject = $subject->fresh();
+            $coverUrl = $subject->cover_url; // accessor
+        }
 
         // return redirect()->route('admin.subjects.index')->with('success', 'Subject created.');
         return redirect()->route('admin.subjects.index')->with('success', __('messages.item_created', ['item' => __('common.subject')]));
@@ -82,36 +65,19 @@ class SubjectController extends Controller
 
     public function update(StoreSubjectRequest $request, Subject $subject)
     {
+        dd($request->all(), $request->files->all());
+
         $data = $request->validated();
 
+        $subject->update($data);
+
         if ($request->hasFile('cover')) {
-            // delete old
-            if ($subject->cover_image_path && Storage::disk('public')->exists($subject->cover_image_path)) {
-                Storage::disk('public')->delete($subject->cover_image_path);
-            }
-            // store new
-            $cover = $request->file('cover');
-            $basename = Str::uuid()->toString();
-            $ext = $cover->getClientOriginalExtension();
-            $filename = "{$basename}.{$ext}";
-            $path = $cover->storeAs('covers', $filename, 'public');
-
-            // create thumbnail
-            try {
-                $img = Image::make($cover->getRealPath());
-                $img->fit(1200, 400, function ($c) {
-                    $c->upsize();
-                });
-                $thumbPath = "covers/thumbnails/{$basename}.jpg";
-                Storage::disk('public')->put($thumbPath, (string) $img->encode('jpg', 80));
-            } catch (\Throwable $e) {
-                \Log::warning("Cover thumbnail creation failed: " . $e->getMessage());
-            }
-
-            $data['cover_image_path'] = $path;
+            $subject->clearMediaCollection('cover'); // Remove old cover
+            $subject->addMediaFromRequest('cover')->toMediaCollection('cover');
+            $subject = $subject->fresh();
+            $coverUrl = $subject->cover_url; // accessor
         }
 
-        $subject->update($data);
 
         // return redirect()->route('admin.subjects.index')->with('success', 'Subject updated.');
         return redirect()->route('admin.subjects.index')->with('success', __('messages.item_updated', ['item' => __('common.subject')]));

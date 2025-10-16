@@ -29,11 +29,17 @@ class TeacherController extends Controller
             'photo' => 'nullable|image|max:2048', // 2MB Max
         ]);
 
-        if ($request->hasFile('photo')) {
-            $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
-        }
+        // if ($request->hasFile('photo')) {
+        //     $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
+        // }
 
-        Teacher::create($data);
+        $teacher = Teacher::create($data);
+
+        if ($request->hasFile('photo')) {
+            $teacher->addMediaFromRequest('photo')->toMediaCollection('photo');
+            $teacher = $teacher->fresh();
+            $coverUrl = $teacher->photo_url;
+        }
 
         return redirect()->route('admin.teachers.index')->with('success', 'Teacher created successfully.');
     }
@@ -51,15 +57,22 @@ class TeacherController extends Controller
             'photo' => 'nullable|image|max:2048',
         ]);
 
-        if ($request->hasFile('photo')) {
-            // Delete old photo if it exists
-            if ($teacher->photo_path) {
-                Storage::disk('public')->delete($teacher->photo_path);
-            }
-            $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
-        }
+        // if ($request->hasFile('photo')) {
+        //     // Delete old photo if it exists
+        //     if ($teacher->photo_path) {
+        //         Storage::disk('public')->delete($teacher->photo_path);
+        //     }
+        //     $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
+        // }
 
         $teacher->update($data);
+
+        if ($request->hasFile('photo')) {
+            $teacher->clearMediaCollection('photo'); // Remove old cover
+            $teacher->addMediaFromRequest('photo')->toMediaCollection('photo');
+            $teacher = $teacher->fresh();
+            $coverUrl = $teacher->photo_url;
+        }
 
         return redirect()->route('admin.teachers.index')->with('success', 'Teacher updated successfully.');
     }

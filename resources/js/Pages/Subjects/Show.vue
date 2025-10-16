@@ -30,6 +30,9 @@ const props = defineProps({
     bookmarkedMaterialIds: Array,
 });
 
+console.log(props.materials);
+console.log(props.vid_materials);
+
 // 1. Create a local, reactive copy of the bookmarked IDs.
 //    This allows us to update the UI instantly.
 const localBookmarkedIds = ref([...props.bookmarkedMaterialIds]);
