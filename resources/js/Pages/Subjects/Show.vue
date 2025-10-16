@@ -30,19 +30,15 @@ const props = defineProps({
     bookmarkedMaterialIds: Array,
 });
 
-console.log(props.materials);
-console.log(props.vid_materials);
-
-// 1. Create a local, reactive copy of the bookmarked IDs.
 //    This allows us to update the UI instantly.
 const localBookmarkedIds = ref([...props.bookmarkedMaterialIds]);
 
-// 2. The `isBookmarked` function now checks our local copy.
+// The `isBookmarked` function now checks local copy.
 const isBookmarked = (materialId) => {
     return localBookmarkedIds.value.includes(materialId);
 };
 
-// 3. The refactored toggle function.
+// The refactored toggle function.
 const toggleBookmark = (material) => {
     const isCurrentlyBookmarked = isBookmarked(material.id);
 
@@ -98,7 +94,10 @@ const toggleBookmark = (material) => {
             </p>
         </div>
 
-        <TabGroup :tabs="['مواد', 'محاضرات', 'الاختبارات']" v-slot="{ active }">
+        <TabGroup
+            :tabs="['المقرر', 'المحاضرات', 'الاختبارات']"
+            v-slot="{ active }"
+        >
             <div v-show="active === 0" class="space-y-4">
                 <div
                     v-if="materials.data.length"
@@ -133,7 +132,13 @@ const toggleBookmark = (material) => {
                             <div class="mt-2 flex items-center justify-between">
                                 <span
                                     class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold uppercase dark:bg-gray-700"
-                                    >{{ material.type }}</span
+                                    >{{
+                                        material.type === 'picture'
+                                            ? 'صورة'
+                                            : material.type === 'pdf'
+                                              ? 'ملف PDF'
+                                              : material.type
+                                    }}</span
                                 >
                                 <button
                                     @click="toggleBookmark(material)"
@@ -212,7 +217,11 @@ const toggleBookmark = (material) => {
                             <div class="mt-2 flex items-center justify-between">
                                 <span
                                     class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold uppercase dark:bg-gray-700"
-                                    >{{ material.type }}</span
+                                    >{{
+                                        material.type === 'youtube'
+                                            ? 'يوتيوب'
+                                            : material.type
+                                    }}</span
                                 >
                                 <button
                                     @click="toggleBookmark(material)"

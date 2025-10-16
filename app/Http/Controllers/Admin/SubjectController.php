@@ -65,8 +65,6 @@ class SubjectController extends Controller
 
     public function update(StoreSubjectRequest $request, Subject $subject)
     {
-        dd($request->all(), $request->files->all());
-
         $data = $request->validated();
 
         $subject->update($data);

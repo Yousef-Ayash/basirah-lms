@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
@@ -11,6 +12,25 @@ const props = defineProps({
 });
 
 defineEmits(['update:modelValue']);
+
+const selectedExam = computed(() => {
+    if (!props.modelValue.exam_id || !props.exams) {
+        return null;
+    }
+    // Use == to handle potential type mismatch ('1' vs 1) from the select input
+    return props.exams.find((exam) => exam.id == props.modelValue.exam_id);
+});
+
+const marksLabel = computed(() => {
+    if (selectedExam.value) {
+        return `الدرجات (من ${selectedExam.value.full_mark})`;
+    }
+    return 'الدرجات';
+});
+
+const maxMark = computed(() => {
+    return selectedExam.value ? selectedExam.value.full_mark : 100;
+});
 </script>
 
 <template>
@@ -40,30 +60,15 @@ defineEmits(['update:modelValue']);
         </BaseSelect>
 
         <BaseInput
-            :label="`الدرجات (من ${props.exams ? props.exams.find((exam) => exam.id === props.modelValue.exam_id).full_mark : '100'})`"
+            :label="marksLabel"
             type="number"
             min="0"
-            :max="
-                props.exams
-                    ? props.exams.find(
-                          (exam) => exam.id === props.modelValue.exam_id,
-                      ).full_mark
-                    : '100'
-            "
+            :max="maxMark"
             v-model="modelValue.marks"
             :error="modelValue.errors.marks"
             required
         />
-        <!-- <BaseInput
-            label="النسبة (من 100)"
-            type="number"
-            min="0"
-            max="100"
-            step="0.01"
-            v-model="modelValue.score"
-            :error="modelValue.errors.score"
-            required
-        /> -->
+
         <BaseTextarea
             label="ملاحظات (اختياري)"
             v-model="modelValue.notes"

@@ -11,13 +11,40 @@
                     @submit.prevent="updateSubjectDetails"
                     enctype="multipart/form-data"
                 >
-                    <SubjectForm v-model="form" :levels="levels" />
+                    <!-- <SubjectForm v-model="form" :levels="levels" /> -->
+                    <SubjectForm
+                        :modelValue="form"
+                        :levels="levels"
+                        @update:modelValue="
+                            (partial) => Object.assign(form, partial)
+                        "
+                    />
                     <div class="mt-4 flex justify-end">
                         <BaseButton type="submit" :disabled="form.processing">
                             حفظ التغييرات
                         </BaseButton>
                     </div>
                 </form>
+                <pre style="white-space: pre-wrap; font-size: 18px" dir="ltr">
+Parent form state:
+{{
+                        JSON.stringify(
+                            {
+                                title: form.title,
+                                level_id: form.level_id,
+                                cover: form.cover
+                                    ? {
+                                          name: form.cover.name,
+                                          size: form.cover.size,
+                                      }
+                                    : null,
+                            },
+                            null,
+                            2,
+                        )
+                    }}
+</pre
+                >
             </div>
 
             <div v-show="active === 1" class="space-y-6">
@@ -139,16 +166,23 @@ const props = defineProps({
     levels: Array,
 });
 
+// Initialize form with proper types and include cover_url for existing image
 const form = useForm({
+    _method: 'PUT',
     title: props.subject.title || '',
     description: props.subject.description || '',
-    level_id: props.subject.level_id || '',
+    level_id: Number(props.subject.level_id) || 0,
     cover: null,
+    cover_url: props.subject.cover || null, // Keep reference to existing cover
 });
 
 const tabLabels = computed(() => ['التفاصيل', 'المقرر', 'الاختبارات']);
 
 const updateSubjectDetails = () => {
-    form.put(route('admin.subjects.update', props.subject.id));
+    form.post(route('admin.subjects.update', props.subject.id), {
+        onError: (errs) => {
+            console.log('validation errors', errs);
+        },
+    });
 };
 </script>
