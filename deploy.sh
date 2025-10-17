@@ -17,6 +17,7 @@ git pull origin "$BRANCH"
 echo ""
 echo "=> 1. Updating PHP dependencies (composer install)..."
 # Use --no-dev and --optimize-autoloader for production
+composer update
 composer install --no-dev --optimize-autoloader
 
 # Rebuild Frontend Assets (Adjust the command based on your setup: mix or vite)
