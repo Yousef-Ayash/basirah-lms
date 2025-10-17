@@ -1,41 +1,75 @@
 #!/bin/bash
+# deploy.sh
+# Usage: ./deploy.sh
 
 # --- Configuration ---
 BRANCH="main"
 # ---------------------
 
-# Exit immediately if a command exits with a non-zero status
-set -e
+set -euo pipefail
 
 echo "--- STARTING LARAVEL DEPLOYMENT ---"
 
-# Pull the latest code from GitHub
+# 0. Pull latest code
 echo "=> 0. Pulling latest code from origin/$BRANCH..."
-git pull origin "$BRANCH"
+git fetch origin "$BRANCH"
+git reset --hard "origin/$BRANCH"
+# or: git pull origin "$BRANCH"
 
-# Update PHP Dependencies
+# 1. Install/update PHP dependencies (production safe)
 echo ""
-echo "=> 1. Updating PHP dependencies (composer install)..."
-# Use --no-dev and --optimize-autoloader for production
-composer update
-composer install --no-dev --optimize-autoloader
+echo "=> 1. Installing PHP dependencies (composer install, no-dev, optimized, no-scripts)..."
 
-# Rebuild Frontend Assets (Adjust the command based on your setup: mix or vite)
+# Use install (not update) in deployment, and prevent composer scripts from running
+composer install --no-dev --optimize-autoloader --no-scripts
+
+# 2. Rebuild frontend assets
 echo ""
-echo "=> 3. Rebuilding frontend assets (npm run build)..."
-npm install
+echo "=> 2. Rebuilding frontend assets (npm run build)..."
+npm ci --silent
 npm run build
 
-# Run Database Migrations
+# 3. Defensive cleanup: remove duplicate migration files (keep oldest)
 echo ""
-echo "=> 4. Running database migrations..."
-# The --force flag confirms the migration in a production environment
+echo "=> 3. Cleaning duplicate migrations (if any) — keeping oldest copy for each slug..."
+
+MIGRATIONS_DIR="database/migrations"
+
+# Safety: make sure directory exists
+if [ -d "$MIGRATIONS_DIR" ]; then
+  # Iterate over migration files sorted by name ascending (older timestamps first)
+  declare -A SEEN
+  while IFS= read -r -d '' file; do
+    base="$(basename "$file")"
+    # Remove the leading timestamp and underscores to get the slug:
+    # e.g. 2025_10_17_123456_create_personal_access_tokens_table.php -> create_personal_access_tokens_table.php
+    slug="$(printf '%s' "$base" | sed -E 's/^[0-9_]+_//')"
+
+    if [ -z "${SEEN[$slug]:-}" ]; then
+      SEEN[$slug]="$file"
+    else
+      # Duplicate detected — delete the newer file (we already encountered older one because of sort)
+      echo "    [dup-migration] deleting duplicate: $file  (keeping ${SEEN[$slug]##*/})"
+      rm -f "$file"
+    fi
+  done < <(find "$MIGRATIONS_DIR" -maxdepth 1 -name "*.php" -print0 | sort -z)
+else
+  echo "    migrations dir not found: $MIGRATIONS_DIR (skipping cleanup)"
+fi
+
+# 4. Optional: check migration status (good for debugging)
+echo ""
+echo "=> 4. Checking migration status (not running migrations yet)..."
+php artisan migrate:status || true
+
+# 5. Run Database Migrations (force in production)
+echo ""
+echo "=> 5. Running database migrations (php artisan migrate --force)..."
 php artisan migrate --force
 
-# Clear and Optimize Caches
+# 6. Clear and Optimize Caches
 echo ""
-echo "=> 5. Clearing and optimizing caches..."
-# This single command clears view, route, config, and application cache
+echo "=> 6. Clearing and optimizing caches..."
 php artisan optimize:clear
 
 echo ""
