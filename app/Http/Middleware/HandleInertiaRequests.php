@@ -44,16 +44,10 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn() => $request->session()->get('success'),
                 'error' => fn() => $request->session()->get('error'),
             ],
-            // 'translations' => function () {
-            //     $locale = app()->getLocale();
-            //     $jsonFile = lang_path("{$locale}.json");
-
-            //     if (!file_exists($jsonFile)) {
-            //         return [];
-            //     }
-
-            //     return json_decode(file_get_contents($jsonFile), true);
-            // },
+            'appEnv' => [
+                'isLocal' => config('app.env') === 'local',
+                'isDebug' => config('app.debug'),
+            ],
         ];
     }
 }

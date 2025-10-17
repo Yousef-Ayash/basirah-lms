@@ -46,7 +46,9 @@
                             class="rounded bg-[#61CE70] px-4 py-2 font-medium text-white hover:cursor-pointer disabled:opacity-60"
                             :disabled="form.processing"
                         >
-                            <span v-if="form.processing">جارٍ تسجيل الدخول...</span>
+                            <span v-if="form.processing"
+                                >جارٍ تسجيل الدخول...</span
+                            >
                             <span v-else>تسجيل الدخول</span>
                         </button>
 
@@ -75,20 +77,26 @@
 
 <script setup>
 import BaseInput from '@/components/FormElements/BaseInput.vue';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-import { Head, useForm } from '@inertiajs/vue3';
+const page = usePage();
+const showDebugFeature = computed(() => {
+    const env = page.props.appEnv;
+    // Check if APP_ENV is 'local' AND APP_DEBUG is true
+    return env.isLocal && env.isDebug;
+});
 
-// 1. Initialize the form with Inertia's helper
 const form = useForm({
-    email: 'admin@example.com', // Pre-fill for easy testing
-    password: 'password',
+    email: showDebugFeature.value ? 'admin@example.com' : '',
+    password: showDebugFeature.value ? 'password' : '',
     remember: false,
 });
 
-// 2. Create a submit function that posts to the Laravel route
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
 };
+console.log(showDebugFeature.value);
 </script>
