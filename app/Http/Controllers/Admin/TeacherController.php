@@ -10,10 +10,21 @@ use Inertia\Inertia;
 
 class TeacherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $teachers = Teacher::orderBy('name')->paginate(15);
-        return Inertia::render('Admin/Teachers/Index', ['teachers' => $teachers]);
+        $q = $request->get('q');
+        $query = Teacher::query();
+
+        if ($q) {
+            $query->where('name', 'like', "%{$q}%");
+        }
+
+        $teachers = $query->orderBy('name')->paginate(15)->withQueryString();
+
+        return Inertia::render('Admin/Teachers/Index', [
+            'teachers' => $teachers,
+            'filters' => ['q' => $q]
+        ]);
     }
 
     public function create()
@@ -28,10 +39,6 @@ class TeacherController extends Controller
             'bio' => 'nullable|string',
             'photo' => 'nullable|image|max:2048', // 2MB Max
         ]);
-
-        // if ($request->hasFile('photo')) {
-        //     $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
-        // }
 
         $teacher = Teacher::create($data);
 
@@ -57,14 +64,6 @@ class TeacherController extends Controller
             'photo' => 'nullable|image|max:2048',
         ]);
 
-        // if ($request->hasFile('photo')) {
-        //     // Delete old photo if it exists
-        //     if ($teacher->photo_path) {
-        //         Storage::disk('public')->delete($teacher->photo_path);
-        //     }
-        //     $data['photo_path'] = $request->file('photo')->store('teachers', 'public');
-        // }
-
         $teacher->update($data);
 
         if ($request->hasFile('photo')) {
@@ -79,9 +78,9 @@ class TeacherController extends Controller
 
     public function destroy(Teacher $teacher)
     {
-        if ($teacher->photo_path) {
-            Storage::disk('public')->delete($teacher->photo_path);
-        }
+        // if ($teacher->photo_path) {
+        //     Storage::disk('public')->delete($teacher->photo_path);
+        // }
         $teacher->delete();
         return redirect()->route('admin.teachers.index')->with('success', 'Teacher deleted successfully.');
     }

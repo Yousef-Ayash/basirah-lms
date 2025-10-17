@@ -31,6 +31,22 @@
             </option>
         </BaseSelect>
 
+        <BaseSelect
+            label="مدرس المادة"
+            v-model="local.teacher_id"
+            :error="local.errors?.teacher_id"
+            @change="emitModel"
+        >
+            <option :value="0">-- بدون مدرس --</option>
+            <option
+                v-for="teacher in teachers"
+                :key="teacher.id"
+                :value="teacher.id"
+            >
+                {{ teacher.name }}
+            </option>
+        </BaseSelect>
+
         <!-- File input -->
         <BaseFileInput
             label="صورة الغلاف (اختياري)"
@@ -65,6 +81,7 @@ import BaseFileInput from '@/components/FormElements/BaseFileInput.vue';
 const props = defineProps({
     modelValue: { type: Object, required: true },
     levels: { type: Array, default: () => [] },
+    teachers: { type: Array, default: () => {} },
 });
 
 const emit = defineEmits(['update:modelValue']);

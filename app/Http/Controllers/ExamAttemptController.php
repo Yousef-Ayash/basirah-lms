@@ -24,10 +24,10 @@ class ExamAttemptController extends Controller
 
         // check open/close
         if ($exam->open_at && $now->lt($exam->open_at)) {
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_not_open_yet')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار لم يفتح بعد.']);
         }
         if ($exam->close_at && $now->gt($exam->close_at)) {
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_is_closed')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار مغلق بالفعل.']);
         }
 
         // attempts check
@@ -36,11 +36,11 @@ class ExamAttemptController extends Controller
             ->count();
 
         if ($attemptCount >= $exam->max_attempts) {
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.max_attempts_reached')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'تم الوصول إلى الحد الأقصى من المحاولات.']);
         }
 
         if ($exam->questions()->count() === 0) {
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_no_questions')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'هذا الاختبار لا يحتوي على أسئلة ولا يمكن البدء به.']);
         }
 
         $last_attempt = StudentExamAttempt::where('exam_id', $exam->id)->where('user_id', $user->id)->latest('submitted_at')->value('submitted_at');
@@ -294,7 +294,7 @@ class ExamAttemptController extends Controller
         }
         if ($attempt->submitted_at) {
             // return redirect()->route('exams.show', $attempt->exam()->first())->withErrors(['attempt' => 'Attempt already submitted.']);
-            return redirect()->route('exams.show', $exam)->withErrors(['attempt' => __('messages.attempt_already_submitted')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['attempt' => 'تم تسليم المحاولة بالفعل.']);
         }
 
         $now = now();
@@ -306,17 +306,17 @@ class ExamAttemptController extends Controller
 
         if ($attempt->attempt_number > $exam->max_attempts) {
             // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Attempt exceeded allowed attempts.']);
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.max_attempts_reached')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'تم الوصول إلى الحد الأقصى من المحاولات.']);
         }
 
         if ($exam->open_at && $now->lt($exam->open_at)) {
             // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Exam not open.']);
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_not_open_yet')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار لم يفتح بعد.']);
         }
 
         if ($exam->close_at && $now->gt($exam->close_at)) {
             // return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'Exam closed.']);
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => __('messages.exam_is_closed')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار مغلق بالفعل.']);
         }
 
         // time limit check if exists
@@ -325,7 +325,7 @@ class ExamAttemptController extends Controller
             $expires = $attempt->started_at->copy()->addMinutes($exam->time_limit_minutes);
             if ($now->gt($expires)) {
                 // return redirect()->route('exams.show', $exam)->withErrors(['time' => 'Time limit exceeded.']);
-                return redirect()->route('exams.show', $exam)->withErrors(['time' => __('messages.time_limit_exceeded')]);
+                return redirect()->route('exams.show', $exam)->withErrors(['time' => 'تم تجاوز الحد الزمني.']);
             }
         }
 
@@ -424,7 +424,7 @@ class ExamAttemptController extends Controller
             // redirect to attempt show / result page
             return redirect()->route('attempts.show', $attempt->id)
                 // ->with('success', 'Your exam was submitted. Score: ' . $score)
-                ->with('success', __('messages.exam_submitted_successfully', ['score' => $score]))
+                ->with('success', 'تم تسليم اختبارك. الدرجة: ' . ['score' => $score])
                 ->with('review', $canReview)
                 ->with('show_answers', $showAnswers);
         } catch (\Throwable $e) {
@@ -437,7 +437,7 @@ class ExamAttemptController extends Controller
                 'answers_payload' => $answersPayload ?? null
             ]);
             // return redirect()->route('exams.show', $exam)->withErrors(['submit' => 'Unable to submit exam — please try again.']);
-            return redirect()->route('exams.show', $exam)->withErrors(['submit' => __('errors.exam_submit_failed')]);
+            return redirect()->route('exams.show', $exam)->withErrors(['submit' => 'فشل تسليم اختبارك.']);
         }
     }
 }

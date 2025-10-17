@@ -42,7 +42,7 @@ class BookmarkController extends Controller
         ]);
 
         // return redirect()->back()->with('success', 'Bookmarked.');
-        return redirect()->back()->with('success', __('messages.bookmarked'));
+        return redirect()->back()->with('success', 'تمت الإشارة المرجعية.');
     }
 
     public function destroy(SubjectMaterial $material)
@@ -54,6 +54,6 @@ class BookmarkController extends Controller
             ->delete();
 
         // return redirect()->back()->with('success', 'Bookmark removed.');
-        return redirect()->back()->with('success', __('messages.bookmark_removed'));
+        return redirect()->back()->with('success', 'تمت إزالة الإشارة المرجعية.');
     }
 }

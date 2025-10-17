@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SectionHeader title="إضافة مادة جديدة" />
+        <SectionHeader title="إضافة مقررات جديدة" />
         <form @submit.prevent="submit" enctype="multipart/form-data">
             <Card class="space-y-4">
                 <BaseInput
@@ -23,12 +23,8 @@
                     required
                 >
                     <option value="pdf">ملف PDF</option>
-                    <option value="picture">
-                        صورة
-                    </option>
-                    <option value="youtube">
-                        فيديو YouTube
-                    </option>
+                    <option value="picture">صورة</option>
+                    <option value="youtube">فيديو YouTube</option>
                 </BaseSelect>
                 <div v-if="form.type === 'pdf'">
                     <BaseFileInput

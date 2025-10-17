@@ -15,9 +15,8 @@ class Subject extends Model implements HasMedia // Implement the interface
         'title',
         'description',
         'created_by',
+        'teacher_id',
         'level_id',
-        // 'cover_image_path',
-        // 'cover',
     ];
 
     // Optional: Add an accessor for easy access in your Vue components

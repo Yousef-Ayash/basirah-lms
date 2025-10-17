@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Admin\LevelController as AdminLevelController;
+use App\Models\Subject;
+use App\Models\Teacher;
 use Inertia\Inertia;
 
 
@@ -36,6 +38,15 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+// Route::get('/', function () {
+//     $subjects = Subject::orderBy('id')->get();
+//     $teachers = Teacher::orderBy('name')->get();
+//     return Inertia::render('Welcome', [
+//         'subjects' => $subjects,
+//         'teachers' => $teachers
+//     ]);
+// });
 
 // #####################################################################
 // ## Phase 1: Authentication, RBAC, and Profile Management

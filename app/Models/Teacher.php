@@ -16,8 +16,6 @@ class Teacher extends Model implements HasMedia
     protected $fillable = [
         'name',
         'bio',
-        // 'photo_path',
-        // 'photo',
     ];
 
     // We can keep the photo_url accessor but change its logic
@@ -35,18 +33,6 @@ class Teacher extends Model implements HasMedia
     }
 
     protected $appends = ['photo_url'];
-
-    /**
-     * Get the URL for the teacher's photo.
-     */
-    // public function getPhotoUrlAttribute(): ?string
-    // {
-    //     if ($this->photo_path && Storage::disk('public')->exists($this->photo_path)) {
-    //         return Storage::disk('public')->url($this->photo_path);
-    //     }
-    //     // Return a default placeholder image if you have one
-    //     return 'https://via.placeholder.com/400';
-    // }
 
     /**
      * A teacher can have many subjects.

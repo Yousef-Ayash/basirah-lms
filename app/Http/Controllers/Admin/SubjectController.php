@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSubjectRequest;
 use App\Models\Subject;
 use App\Models\Level;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $q = $request->input('q');
-        $query = Subject::with('level', 'creator')->withCount(['materials', 'exams']);
+        $query = Subject::with('level', 'creator', 'teacher')->withCount(['materials', 'exams']);
 
         if ($q) {
             $query->where('title', 'like', "%{$q}%");
@@ -33,7 +34,8 @@ class SubjectController extends Controller
     public function create()
     {
         $levels = Level::orderBy('order')->get();
-        return Inertia::render('Admin/Subjects/Create', ['levels' => $levels]);
+        $teachers = Teacher::orderBy('name')->get();
+        return Inertia::render('Admin/Subjects/Create', ['levels' => $levels, 'teachers' => $teachers]);
     }
 
     public function store(StoreSubjectRequest $request)
@@ -56,10 +58,11 @@ class SubjectController extends Controller
     public function edit(Subject $subject)
     {
         $levels = Level::orderBy('order')->get();
-
+        $teachers = Teacher::orderBy('name')->get();
         return Inertia::render('Admin/Subjects/Edit', [
             'subject' => $subject->load('materials', 'exams'),
             'levels' => $levels,
+            'teachers' => $teachers
         ]);
     }
 

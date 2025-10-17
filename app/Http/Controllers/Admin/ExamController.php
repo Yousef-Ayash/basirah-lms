@@ -61,7 +61,7 @@ class ExamController extends Controller
         Exam::create($data);
 
         // return redirect()->route('admin.exams.index')->with('success', 'Exam created.');
-        return redirect()->route('admin.exams.index')->with('success', __('messages.exam_created'));
+        return redirect()->route('admin.exams.index')->with('success', 'تم إنشاء الاختبار.');
     }
 
     public function show(Exam $exam)
@@ -94,14 +94,14 @@ class ExamController extends Controller
         $exam->update($request->validated());
 
         // return redirect()->route('admin.exams.index')->with('success', 'Exam updated.');
-        return redirect()->route('admin.exams.index')->with('success', __('messages.exam_updated'));
+        return redirect()->route('admin.exams.index')->with('success', 'تم تحديث الاختبار.');
     }
 
     public function destroy(Exam $exam)
     {
         $exam->delete();
         // return redirect()->route('admin.exams.index')->with('success', 'Exam deleted.');
-        return redirect()->route('admin.exams.index')->with('success', __('messages.exam_deleted'));
+        return redirect()->route('admin.exams.index')->with('success', 'تم حذف الاختبار.');
     }
 
     // Admin: attempt list

@@ -16,6 +16,7 @@ class StoreSubjectRequest extends FormRequest
             'title' => 'required|string|max:191',
             'description' => 'nullable|string',
             'level_id' => 'required|exists:levels,id',
+            'teacher_id' => 'nullable|exists:teachers,id',
             'cover' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240', // 10MB
         ];
     }

@@ -27,6 +27,7 @@ const props = defineProps({
     materials: Object, // Paginated materials
     vid_materials: Object,
     exams: Array,
+    teacher: Object,
     bookmarkedMaterialIds: Array,
 });
 
@@ -81,17 +82,23 @@ const toggleBookmark = (material) => {
 <template>
     <div>
         <Head :title="subject.title" />
-        <div class="mb-6">
+        <div class="mb-6 flex flex-col md:flex-row md:justify-between md:gap-8">
+            <div class="mb-4 flex flex-col items-start justify-center md:w-1/2">
+                <h1 class="mb-2 text-3xl font-bold">{{ subject.title }}</h1>
+                <p class="mb-3 text-sm font-bold text-gray-500" v-if="teacher">
+                    مدرس المادة: {{ teacher.name }}
+                </p>
+                <p class="text-gray-600 dark:text-gray-400">
+                    {{ subject.description }}
+                </p>
+            </div>
+
             <img
                 v-if="subject.cover_image"
                 :src="subject.cover_image"
                 alt="Subject Cover"
-                class="mb-4 max-h-64 w-full rounded-lg object-cover"
+                class="mt-4 h-64 w-full rounded-lg object-cover md:mt-0 md:h-64 md:max-h-64 md:w-80"
             />
-            <h1 class="mb-2 text-3xl font-bold">{{ subject.title }}</h1>
-            <p class="text-gray-600 dark:text-gray-400">
-                {{ subject.description }}
-            </p>
         </div>
 
         <TabGroup

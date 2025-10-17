@@ -11,46 +11,40 @@
                     @submit.prevent="updateSubjectDetails"
                     enctype="multipart/form-data"
                 >
-                    <!-- <SubjectForm v-model="form" :levels="levels" /> -->
                     <SubjectForm
                         :modelValue="form"
                         :levels="levels"
+                        :teachers="teachers"
                         @update:modelValue="
                             (partial) => Object.assign(form, partial)
                         "
                     />
-                    <div class="mt-4 flex justify-end">
-                        <BaseButton type="submit" :disabled="form.processing">
-                            حفظ التغييرات
-                        </BaseButton>
+                    <div class="mt-4 flex justify-between">
+                        <div class="justify-start">
+                            <BaseButton
+                                as="a"
+                                :href="route('admin.subjects.index')"
+                                class="bg-red-500 text-white hover:bg-red-600"
+                            >
+                                إلغاء
+                            </BaseButton>
+                        </div>
+                        <div class="justify-end">
+                            <BaseButton
+                                type="submit"
+                                :disabled="form.processing"
+                            >
+                                حفظ التغييرات
+                            </BaseButton>
+                        </div>
                     </div>
                 </form>
-                <pre style="white-space: pre-wrap; font-size: 18px" dir="ltr">
-Parent form state:
-{{
-                        JSON.stringify(
-                            {
-                                title: form.title,
-                                level_id: form.level_id,
-                                cover: form.cover
-                                    ? {
-                                          name: form.cover.name,
-                                          size: form.cover.size,
-                                      }
-                                    : null,
-                            },
-                            null,
-                            2,
-                        )
-                    }}
-</pre
-                >
             </div>
 
             <div v-show="active === 1" class="space-y-6">
                 <AddMaterialForm :subject-id="subject.id" />
 
-                <SectionHeader title="المواد الموجودة" />
+                <SectionHeader title="المقررات الموجودة" />
                 <Card v-if="subject.materials.length">
                     <ul class="divide-y dark:divide-gray-700">
                         <li
@@ -92,7 +86,7 @@ Parent form state:
                 </Card>
                 <EmptyState
                     v-else
-                    message="لم تتم إضافة أي مواد لهذه المادة بعد."
+                    message="لم تتم إضافة أي مقررات لهذه المادة بعد."
                 />
             </div>
 
@@ -164,6 +158,7 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     subject: Object,
     levels: Array,
+    teachers: Array,
 });
 
 // Initialize form with proper types and include cover_url for existing image
@@ -172,6 +167,7 @@ const form = useForm({
     title: props.subject.title || '',
     description: props.subject.description || '',
     level_id: Number(props.subject.level_id) || 0,
+    teacher_id: Number(props.subject.teacher_id) || 0,
     cover: null,
     cover_url: props.subject.cover || null, // Keep reference to existing cover
 });

@@ -87,7 +87,15 @@ watch(
                     <div
                         class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700"
                     >
-                        <span class="text-sm text-gray-400">لا توجد صورة</span>
+                        <img
+                            v-if="subject.cover_url"
+                            :src="subject.cover_url"
+                            alt="Subject Cover"
+                            class="h-full w-full rounded-md object-cover"
+                        />
+                        <span v-else class="text-sm text-gray-400"
+                            >لا توجد صورة</span
+                        >
                     </div>
                     <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">
                         {{ subject.title }}
@@ -98,7 +106,7 @@ watch(
                         {{ subject.description }}
                     </p>
                     <div class="mt-2 text-xs text-gray-500">
-                        <span>{{ subject.materials_count }} مواد</span>
+                        <span>{{ subject.materials_count }} مقررات</span>
                         |
                         <span>{{ subject.exams_count }} الاختبارات</span>
                     </div>

@@ -3,9 +3,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use App\Models\Level;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Mockery\Matcher\Subset;
 
 class SubjectController extends Controller
 {
@@ -19,7 +21,7 @@ class SubjectController extends Controller
         $studentLevelId = $user->level_id ?? 1;
 
         // 3. Start the query for Subjects
-        $query = Subject::query()->withCount(['materials', 'exams'])->with('level');
+        $query = Subject::query()->withCount(['materials', 'exams'])->with(['level']);
 
         // 4. IMPORTANT: Filter subjects to only include those at or below the student's level
         $query->whereHas('level', function ($q) use ($studentLevelId) {
@@ -43,6 +45,7 @@ class SubjectController extends Controller
 
         $subjects = $query->orderBy('title')->paginate(12)->withQueryString();
 
+
         // 5. IMPORTANT: Also filter the list of Levels for the dropdown
         //    so a student can't filter by levels they haven't reached yet.
         $levels = Level::where('id', '<=', $studentLevelId)->orderBy('order')->get();
@@ -58,22 +61,6 @@ class SubjectController extends Controller
     public function show(Subject $subject, Request $request)
     {
         // eager load materials (paginated) and exams
-        // $materials = $subject->materials()
-        //     ->where('type', ['pdf', 'picture'])
-        //     ->orderBy('order')
-        //     ->paginate(12)
-        //     ->through(function ($m) {
-        //         // deja vu: accessor provides preview_url / thumbnail_url
-        //         return [
-        //             'id' => $m->id,
-        //             'title' => $m->title,
-        //             'type' => $m->type,
-        //             'preview_url' => $m->preview_url,
-        //             'thumbnail_url' => $m->thumbnail_url,
-        //             'order' => $m->order,
-        //         ];
-        //     });
-
         $materials = $subject->materials()
             // CORRECT: use whereIn for multiple possible values
             ->whereIn('type', ['pdf', 'picture'])
@@ -106,6 +93,7 @@ class SubjectController extends Controller
                 ];
             });
 
+        $teacher = Teacher::firstWhere('id', $subject->teacher_id);
 
         $exams = $subject->exams()
             ->orderBy('created_at', 'desc')
@@ -119,12 +107,12 @@ class SubjectController extends Controller
                 'id' => $subject->id,
                 'title' => $subject->title,
                 'description' => $subject->description,
-                // 'cover_image' => $subject->cover_image_path ? \Storage::disk('public')->url($subject->cover_image_path) : null,
                 'cover_image' => $subject->cover_url,
             ],
             'materials' => $materials,
             'vid_materials' => $vid_materials,
             'exams' => $exams,
+            'teacher' => $teacher,
             'bookmarkedMaterialIds' => $bookmarkedMaterialIds,
         ]);
     }

@@ -28,13 +28,15 @@
                         {{ subject.title }}
                     </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        المستوى: {{ subject.level?.name || 'N/A' }} | مواد:
-                        {{ subject.materials_count }} | الاختبارات:
+                        المستوى: {{ subject.level?.name || 'N/A' }} | المدرس:
+                        {{ subject.teacher?.name || 'لا يوجد مدرس للمادة' }} |
+                        مقررات: {{ subject.materials_count }} | الاختبارات:
                         {{ subject.exams_count }}
                     </p>
                 </div>
                 <div class="mt-2 flex items-center gap-2 sm:mt-0">
                     <BaseButton
+                        class="bg-blue-500 hover:bg-blue-600"
                         as="a"
                         :href="route('admin.subjects.edit', subject.id)"
                         >تعديل</BaseButton
