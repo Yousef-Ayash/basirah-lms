@@ -68,7 +68,7 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            return Inertia::render('student/Dashboard', [
+            return Inertia::render('Student/Dashboard', [
                 'summary' => [
                     'enrolledSubjects' => $enrolledSubjects,
                     'examsTaken' => $examsTaken,
