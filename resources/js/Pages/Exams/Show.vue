@@ -19,6 +19,7 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import formatMinutes from '@/composables/useFormatMinutes';
 
 const props = defineProps({
     exam: Object,
@@ -121,7 +122,13 @@ const alertInfo = computed(() => {
             >
                 <li class="flex justify-between">
                     <span>الوقت المحدد:</span>
-                    <span class="font-semibold">لا يوجد حد للوقت </span>
+                    <span class="font-semibold">{{
+                        formatMinutes(exam.time_limit_minutes).formattedString
+                    }}</span>
+                </li>
+                <li class="flex justify-between">
+                    <span>عدد المحاولات المسموح بها:</span>
+                    <span class="font-semibold">{{ exam.max_attempts }}</span>
                 </li>
                 <li class="flex justify-between">
                     <span>محاولاتك:</span>

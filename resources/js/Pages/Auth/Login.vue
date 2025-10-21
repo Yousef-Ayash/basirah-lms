@@ -98,5 +98,4 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
-console.log(showDebugFeature.value);
 </script>

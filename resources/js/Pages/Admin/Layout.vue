@@ -32,11 +32,9 @@
 import Footer from '@/components/LayoutStructure/Footer.vue';
 import NavBar from '@/components/LayoutStructure/NavBar.vue';
 import Alert from '@/components/Misc/Alert.vue';
-import { useTranslations } from '@/composables/useTranslations';
-import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
-const { __ } = useTranslations();
 const page = usePage();
 
 const flashSuccess = computed(() => page.props.flash.success);

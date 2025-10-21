@@ -112,11 +112,8 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { useTranslations } from '@/composables/useTranslations';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
-
-const { __ } = useTranslations();
 
 // Set the layout for this page
 defineOptions({ layout: AdminLayout });

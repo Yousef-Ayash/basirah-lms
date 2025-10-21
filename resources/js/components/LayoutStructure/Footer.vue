@@ -19,8 +19,3 @@
     </footer>
 </template>
 
-<script setup>
-import { useTranslations } from '@/composables/useTranslations';
-
-const { __ } = useTranslations();
-</script>

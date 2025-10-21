@@ -15,13 +15,19 @@ class BookmarkController extends Controller
 
         // transform for Inertia
         $items = $bookmarks->through(function ($b) {
+            $m = $b->material;
             return [
                 'id' => $b->id,
                 'material' => [
-                    'id' => $b->material->id,
-                    'title' => $b->material->title,
-                    'thumbnail_url' => $b->material->thumbnail_url,
-                    'subject' => ['id' => $b->material->subject->id, 'title' => $b->material->subject->title],
+                    'id' => $m->id,
+                    'title' => $m->title,
+                    'preview_url' => $m->preview_url,       // <<-- add preview_url
+                    'thumbnail_url' => $m->thumbnail_url,
+                    'type' => $m->type,
+                    'subject' => [
+                        'id' => $m->subject->id,
+                        'title' => $m->subject->title
+                    ],
                 ],
                 'created_at' => $b->created_at,
             ];

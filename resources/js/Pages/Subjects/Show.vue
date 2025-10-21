@@ -21,6 +21,7 @@ import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import formatMinutes from '@/composables/useFormatMinutes';
 
 const props = defineProps({
     subject: Object,
@@ -121,7 +122,10 @@ const toggleBookmark = (material) => {
                             class="block"
                         >
                             <img
-                                v-if="material.thumbnail_url"
+                                v-if="
+                                    material.thumbnail_url &&
+                                    material.type !== 'pdf'
+                                "
                                 :src="material.thumbnail_url"
                                 class="h-40 w-full rounded-t-lg object-cover"
                             />
@@ -149,7 +153,7 @@ const toggleBookmark = (material) => {
                                 >
                                 <button
                                     @click="toggleBookmark(material)"
-                                    class="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    class="rounded-full p-1 hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                                 >
                                     <svg
                                         v-if="isBookmarked(material.id)"
@@ -232,7 +236,7 @@ const toggleBookmark = (material) => {
                                 >
                                 <button
                                     @click="toggleBookmark(material)"
-                                    class="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
+                                    class="rounded-full p-1 hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                                 >
                                     <svg
                                         v-if="isBookmarked(material.id)"
@@ -286,8 +290,10 @@ const toggleBookmark = (material) => {
                             </h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 المدة المسموح بها
-                                {{ exam.time_limit_minutes }}
-                                دق
+                                {{
+                                    formatMinutes(exam.time_limit_minutes)
+                                        .formattedString
+                                }}
                             </p>
                         </div>
                         <BaseButton
