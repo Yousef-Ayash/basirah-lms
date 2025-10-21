@@ -4,7 +4,6 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -38,28 +37,50 @@ const viewMaterial = (material) => {
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">المواد المسجلة</p>
-                <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.enrolledSubjects }}</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    المواد المسجلة
+                </p>
+                <h2 class="text-3xl font-bold text-[#61CE70]">
+                    {{ summary.enrolledSubjects }}
+                </h2>
             </Card>
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">الاختبارات التي تم إجراؤها</p>
-                <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.examsTaken }}</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    الاختبارات التي تم إجراؤها
+                </p>
+                <h2 class="text-3xl font-bold text-[#61CE70]">
+                    {{ summary.examsTaken }}
+                </h2>
             </Card>
             <Card class="p-6 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">متوسط الدرجات</p>
-                <h2 class="text-3xl font-bold text-[#61CE70]">{{ summary.averageScore }}%</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    متوسط الدرجات
+                </p>
+                <h2 class="text-3xl font-bold text-[#61CE70]">
+                    {{ summary.averageScore }}%
+                </h2>
             </Card>
         </div>
 
         <SectionHeader title="الاختبارات القادمة" />
         <Card v-if="upcomingExams.length">
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                <li v-for="exam in upcomingExams" :key="exam.id" class="flex items-center justify-between py-3">
+                <li
+                    v-for="exam in upcomingExams"
+                    :key="exam.id"
+                    class="flex items-center justify-between py-3"
+                >
                     <div>
-                        <p class="font-medium text-gray-900 dark:text-white">{{ exam.title }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ exam.subject.title }}</p>
+                        <p class="font-medium text-gray-900 dark:text-white">
+                            {{ exam.title }}
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ exam.subject.title }}
+                        </p>
                     </div>
-                    <BaseButton @click="startExam(exam)">عرض الاختبار</BaseButton>
+                    <BaseButton @click="startExam(exam)"
+                        >عرض الاختبار</BaseButton
+                    >
                 </li>
             </ul>
         </Card>
@@ -73,21 +94,41 @@ const viewMaterial = (material) => {
                 class="flex items-center justify-between border-b border-gray-200 pb-3 last:border-none dark:border-gray-700"
             >
                 <div class="flex items-center space-x-3">
-                    <span v-if="mat.type === 'pdf'" class="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600">PDF</span>
-                    <span v-else-if="mat.type === 'picture'" class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">Image</span>
-                    <span v-else-if="mat.type === 'youtube'" class="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-600"
+                    <span
+                        v-if="mat.type === 'pdf'"
+                        class="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600"
+                        >PDF</span
+                    >
+                    <span
+                        v-else-if="mat.type === 'picture'"
+                        class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600"
+                        >Image</span
+                    >
+                    <span
+                        v-else-if="mat.type === 'youtube'"
+                        class="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-600"
                         >YouTube</span
                     >
                     <div>
-                        <p class="font-medium text-gray-900 dark:text-white">{{ mat.title }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ mat.subject.title }}</p>
+                        <p class="font-medium text-gray-900 dark:text-white">
+                            {{ mat.title }}
+                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            {{ mat.subject.title }}
+                        </p>
                     </div>
                 </div>
-                <BaseButton size="sm" @click="viewMaterial(mat)">عرض</BaseButton>
+                <BaseButton size="sm" @click="viewMaterial(mat)"
+                    >عرض</BaseButton
+                >
             </div>
 
             <div class="text-end">
-                <Link :href="route('subjects.index')" class="text-sm text-[#61CE70] hover:underline">عرض كل المواد →</Link>
+                <Link
+                    :href="route('subjects.index')"
+                    class="text-sm text-[#61CE70] hover:underline"
+                    >عرض كل المواد →</Link
+                >
             </div>
         </Card>
         <EmptyState v-else message="لا توجد مواد حديثة متاحة." />

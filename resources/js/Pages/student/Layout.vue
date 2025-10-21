@@ -14,7 +14,6 @@
 <script setup>
 import Footer from '@/components/LayoutStructure/Footer.vue';
 import NavBar from '@/components/LayoutStructure/NavBar.vue';
-
 import { computed } from 'vue';
 
 const navLinks = computed(() => [
