@@ -7,6 +7,7 @@
         <main class="mx-auto w-full max-w-7xl flex-grow px-4 py-6">
             <slot />
         </main>
+
         <Footer />
     </div>
 </template>
