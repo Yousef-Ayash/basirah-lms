@@ -11,11 +11,11 @@
             </p>
 
             <div class="mt-3 flex space-x-4 md:mt-0">
-                <span class="hover:text-[#61CE70]">عن بصيرة</span>
-                <span class="hover:text-[#61CE70]">تواصل معنا</span>
-                <span class="hover:text-[#61CE70]">مساعدة</span>
+                <a :href="route('about')" class="hover:text-[#61CE70]"
+                    >عن بصيرة</a
+                >
+                <a href="#" class="hover:text-[#61CE70]">تواصل معنا</a>
             </div>
         </div>
     </footer>
 </template>
-

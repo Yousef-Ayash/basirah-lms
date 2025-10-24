@@ -1,12 +1,22 @@
 <template>
-    <div class="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
+    <div
+        class="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900"
+    >
         <Head title="تسجيل" />
         <div class="w-full max-w-md">
             <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-                <h1 class="mb-4 text-2xl font-semibold text-[#61CE70]">إنشاء حساب</h1>
+                <h1 class="mb-4 text-2xl font-semibold text-[#61CE70]">
+                    إنشاء حساب
+                </h1>
 
                 <form @submit.prevent="submit" class="space-y-4">
-                    <BaseInput label="الاسم الكامل" v-model="form.name" :error="form.errors.name" required autocomplete="name" />
+                    <BaseInput
+                        label="الاسم الكامل"
+                        v-model="form.name"
+                        :error="form.errors.name"
+                        required
+                        autocomplete="name"
+                    />
                     <BaseInput
                         label="البريد الإلكتروني"
                         type="email"
@@ -38,11 +48,16 @@
                             type="submit"
                             :disabled="form.processing"
                         >
-                            <span v-if="form.processing">جارٍ إنشاء الحساب...</span>
+                            <span v-if="form.processing"
+                                >جارٍ إنشاء الحساب...</span
+                            >
                             <span v-else>إنشاء حساب</span>
                         </button>
 
-                        <Link :href="route('login')" class="text-sm text-gray-600 hover:underline dark:text-gray-300">
+                        <Link
+                            :href="route('login')"
+                            class="text-sm text-gray-600 hover:underline dark:text-gray-300"
+                        >
                             لديك حساب بالفعل؟
                         </Link>
                     </div>
@@ -54,7 +69,7 @@
 
 <script setup>
 import BaseInput from '@/components/FormElements/BaseInput.vue';
-
+import { onMounted } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -66,8 +81,12 @@ const form = useForm({
 
 const submit = () => {
     // The second argument to .post() is an object of options
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
-    });
+    // form.post(route('register'), {
+    //     onFinish: () => form.reset('password', 'password_confirmation'),
+    // });
 };
+
+onMounted(() => {
+    window.location.href = 'https://forms.gle/rBJK8guhKmSSMd2X6';
+});
 </script>

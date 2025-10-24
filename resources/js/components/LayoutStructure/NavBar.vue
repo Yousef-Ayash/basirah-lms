@@ -31,13 +31,17 @@ function logout() {
     >
         <div class="flex justify-start">
             <Link
-                :href="dashboardUrl"
-                class="flex flex-row items-center justify-center gap-4 text-xl font-semibold text-[#61CE70]"
+                href="/"
+                class="flex flex-row items-center justify-center gap-4"
             >
-                <span class="h-12 w-12">
+                <span class="h-16 w-16 rounded-lg bg-white">
                     <Logo />
                 </span>
-                <span>بصيرة</span>
+                <span
+                    class="flex h-16 w-16 items-center justify-center rounded-lg bg-white p-1"
+                >
+                    <img src="@i/Logo2.jpg" />
+                </span>
             </Link>
         </div>
 

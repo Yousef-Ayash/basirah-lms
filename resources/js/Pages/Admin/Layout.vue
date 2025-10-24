@@ -15,7 +15,7 @@
         </div>
 
         <NavBar :links="navLinks" />
-        <main class="mx-auto w-full max-w-7xl flex-grow px-4 py-6">
+        <main class="mx-auto mb-28 w-full max-w-7xl flex-grow px-4 py-6">
             <Alert
                 v-if="flashSuccess"
                 :message="flashSuccess"
@@ -25,15 +25,19 @@
             <slot />
         </main>
         <Footer />
+
+        <ScrollToTop />
     </div>
 </template>
 
 <script setup>
-import Footer from '@/components/LayoutStructure/Footer.vue';
+import Footer from '@/components/LayoutStructure/FooterNew.vue';
 import NavBar from '@/components/LayoutStructure/NavBar.vue';
 import Alert from '@/components/Misc/Alert.vue';
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+
+import ScrollToTop from '@/components/Misc/ScrollToTop.vue';
 
 const page = usePage();
 
@@ -41,6 +45,7 @@ const flashSuccess = computed(() => page.props.flash.success);
 const viewingAsStudent = computed(() => page.props.auth.viewingAsStudent);
 
 const adminLinks = computed(() => [
+    { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
     { label: 'المواد الدراسية', to: route('admin.subjects.index') },
     { label: 'الاختبارات', to: route('admin.exams.index') },
@@ -53,6 +58,7 @@ const adminLinks = computed(() => [
 ]);
 
 const studentLinks = computed(() => [
+    { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
     { label: 'المواد الدراسية', to: route('subjects.index') },
     { label: 'درجاتي ومحاولاتي', to: route('attempts.index') },

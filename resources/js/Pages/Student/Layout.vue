@@ -4,23 +4,26 @@
     >
         <NavBar :links="navLinks" />
 
-        <main class="mx-auto w-full max-w-7xl flex-grow px-4 py-6">
+        <main class="mx-auto mb-28 w-full max-w-7xl flex-grow px-4 py-6">
             <slot />
         </main>
 
         <Footer />
+
+        <ScrollToTop />
     </div>
 </template>
 
 <script setup>
-import Footer from '@/components/LayoutStructure/Footer.vue';
+import Footer from '@/components/LayoutStructure/FooterNew.vue';
 import NavBar from '@/components/LayoutStructure/NavBar.vue';
 import { computed } from 'vue';
+import ScrollToTop from '@/components/Misc/ScrollToTop.vue';
 
 const navLinks = computed(() => [
+    { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
     { label: 'المواد الدراسية', to: route('subjects.index') },
-    { label: 'المدرسون', to: route('teachers.index') },
     { label: 'درجاتي', to: route('attempts.index') },
     { label: 'إشاراتي المرجعية', to: route('bookmarks.index') },
 ]);

@@ -30,23 +30,52 @@ use Inertia\Inertia;
 
 
 // Public and Foundational Routes
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
 // Route::get('/', function () {
-//     $subjects = Subject::orderBy('id')->get();
-//     $teachers = Teacher::orderBy('name')->get();
 //     return Inertia::render('Welcome', [
-//         'subjects' => $subjects,
-//         'teachers' => $teachers
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
 //     ]);
 // });
+
+
+// #####################################################################
+// ## New FrontEnd
+// #####################################################################
+
+Route::get('/', function () {
+    $teachers = \App\Models\Teacher::orderBy('name')->get();
+    $subjects = \App\Models\Subject::orderBy('id')->get(['title', 'description']);
+    return Inertia::render('General/Home', [
+        'teachers' => $teachers,
+        'subjects' => $subjects
+    ]);
+})->name('home');
+
+Route::get('/about', function () {
+    return Inertia::render('General/About');
+})->name('about');
+
+Route::get('/internal-system', function () {
+    return Inertia::render('General/InternalSystem');
+})->name('i-sys');
+
+Route::get('/join-us', function () {
+    return Inertia::render('General/JoinUs');
+})->name('join');
+
+// Route::get('/teachers-new', function () {
+//     return Inertia::render('General/Teachers');
+// })->name('teachers');
+
+Route::get('/main-subjects', function () {
+    return Inertia::render('General/MainSubjects');
+})->name('subjects');
+
+// ## Teachers
+Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers');
+
 
 // #####################################################################
 // ## Phase 1: Authentication, RBAC, and Profile Management
@@ -92,10 +121,7 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::get('/attempts/export.xlsx', [ExamAttemptController::class, 'exportAttemptsExcel'])->name('attempts.export.xlsx');
     Route::get('/attempts/export_ar.pdf', [ExportController::class, 'exportAttemptsPdf'])->name('attempts.export.pdf');
 
-    // ## Teachers
-    Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
 });
-
 
 // #####################################################################
 // ## Admin Panel Routes

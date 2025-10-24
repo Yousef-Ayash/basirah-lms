@@ -22,7 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'level_id',
-        // 'locale',
         'is_approved'
     ];
 
@@ -62,5 +61,10 @@ class User extends Authenticatable
     public function attempts()
     {
         return $this->hasMany(\App\Models\StudentExamAttempt::class);
+    }
+
+    public function marks()
+    {
+        return $this->hasMany(\App\Models\MarksReport::class);
     }
 }

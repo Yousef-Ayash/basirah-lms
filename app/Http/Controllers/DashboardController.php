@@ -38,7 +38,9 @@ class DashboardController extends Controller
             // --- Summary Card Queries ---
             $enrolledSubjects = Subject::where('level_id', $user->level_id)->count();
             $examsTaken = $user->attempts()->distinct()->count('exam_id');
-            $averageScore = round($user->attempts()->whereNotNull('score')->avg('score') ?? 0);
+            // $averageScore = round($user->attempts()->whereNotNull('score')->avg('score') ?? 0);
+            $averageScore = $user->marks()->avg('score');
+            $averageScore = $averageScore !== null ? (float) $averageScore : 0.0;
 
             // --- Upcoming Exams Query ---
             $now = Carbon::now();

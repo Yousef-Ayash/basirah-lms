@@ -97,17 +97,17 @@ const viewMaterial = (material) => {
                     <span
                         v-if="mat.type === 'pdf'"
                         class="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-600"
-                        >PDF</span
+                        >ملف PDF</span
                     >
                     <span
                         v-else-if="mat.type === 'picture'"
                         class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600"
-                        >Image</span
+                        >صورة</span
                     >
                     <span
                         v-else-if="mat.type === 'youtube'"
                         class="rounded bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-600"
-                        >YouTube</span
+                        >يوتيوب</span
                     >
                     <div>
                         <p class="font-medium text-gray-900 dark:text-white">
