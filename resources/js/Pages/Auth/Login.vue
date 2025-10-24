@@ -14,9 +14,7 @@
             <div
                 class="hidden h-[340px] border-1 border-gray-600/80 md:flex"
             ></div>
-            <!-- <div class="w-full max-w-md"> -->
             <div>
-                <!-- <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800"> -->
                 <div>
                     <h1 class="mb-4 text-2xl font-semibold text-[#61CE70]">
                         تسجيل الدخول
@@ -24,7 +22,7 @@
                     <div
                         v-if="
                             form.hasErrors &&
-                            !form.errors.email &&
+                            !form.errors.phone &&
                             !form.errors.password
                         "
                         class="mb-4 text-sm text-red-500"
@@ -33,12 +31,12 @@
                     </div>
                     <form @submit.prevent="submit" class="space-y-4">
                         <BaseInput
-                            label="البريد الإلكتروني"
-                            v-model="form.email"
-                            :error="form.errors.email"
-                            placeholder="you@example.com"
+                            label="رقم الموبايل"
+                            v-model="form.phone"
+                            :error="form.errors.phone"
+                            placeholder="0900000000"
                             required
-                            autocomplete="username"
+                            autocomplete="tel"
                         />
                         <BaseInput
                             label="كلمة المرور"
@@ -99,7 +97,7 @@ const showDebugFeature = computed(() => {
 });
 
 const form = useForm({
-    email: showDebugFeature.value ? 'admin@example.com' : '',
+    phone: showDebugFeature.value ? '0987654321' : '',
     password: showDebugFeature.value ? 'password' : '',
     remember: false,
 });

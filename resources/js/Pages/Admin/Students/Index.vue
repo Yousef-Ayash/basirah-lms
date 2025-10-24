@@ -55,7 +55,8 @@
                         <tr>
                             <th class="px-4 py-2">ID</th>
                             <th class="px-4 py-2">الاسم</th>
-                            <th class="px-4 py-2">البريد الإلكتروني</th>
+                            <!-- <th class="px-4 py-2">البريد الإلكتروني</th> -->
+                            <th class="px-4 py-2">رقم الموبايل</th>
                             <th class="px-4 py-2">المستوى</th>
                             <th class="px-4 py-2">تمت الموافقة</th>
                             <th class="px-4 py-2">الإجراءات</th>
@@ -73,7 +74,8 @@
                             <td class="px-4 py-2 whitespace-nowrap">
                                 {{ student.name }}
                             </td>
-                            <td class="px-4 py-2">{{ student.email }}</td>
+                            <!-- <td class="px-4 py-2">{{ student.email }}</td> -->
+                            <td class="px-4 py-2">{{ student.phone }}</td>
                             <td class="px-4 py-2">
                                 {{ student.level?.name || 'بلا مستوى' }}
                             </td>

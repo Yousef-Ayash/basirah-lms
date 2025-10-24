@@ -10,7 +10,7 @@ class TeacherController extends Controller
 {
     public function index()
     {
-        $teachers = Teacher::orderBy('name')->get();
+        $teachers = Teacher::orderBy('order')->get();
         return Inertia::render('General/Teachers', ['teachers' => $teachers]);
     }
 }

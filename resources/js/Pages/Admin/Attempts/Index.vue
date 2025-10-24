@@ -33,7 +33,8 @@
                                     {{ attempt.user?.name ?? '—' }}
                                 </div>
                                 <div class="text-xs text-gray-500">
-                                    {{ attempt.user?.email ?? '' }}
+                                    <!-- {{ attempt.user?.email ?? '' }} -->
+                                    {{ attempt.user?.phone ?? '' }}
                                 </div>
                             </td>
                             <td class="p-2">

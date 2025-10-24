@@ -16,6 +16,7 @@ class Teacher extends Model implements HasMedia
     protected $fillable = [
         'name',
         'bio',
+        'order'
     ];
 
     // We can keep the photo_url accessor but change its logic

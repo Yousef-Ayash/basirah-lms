@@ -16,7 +16,8 @@ const props = defineProps({
 
 const form = useForm({
     name: props.student.name,
-    email: props.student.email,
+    // email: props.student.email,
+    phone: props.student.phone,
     password: '',
     level_id: props.student.level_id,
     is_approved: props.student.is_approved,
@@ -57,7 +58,9 @@ const advanceStudent = () => {
 <template>
     <div>
         <Head :title="`تعديل الطالب: ${student.name}`" />
-        <h1 class="mb-4 text-2xl font-bold">{{ `تعديل الطالب: ${student.name}` }}</h1>
+        <h1 class="mb-4 text-2xl font-bold">
+            {{ `تعديل الطالب: ${student.name}` }}
+        </h1>
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
 
@@ -71,7 +74,9 @@ const advanceStudent = () => {
                 >
                     ترقية المستوى
                 </BaseButton>
-                <BaseButton type="submit" :disabled="form.processing"> تحديث الطالب </BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">
+                    تحديث الطالب
+                </BaseButton>
             </div>
         </form>
 

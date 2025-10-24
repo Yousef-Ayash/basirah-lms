@@ -29,7 +29,7 @@ class DashboardController extends Controller
                 'recentStudents' => User::role('student')
                     ->orderBy('created_at', 'desc')
                     ->take(5)
-                    ->get(['id', 'name', 'email', 'is_approved']),
+                    ->get(['id', 'name', 'email', 'phone', 'is_approved']),
             ]);
         }
 

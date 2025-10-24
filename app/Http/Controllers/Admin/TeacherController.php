@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTeacherRequest;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -32,13 +33,10 @@ class TeacherController extends Controller
         return Inertia::render('Admin/Teachers/Create');
     }
 
-    public function store(Request $request)
+    public function store(StoreTeacherRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048', // 2MB Max
-        ]);
+        $data = $request->validated();
+        unset($data['photo']);
 
         $teacher = Teacher::create($data);
 
@@ -56,13 +54,10 @@ class TeacherController extends Controller
         return Inertia::render('Admin/Teachers/Edit', ['teacher' => $teacher]);
     }
 
-    public function update(Request $request, Teacher $teacher)
+    public function update(StoreTeacherRequest $request, Teacher $teacher)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
-        ]);
+        $data = $request->validated();
+        unset($data['photo']);
 
         $teacher->update($data);
 

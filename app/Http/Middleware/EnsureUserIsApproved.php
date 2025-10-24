@@ -13,7 +13,8 @@ class EnsureUserIsApproved
         if (Auth::check() && !Auth::user()->is_approved) {
             Auth::logout();
             return redirect()->route('auth.approval.pending')->withErrors([
-                'email' => 'Your account was unapproved - contact admin.',
+                // 'email' => 'Your account was unapproved - contact admin.',
+                'phone' => 'Your account was unapproved - contact admin.',
             ]);
         }
 

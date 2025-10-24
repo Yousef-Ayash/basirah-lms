@@ -8,6 +8,7 @@ defineOptions({ layout: AdminLayout });
 
 const form = useForm({
     name: '',
+    order: 1,
     bio: '',
     photo: null,
 });
@@ -20,13 +21,13 @@ const submit = () => {
 <template>
     <div>
         <Head title="إنشاء مدرس" />
-        <h1 class="mb-4 text-2xl font-bold">
-            إنشاء مدرس جديد
-        </h1>
+        <h1 class="mb-4 text-2xl font-bold">إنشاء مدرس جديد</h1>
         <form @submit.prevent="submit">
             <TeacherForm v-model="form" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">إنشاء</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >إنشاء</BaseButton
+                >
             </div>
         </form>
     </div>

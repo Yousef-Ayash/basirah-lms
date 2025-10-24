@@ -27,7 +27,8 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
         if (!empty($this->filters['q'])) {
             $query->where(function ($s) {
                 $s->where('name', 'like', "%{$this->filters['q']}%")
-                    ->orWhere('email', 'like', "%{$this->filters['q']}%");
+                    // ->orWhere('email', 'like', "%{$this->filters['q']}%");
+                    ->orWhere('phone', 'like', "%{$this->filters['q']}%");
             });
         }
         if (!empty($this->filters['level_id'])) {
@@ -37,7 +38,7 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
             $query->where('is_approved', (bool) $this->filters['is_approved']);
         }
 
-        return $query->orderBy('name')->get();
+        return $query->orderBy('id')->get();
     }
 
     /**
@@ -48,7 +49,8 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
         return [
             'ID',
             'Name',
-            'Email',
+            // 'Email',
+            'Phone',
             'Level',
             'Approval Status',
             'Date Registered',
@@ -65,7 +67,8 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping
         return [
             $student->id,
             $student->name,
-            $student->email,
+            // $student->email,
+            $student->phone,
             $student->level->name ?? 'N/A',
             $student->is_approved ? 'Approved' : 'Pending',
             $student->created_at->toDateTimeString(),

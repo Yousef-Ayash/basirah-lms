@@ -63,7 +63,8 @@ const submit = () => {
                             :key="row.row"
                             class="border-t dark:border-gray-700"
                         >
-                            <td class="p-2">{{ row.user_email }}</td>
+                            <!-- <td class="p-2">{{ row.user_email }}</td> -->
+                            <td class="p-2">{{ row.user_phone }}</td>
                             <td class="p-2">{{ row.exam_title }}</td>
                             <td class="p-2">{{ row.marks }}</td>
                             <td class="p-2">{{ row.notes }}</td>

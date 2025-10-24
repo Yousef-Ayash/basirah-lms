@@ -163,11 +163,14 @@ class MarkController extends Controller
             $user = null;
             if (is_numeric($userIdentifier)) {
                 $user = User::find((int) $userIdentifier);
-            } elseif (is_string($userIdentifier) && filter_var($userIdentifier, FILTER_VALIDATE_EMAIL)) {
-                $user = User::where('email', trim($userIdentifier))->first();
+            } elseif (is_string($userIdentifier)) {
+                // } elseif (is_string($userIdentifier) && filter_var($userIdentifier, FILTER_VALIDATE_EMAIL)) {
+                // $user = User::where('email', trim($userIdentifier))->first();
+                $user = User::where('phone', trim($userIdentifier))->first();
             }
             if (!$user)
-                $errors[] = 'User not found (provide user_id or email).';
+                $errors[] = 'User not found (provide user_id or phone).';
+            // $errors[] = 'User not found (provide user_id or email).';
 
             // resolve exam
             $exam = null;
@@ -197,6 +200,7 @@ class MarkController extends Controller
                 'row' => $rowNum,
                 'user_id' => $user?->id,
                 'user_email' => $user?->email,
+                'user_phone' => $user?->phone,
                 'exam_id' => $exam?->id,
                 'exam_title' => $exam?->title,
                 'marks' => $marks,

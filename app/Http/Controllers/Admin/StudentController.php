@@ -30,7 +30,8 @@ class StudentController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%");
+                    // ->orWhere('email', 'like', "%{$q}%");
+                    ->orWhere('phone', 'like', "%{$q}%");
             });
         }
 
@@ -66,7 +67,8 @@ class StudentController extends Controller
         $password = $data['password'] ?? Str::random(10);
         $user = User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
+            'email' => $data['email'] ?? null,
+            'phone' => $data['phone'],
             'password' => Hash::make($password),
             'level_id' => $data['level_id'] ?? null,
             'is_approved' => $data['is_approved'] ?? false,
@@ -100,7 +102,8 @@ class StudentController extends Controller
         }
 
         $student->name = $data['name'];
-        $student->email = $data['email'];
+        $student->email = $data['email'] ?? null;
+        $student->phone = $data['phone'];
         $student->level_id = $data['level_id'] ?? null;
         $student->is_approved = $data['is_approved'] ?? false;
         $student->save();
@@ -185,9 +188,10 @@ class StudentController extends Controller
         $headers = [];
         if (isset($rows[0]) && is_array($rows[0])) {
             $first = array_map('strtolower', array_map('trim', $rows[0]));
-            $headerKeys = ['name', 'full name', 'email', 'level', 'level_id', 'level_name', 'approved', 'is_approved', 'password'];
+            $headerKeys = ['name', 'full name', 'email', 'phone', 'level', 'level_id', 'level_name', 'approved', 'is_approved', 'password'];
             foreach ($first as $c) {
-                if (in_array($c, $headerKeys) || str_contains($c, 'email') || str_contains($c, 'name')) {
+                if (in_array($c, $headerKeys) || str_contains($c, 'phone') || str_contains($c, 'name')) {
+                    // if (in_array($c, $headerKeys) || str_contains($c, 'email') || str_contains($c, 'name')) {
                     $hasHeader = true;
                 }
             }
@@ -210,6 +214,7 @@ class StudentController extends Controller
             $data = [
                 'name' => null,
                 'email' => null,
+                'phone' => null,
                 'level' => null,
                 'password' => null,
                 'is_approved' => null,
@@ -220,7 +225,9 @@ class StudentController extends Controller
                 foreach ($headers as $idx => $h) {
                     $k = strtolower($h);
                     $val = isset($row[$idx]) ? trim((string) $row[$idx]) : null;
-                    if (str_contains($k, 'email'))
+                    if (str_contains($k, 'phone'))
+                        $data['phone'] = $val;
+                    elseif (str_contains($k, 'email'))
                         $data['email'] = $val;
                     elseif (str_contains($k, 'name'))
                         $data['name'] = $val;
@@ -234,10 +241,11 @@ class StudentController extends Controller
             } else {
                 // conventional ordering: name, email, level, is_approved, password
                 $data['name'] = $col(0);
-                $data['email'] = $col(1);
-                $data['level'] = $col(2);
-                $data['is_approved'] = $col(3);
-                $data['password'] = $col(4);
+                $data['phone'] = $col(1);
+                $data['email'] = $col(2);
+                $data['level'] = $col(3);
+                $data['is_approved'] = $col(4);
+                $data['password'] = $col(5);
                 // normalize is_approved
                 $data['is_approved'] = in_array(strtolower((string) $data['is_approved']), ['1', 'true', 'yes', 'approved', 'y']);
             }
@@ -245,8 +253,11 @@ class StudentController extends Controller
             $errors = [];
 
             // email required & valid
-            if (!$data['email'] || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                $errors[] = 'Valid email required.';
+            // if (!$data['email'] || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            //     $errors[] = 'Valid email required.';
+            // }
+            if (!$data['phone']) {
+                $errors[] = 'Phone is required.';
             }
 
             // name required
@@ -255,19 +266,30 @@ class StudentController extends Controller
             }
 
             // detect duplicate in file
-            $emailKey = strtolower($data['email'] ?? '');
-            if ($emailKey) {
-                if (isset($seen[$emailKey])) {
-                    $errors[] = 'Duplicate email in file (row ' . $seen[$emailKey] . ').';
+            // $emailKey = strtolower($data['email'] ?? '');
+            // if ($emailKey) {
+            //     if (isset($seen[$emailKey])) {
+            //         $errors[] = 'Duplicate email in file (row ' . $seen[$emailKey] . ').';
+            //     } else {
+            //         $seen[$emailKey] = $rowNum;
+            //     }
+            // }
+            $phoneKey = strtolower($data['phone'] ?? '');
+            if ($phoneKey) {
+                if (isset($seen[$phoneKey])) {
+                    $errors[] = 'Duplicate phone in file (row ' . $seen[$phoneKey] . ').';
                 } else {
-                    $seen[$emailKey] = $rowNum;
+                    $seen[$phoneKey] = $rowNum;
                 }
             }
 
             // detect existing user in DB
             $existing = null;
-            if ($emailKey) {
-                $existing = User::whereRaw('lower(email) = ?', [$emailKey])->first();
+            // if ($emailKey) {
+            //     $existing = User::whereRaw('lower(email) = ?', [$emailKey])->first();
+            // }
+            if ($phoneKey) {
+                $existing = User::whereRaw('lower(phone) = ?', [$phoneKey])->first();
             }
 
             // resolve level id if provided (by name or id)
@@ -290,6 +312,7 @@ class StudentController extends Controller
                 'row' => $rowNum,
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'phone' => $data['phone'],
                 'level' => $levelResolved,
                 'is_approved' => (bool) ($data['is_approved']),
                 'password_provided' => (bool) ($data['password']),
@@ -378,7 +401,8 @@ class StudentController extends Controller
                 $randomPassword = Str::random(10);
                 $user = User::create([
                     'name' => $r['name'],
-                    'email' => $r['email'],
+                    'email' => $r['email'] ?? null,
+                    'phone' => $r['phone'],
                     'password' => Hash::make($randomPassword), // if you want to expose password for admin, you can store it in logs
                     'level_id' => $r['level']['id'] ?? null,
                     'is_approved' => $r['is_approved'] ?? false,

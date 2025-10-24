@@ -6,16 +6,18 @@
             <div class="flex items-start justify-between">
                 <div>
                     <h2 class="text-xl font-semibold">
-                        Attempt #{{ props.attempt.id }} — {{ props.exam.title }}
+                        المحاولة #{{ props.attempt.id }} —
+                        {{ props.exam.title }}
                     </h2>
                     <p class="text-sm text-gray-500">
                         Student:
                         <span class="font-medium">{{
                             props.attempt.user?.name
                         }}</span>
-                        <span class="ml-2 text-xs text-gray-400"
-                            >({{ props.attempt.user?.email }})</span
-                        >
+                        <span class="ml-2 text-xs text-gray-400">
+                            <!-- ({{ props.attempt.user?.email }}) -->
+                            ({{ props.attempt.user?.phone }})
+                        </span>
                     </p>
                     <div class="mt-2 text-sm text-gray-600">
                         <span class="mr-3"

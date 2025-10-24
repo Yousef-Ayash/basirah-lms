@@ -17,6 +17,14 @@ defineProps({
             :error="modelValue.errors.name"
             required
         />
+        <BaseInput
+            label="الترتيب"
+            type="number"
+            min="0"
+            v-model="modelValue.order"
+            :error="modelValue.errors.order"
+            required
+        />
         <BaseTextarea
             label="السيرة"
             v-model="modelValue.bio"

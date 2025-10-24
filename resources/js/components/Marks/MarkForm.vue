@@ -43,7 +43,8 @@ const maxMark = computed(() => {
         >
             <option disabled :value="null">اختر طالباً</option>
             <option v-for="user in users" :key="user.id" :value="user.id">
-                {{ user.name }} ({{ user.email }})
+                <!-- {{ user.name }} ({{ user.email }}) -->
+                {{ user.name }} ({{ user.phone }})
             </option>
         </BaseSelect>
 

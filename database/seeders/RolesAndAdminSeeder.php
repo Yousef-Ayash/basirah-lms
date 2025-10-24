@@ -14,7 +14,8 @@ class RolesAndAdminSeeder extends Seeder
 
         // Create demo admin if not exists
         $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            // ['email' => 'admin@example.com'],
+            ['phone' => '0987654321'],
             [
                 'name' => 'Admin',
                 'password' => bcrypt('password'),

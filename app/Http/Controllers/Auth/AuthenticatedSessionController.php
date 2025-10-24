@@ -30,15 +30,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-
         // if user exists and is not approved, short-circuit with an error
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('phone', $request->phone)->first();
 
         if ($user && !$user->is_approved) {
             // return back()->withErrors([
             //     'email' => 'Your account is still pending admin approval.',
             // ]);
-            return back()->withErrors(['email' => __('messages.account_pending_approval')]);
+            return back()->withErrors(['phone' => __('messages.account_pending_approval')]);
         }
 
         $request->authenticate();
@@ -47,6 +46,19 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
+
+    // public function store(LoginRequest $request)
+    // {
+    //     $request->authenticate();
+
+    //     // regenerate once (prevent session fixation)
+    //     $request->session()->regenerate();
+
+    //     // regenerate CSRF token to align with new session
+    //     $request->session()->regenerateToken();
+
+    //     return redirect()->intended(route('dashboard', false));
+    // }
 
     /**
      * Destroy an authenticated session.

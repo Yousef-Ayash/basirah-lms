@@ -34,6 +34,7 @@ const props = defineProps({
 const profileForm = useForm({
     name: props.user.name,
     email: props.user.email,
+    phone: props.user.phone,
     // locale: props.user.locale || 'ar',
 });
 
@@ -102,7 +103,8 @@ const closeModal = () => {
                         معلومات الملف الشخصي
                     </h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        تحديث معلومات الملف الشخصي وعنوان البريد الإلكتروني لحسابك.
+                        تحديث معلومات الملف الشخصي وعنوان البريد الإلكتروني
+                        لحسابك.
                     </p>
                 </header>
                 <form
@@ -122,6 +124,12 @@ const closeModal = () => {
                         :error="profileForm.errors.email"
                         required
                     />
+                    <BaseInput
+                        label="رقم الموبايل"
+                        v-model="profileForm.phone"
+                        :error="profileForm.errors.phone"
+                        required
+                    />
                     <!-- <BaseSelect
                         label="اللغة"
                         v-model="profileForm.locale"
@@ -130,7 +138,9 @@ const closeModal = () => {
                         <option value="en">English (الانكليزية)</option>
                     </BaseSelect> -->
                     <div class="flex items-center gap-4">
-                        <BaseButton :disabled="profileForm.processing">حفظ</BaseButton>
+                        <BaseButton :disabled="profileForm.processing"
+                            >حفظ</BaseButton
+                        >
                         <Transition
                             enter-from-class="opacity-0"
                             leave-to-class="opacity-0"
@@ -155,7 +165,8 @@ const closeModal = () => {
                         تحديث كلمة المرور
                     </h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية للحفاظ على الأمان.
+                        تأكد من أن حسابك يستخدم كلمة مرور طويلة وعشوائية للحفاظ
+                        على الأمان.
                     </p>
                 </header>
                 <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
@@ -178,7 +189,9 @@ const closeModal = () => {
                         :error="passwordForm.errors.password_confirmation"
                     />
                     <div class="flex items-center gap-4">
-                        <BaseButton :disabled="passwordForm.processing">حفظ</BaseButton>
+                        <BaseButton :disabled="passwordForm.processing"
+                            >حفظ</BaseButton
+                        >
                         <Transition
                             enter-from-class="opacity-0"
                             leave-to-class="opacity-0"
@@ -203,7 +216,8 @@ const closeModal = () => {
                         حذف الحساب
                     </h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        بمجرد حذف حسابك، سيتم حذف جميع موارده وبياناته بشكل دائم.
+                        بمجرد حذف حسابك، سيتم حذف جميع موارده وبياناته بشكل
+                        دائم.
                     </p>
                 </header>
                 <BaseButton

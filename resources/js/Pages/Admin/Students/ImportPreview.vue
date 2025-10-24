@@ -62,7 +62,8 @@ const submitCommit = () => {
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="p-2">الاسم</th>
-                            <th class="p-2">البريد الإلكتروني</th>
+                            <!-- <th class="p-2">البريد الإلكتروني</th> -->
+                            <th class="p-2">رقم الموبايل</th>
                             <th class="p-2">المستوى</th>
                             <th class="p-2">تمت الموافقة</th>
                             <th class="p-2">أخطاء الحالة</th>
@@ -75,10 +76,13 @@ const submitCommit = () => {
                             class="border-t dark:border-gray-700"
                         >
                             <td class="p-2">{{ row.name }}</td>
-                            <td class="p-2">{{ row.email }}</td>
+                            <!-- <td class="p-2">{{ row.email }}</td> -->
+                            <td class="p-2">{{ row.phone }}</td>
                             <td class="p-2">{{ row.level?.name || 'N/A' }}</td>
                             <td class="p-2">
-                                لا
+                                {{ row.is_approved ? 'نعم' : 'لا' }}
+                            </td>
+                            <td class="p-2">
                                 <ul
                                     v-if="row.errors.length"
                                     class="text-red-500"

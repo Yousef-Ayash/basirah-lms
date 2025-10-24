@@ -19,7 +19,6 @@ import ScrollToTop from '@/components/Misc/ScrollToTop.vue';
 
 const navLinks = computed(() => [
     { label: 'الرئيسية', to: route('home') },
-    { label: 'تواصل معنا', to: '/contact' },
     {
         label: 'عن البرنامج',
         dropdown: [

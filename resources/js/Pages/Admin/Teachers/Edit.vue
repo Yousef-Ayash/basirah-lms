@@ -13,6 +13,7 @@ const props = defineProps({
 const form = useForm({
     _method: 'PUT',
     name: props.teacher.name,
+    order: props.teacher.order,
     bio: props.teacher.bio,
     photo: null,
 });
@@ -32,7 +33,9 @@ const submit = () => {
         <form @submit.prevent="submit">
             <TeacherForm v-model="form" />
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">حفظ التغييرات</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >حفظ التغييرات</BaseButton
+                >
             </div>
         </form>
     </div>

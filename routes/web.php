@@ -45,7 +45,7 @@ use Inertia\Inertia;
 // #####################################################################
 
 Route::get('/', function () {
-    $teachers = \App\Models\Teacher::orderBy('name')->get();
+    $teachers = \App\Models\Teacher::orderBy('order')->get();
     $subjects = \App\Models\Subject::orderBy('id')->get(['title', 'description']);
     return Inertia::render('General/Home', [
         'teachers' => $teachers,

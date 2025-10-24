@@ -136,7 +136,7 @@ class ExamController extends Controller
         // This prevents N+1 query problems.
         $attempt = $exam->attempts()
             ->with([
-                'user:id,name,email', // Only get needed columns from user
+                'user:id,name,email,phone', // Only get needed columns from user
                 'answers.question',   // Get answers and their corresponding questions
                 'logs' => fn($query) => $query->orderBy('created_at', 'desc'), // Get logs in order
                 'marksReport.creator:id,name', // Get the linked marks report and who created it

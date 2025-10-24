@@ -18,9 +18,15 @@ class StoreStudentRequest extends FormRequest
         return [
             'name' => 'required|string|max:191',
             'email' => [
-                'required',
+                // 'required',
                 'email',
                 'max:191',
+                Rule::unique('users')->ignore($studentId),
+            ],
+            'phone' => [
+                'required',
+                'string',
+                'max:20',
                 Rule::unique('users')->ignore($studentId),
             ],
             'password' => ['nullable', 'string', 'min:6'],

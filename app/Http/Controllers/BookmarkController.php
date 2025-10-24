@@ -47,6 +47,14 @@ class BookmarkController extends Controller
             'material_id' => $request->material_id,
         ]);
 
+        \Log::debug('Bookmark attempt', [
+            'session_id' => session()->getId(),
+            'session_cookie' => request()->cookie(config('session.cookie')),
+            'csrf_session_token' => session()->token(),
+            'csrf_header' => request()->header('X-CSRF-TOKEN'),
+            'ip' => request()->ip(),
+        ]);
+
         // return redirect()->back()->with('success', 'Bookmarked.');
         return redirect()->back()->with('success', 'تمت الإشارة المرجعية.');
     }

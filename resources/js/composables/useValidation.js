@@ -25,6 +25,20 @@ export function isEmail(value) {
         : `أدخل بريدًا إلكترونيًا صالحًا`;
 }
 
+export function isPhoneNumber(value) {
+    // The regular expression for a flexible international phone number format
+    const re = /^\+?[\d\s\(\)-]{8,15}$/;
+
+    // Clean up the input string: ensure it's a string, and remove potential extra characters
+    const stringValue = String(value).trim();
+
+    if (re.test(stringValue)) {
+        return true;
+    } else {
+        return `أدخل رقم هاتف صالحًا`;
+    }
+}
+
 /**
  * Create validator for form with rule map:
  * { field: [ruleFn, ...] }

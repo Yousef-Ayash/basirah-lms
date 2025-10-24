@@ -81,6 +81,7 @@ const deleteTeacher = () => {
                         <tr class="bg-gray-100 text-right dark:bg-gray-700">
                             <th class="p-2">صورة</th>
                             <th class="p-2">الاسم</th>
+                            <th class="p-2">الترتيب</th>
                             <th class="p-2">الإجراءات</th>
                         </tr>
                     </thead>
@@ -98,6 +99,7 @@ const deleteTeacher = () => {
                                 />
                             </td>
                             <td class="p-2">{{ teacher.name }}</td>
+                            <td class="p-2">{{ teacher.order }}</td>
                             <td class="p-2">
                                 <BaseButton
                                     as="a"

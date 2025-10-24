@@ -342,7 +342,7 @@ const nextTeacherGroup = () => {
         <section class="mx-auto max-w-7xl px-6 py-20 text-center" dir="rtl">
             <div class="relative mb-12">
                 <Link
-                    href="/teachers"
+                    :href="route('teachers')"
                     class="absolute left-0 hidden rounded-full bg-gradient-to-r from-green-500 to-green-700 px-4 py-2 text-sm text-white shadow transition hover:scale-105 md:inline-block md:text-base"
                 >
                     عرض الكل

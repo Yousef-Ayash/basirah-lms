@@ -30,6 +30,7 @@
                         <tr>
                             <th class="px-4 py-2">الاسم</th>
                             <th class="px-4 py-2">البريد الإلكتروني</th>
+                            <th class="px-4 py-2">رقم الموبايل</th>
                             <th class="px-4 py-2">تمت الموافقة</th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@
                         >
                             <td class="px-4 py-2">{{ student.name }}</td>
                             <td class="px-4 py-2">{{ student.email }}</td>
+                            <td class="px-4 py-2">{{ student.phone }}</td>
                             <td class="px-4 py-2">
                                 <span
                                     :class="
