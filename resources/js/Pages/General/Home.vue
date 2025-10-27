@@ -112,20 +112,20 @@ const nextTeacherGroup = () => {
                 <div
                     class="flex w-full max-w-md flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6"
                 >
-                    <a
-                        href="/login"
+                    <Link
+                        :href="route('login')"
                         class="w-full rounded-xl bg-green-600 px-8 py-4 text-lg font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-green-700 hover:shadow-lg sm:w-1/2"
                     >
                         تسجيل الدخول
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         href="https://forms.gle/rBJK8guhKmSSMd2X6"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="hover:bg-[#4D88C7]hover:shadow-lg w-full rounded-xl bg-[#4D88C7] px-8 py-4 text-lg font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 sm:w-1/2"
                     >
                         انتسب إلى بصيرة
-                    </a>
+                    </Link>
                 </div>
             </div>
 
@@ -353,7 +353,7 @@ const nextTeacherGroup = () => {
                     أعضاء الهيئة التدريسية
                 </h2>
                 <Link
-                    href="/teachers"
+                    :href="route('teachers')"
                     class="mx-auto mt-8 inline-block rounded-full bg-gradient-to-r from-green-500 to-green-700 px-4 py-2 text-sm text-white shadow transition hover:scale-105 md:hidden"
                 >
                     عرض الكل

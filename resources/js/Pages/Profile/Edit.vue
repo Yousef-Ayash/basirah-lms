@@ -208,7 +208,7 @@ const closeModal = () => {
                 </form>
             </Card>
 
-            <Card>
+            <!-- <Card>
                 <header>
                     <h2
                         class="text-lg font-medium text-gray-900 dark:text-gray-100"
@@ -225,10 +225,10 @@ const closeModal = () => {
                     class="mt-4 bg-red-600 hover:bg-red-700"
                     >حذف الحساب</BaseButton
                 >
-            </Card>
+            </Card> -->
         </div>
 
-        <ConfirmDialog
+        <!-- <ConfirmDialog
             :show="confirmingUserDeletion"
             @close="closeModal"
             title="حذف الحساب"
@@ -261,6 +261,6 @@ const closeModal = () => {
                     </BaseButton>
                 </div>
             </template>
-        </ConfirmDialog>
+        </ConfirmDialog> -->
     </div>
 </template>

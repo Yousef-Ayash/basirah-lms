@@ -55,7 +55,7 @@ class ExamController extends Controller
         $data['created_by'] = auth()->id();
 
         if (!isset($data['pass_threshold'])) {
-            $data['pass_threshold'] = 50;
+            $data['pass_threshold'] = 60;
         }
 
         Exam::create($data);

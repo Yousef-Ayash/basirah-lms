@@ -27,13 +27,15 @@ const submit = () => {
             <div class="md:col-span-1">
                 <Card>
                     <h3 class="mb-2 font-semibold">تعليمات استيراد الطلاب</h3>
-                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">ملاحظات حول استيراد الطلاب</p>
+                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                        ملاحظات حول استيراد الطلاب
+                    </p>
                     <ul class="list-inside list-disc space-y-1 text-sm">
-                        <li>الاسم</li>
-                        <li>البريد الإلكتروني</li>
-                        <li>المستوى</li>
-                        <li>موافق عليه</li>
-                        <li>كلمة المرور</li>
+                        <li>الاسم | [ name ]</li>
+                        <li>رقم الموبايل | [ phone ]</li>
+                        <li>المستوى | [ level ]</li>
+                        <li>موافق عليه | [ is_approved ]</li>
+                        <li>كلمة المرور | [ password ]</li>
                     </ul>
                 </Card>
             </div>
@@ -50,7 +52,12 @@ const submit = () => {
                             required
                         />
                         <div class="flex justify-end">
-                            <BaseButton type="submit" :disabled="form.processing"> رفع ومعاينة </BaseButton>
+                            <BaseButton
+                                type="submit"
+                                :disabled="form.processing"
+                            >
+                                رفع ومعاينة
+                            </BaseButton>
                         </div>
                     </Card>
                 </form>

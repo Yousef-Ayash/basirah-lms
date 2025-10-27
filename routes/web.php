@@ -153,6 +153,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::post('exams/{exam}/questions/import/commit', [AdminQuestionController::class, 'importCommit'])->name('exams.questions.import.commit');
     Route::get('exams/{exam}/attempts', [AdminExamController::class, 'attempts'])->name('exams.attempts.index');
     Route::get('exams/{exam}/attempts/{attempt}', [AdminExamController::class, 'attemptShow'])->name('exams.attempts.show');
+    // Route::delete('exams/')
 
     // ## Exam Logging & Auditing
     Route::get('logs/exam', [ExamLogController::class, 'index'])->name('logs.exam.index');

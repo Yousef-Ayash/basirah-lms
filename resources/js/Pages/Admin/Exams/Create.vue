@@ -36,16 +36,16 @@ const form = useForm({
     title: '',
     description: '',
     subject_id: preselectedSubject || null,
-    time_limit_minutes: 60,
-    max_attempts: 1,
+    time_limit_minutes: 45,
+    max_attempts: 3,
     distance_between_attempts: 0,
     open_at: '',
     close_at: '',
-    review_allowed: true,
+    review_allowed: false,
     show_answers_after_close: false,
-    questions_to_display: 0,
+    questions_to_display: 40,
     full_mark: 100,
-    pass_threshold: 50,
+    pass_threshold: 60,
 });
 
 const submit = () => {

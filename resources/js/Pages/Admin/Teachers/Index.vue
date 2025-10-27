@@ -128,9 +128,12 @@ const deleteTeacher = () => {
         <ConfirmDialog
             :show="showConfirm"
             title="حذف المدرس"
-            :message="`هل انت متأكد من حذف المدرس: ${teacherToDelete?.name}`"
             @confirm="deleteTeacher"
             @cancel="showConfirm = false"
-        />
+        >
+            هل انت متأكد من حذف المدرس:
+            <strong class="text-red-600">{{ teacherToDelete?.name }}</strong
+            >؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>

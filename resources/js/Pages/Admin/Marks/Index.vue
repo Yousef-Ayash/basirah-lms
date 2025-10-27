@@ -153,6 +153,7 @@ const exportMarks = () => {
                         <tr>
                             <th class="p-2">الطالب</th>
                             <th class="p-2">الاختبار</th>
+                            <th class="p-2">المادة</th>
                             <th class="p-2">الدرجات</th>
                             <th class="p-2">أضيف بواسطة</th>
                             <th class="p-2">عُدل بواسطة</th>
@@ -168,6 +169,7 @@ const exportMarks = () => {
                         >
                             <td class="p-2">{{ mark.user.name }}</td>
                             <td class="p-2">{{ mark.exam.title }}</td>
+                            <td class="p-2">{{ mark.exam.subject.title }}</td>
                             <td class="p-2 font-bold">{{ mark.marks }}</td>
                             <td class="p-2">
                                 {{
@@ -216,9 +218,14 @@ const exportMarks = () => {
         <ConfirmDialog
             :show="showConfirm"
             title="حذف العلامة"
-            :message="`هل أنت متأكد من حذف العلامة للمستخدم ${markToDelete?.user.name}؟`"
             @confirm="deleteMark"
             @cancel="showConfirm = false"
-        />
+        >
+            هل أنت متأكد من حذف علامة الاختبار
+            <strong class="text-red-600">{{ markToDelete?.exam.title }}</strong>
+            للمستخدم
+            <strong class="text-red-600">{{ markToDelete?.user.name }}</strong
+            >؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>

@@ -129,10 +129,13 @@
         <ConfirmDialog
             :show="showConfirm"
             title="حذف الطالب"
-            :message="`هل أنت متأكد من حذف الطالب ${studentToDelete?.name}؟`"
             @confirm="deleteStudent"
             @cancel="showConfirm = false"
-        />
+        >
+            هل أنت متأكد من حذف الطالب
+            <strong class="text-red-600">{{ studentToDelete?.name }}</strong
+            >؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>
 

@@ -31,16 +31,16 @@ const form = useForm({
     title: props.exam.title,
     description: props.exam.description,
     subject_id: props.exam.subject_id,
-    time_limit_minutes: props.exam.time_limit_minutes || 60,
-    max_attempts: props.exam.max_attempts || 1,
+    time_limit_minutes: props.exam.time_limit_minutes || 45,
+    max_attempts: props.exam.max_attempts || 3,
     distance_between_attempts: props.exam.distance_between_attempts || 0,
     open_at: props.exam.open_at,
     close_at: props.exam.close_at,
     review_allowed: props.exam.review_allowed,
     show_answers_after_close: props.exam.show_answers_after_close,
-    questions_to_display: props.exam.questions_to_display || 0,
+    questions_to_display: props.exam.questions_to_display || 40,
     full_mark: props.exam.full_mark || 100,
-    pass_threshold: props.exam.pass_threshold || 50,
+    pass_threshold: props.exam.pass_threshold || 60,
 });
 
 const submit = () => {

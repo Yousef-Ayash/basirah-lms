@@ -6,9 +6,9 @@ import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-
+import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { Head, router } from '@inertiajs/vue3';
-import { reactive, watch } from 'vue';
+import { reactive, watch, ref } from 'vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -33,6 +33,26 @@ watch(
     },
     { deep: true },
 );
+
+const showConfirm = ref(false);
+const examToDelete = ref(null);
+
+const confirmDelete = (exam) => {
+    examToDelete.value = exam;
+    showConfirm.value = true;
+};
+
+const deleteExam = () => {
+    if (examToDelete.value) {
+        router.delete(route('admin.exams.destroy', examToDelete.value.id), {
+            onFinish: () => {
+                showConfirm.value = false;
+                examToDelete.value = null;
+            },
+            preserveScroll: true,
+        });
+    }
+};
 </script>
 
 <template>
@@ -98,6 +118,12 @@ watch(
                                     class="bg-blue-500 hover:bg-blue-600"
                                     >تعديل</BaseButton
                                 >
+                                <BaseButton
+                                    @click="confirmDelete(exam)"
+                                    class="ms-2 bg-red-500 hover:bg-red-600"
+                                >
+                                    حذف
+                                </BaseButton>
                             </td>
                         </tr>
                     </tbody>
@@ -107,5 +133,22 @@ watch(
         <div class="mt-6">
             <Pagination :links="exams.links" />
         </div>
+
+        <ConfirmDialog
+            :show="showConfirm"
+            title="حذف الاختبار"
+            @confirm="deleteExam"
+            @cancel="showConfirm = false"
+        >
+            <p>
+                هل أنت متأكد من حذف الاختبار
+                <strong class="text-red-600">
+                    {{ examToDelete?.title }}
+                </strong>
+                من المادة
+                <strong> {{ examToDelete?.subject.title }} </strong>؟ لا يمكن
+                التراجع عن هذا الإجراء.
+            </p>
+        </ConfirmDialog>
     </div>
 </template>

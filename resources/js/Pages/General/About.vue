@@ -28,7 +28,7 @@ defineOptions({ layout: OtherLayout });
                         والمعاصرة في بيئة تعليمية مرنة
                     </p>
                     <Link
-                        href="/joinus"
+                        :href="route('about')"
                         class="mx-auto block w-full rounded-full bg-green-600 px-6 py-3 text-center text-lg font-semibold text-white shadow transition hover:scale-105 hover:bg-green-700 sm:w-auto sm:text-sm lg:mx-0 lg:inline-block"
                     >
                         انضم إلينا

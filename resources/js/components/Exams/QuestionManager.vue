@@ -38,9 +38,7 @@
             <p class="text-center font-semibold">أو</p>
 
             <Card class="space-y-4">
-                <h3 class="font-semibold">
-                    إضافة سؤال يدويًا
-                </h3>
+                <h3 class="font-semibold">إضافة سؤال يدويًا</h3>
                 <BaseTextarea
                     label="نص السؤال"
                     v-model="questionForm.question_text"
@@ -67,15 +65,17 @@
                     v-model="questionForm.correct_answer"
                     :error="questionForm.errors.correct_answer"
                 >
-                    <option :value="null">
-                        اختر الإجابة الصحيحة
-                    </option>
+                    <option :value="null">اختر الإجابة الصحيحة</option>
                     <option
                         v-for="(opt, i) in questionForm.options"
                         :key="i"
                         :value="i + 1"
                     >
-                        {{ `الخيار ${i + 1}` }}
+                        {{
+                            questionForm.options[i] !== ''
+                                ? questionForm.options[i]
+                                : `الخيار ${i + 1} | اكتب الخيار`
+                        }}
                     </option>
                 </BaseSelect>
 
@@ -145,7 +145,7 @@ const questionForm = useForm({
     question_text: '',
     options: ['', ''],
     correct_answer: null,
-    mark: 1,
+    mark: 2.5,
 });
 
 const excelImportForm = useForm({ file: null });

@@ -32,7 +32,7 @@ defineOptions({ layout: OtherLayout });
                     class="order-2 space-y-6 text-center lg:order-1 lg:text-right"
                 >
                     <h1
-                        class="text-right text-xl leading-snug font-semibold whitespace-nowrap text-[#4D88C7] sm:text-3xl md:text-4xl"
+                        class="text-center text-xl leading-snug font-semibold wrap-break-word text-[#4D88C7] sm:text-3xl md:text-right md:text-4xl md:whitespace-nowrap"
                     >
                         ✨ الانتساب إلى برنامج بصيرة
                     </h1>

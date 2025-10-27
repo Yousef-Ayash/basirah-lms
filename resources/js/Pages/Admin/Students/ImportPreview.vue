@@ -16,6 +16,8 @@ const props = defineProps({
     preview_id: String,
 });
 
+console.log(props.preview);
+
 const commitForm = useForm({
     preview_id: props.preview_id,
     on_duplicate: 'fail', // 'fail', 'skip', or 'update'
@@ -62,9 +64,9 @@ const submitCommit = () => {
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
                             <th class="p-2">الاسم</th>
-                            <!-- <th class="p-2">البريد الإلكتروني</th> -->
                             <th class="p-2">رقم الموبايل</th>
                             <th class="p-2">المستوى</th>
+                            <th class="p-2">كلمة السر</th>
                             <th class="p-2">تمت الموافقة</th>
                             <th class="p-2">أخطاء الحالة</th>
                         </tr>
@@ -76,9 +78,15 @@ const submitCommit = () => {
                             class="border-t dark:border-gray-700"
                         >
                             <td class="p-2">{{ row.name }}</td>
-                            <!-- <td class="p-2">{{ row.email }}</td> -->
                             <td class="p-2">{{ row.phone }}</td>
                             <td class="p-2">{{ row.level?.name || 'N/A' }}</td>
+                            <td class="p-2">
+                                {{
+                                    row.password_provided
+                                        ? 'من الملف'
+                                        : 'تلقائية'
+                                }}
+                            </td>
                             <td class="p-2">
                                 {{ row.is_approved ? 'نعم' : 'لا' }}
                             </td>

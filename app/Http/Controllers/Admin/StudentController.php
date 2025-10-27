@@ -213,7 +213,7 @@ class StudentController extends Controller
 
             $data = [
                 'name' => null,
-                'email' => null,
+                // 'email' => null,
                 'phone' => null,
                 'level' => null,
                 'password' => null,
@@ -227,8 +227,8 @@ class StudentController extends Controller
                     $val = isset($row[$idx]) ? trim((string) $row[$idx]) : null;
                     if (str_contains($k, 'phone'))
                         $data['phone'] = $val;
-                    elseif (str_contains($k, 'email'))
-                        $data['email'] = $val;
+                    // elseif (str_contains($k, 'email'))
+                    //     $data['email'] = $val;
                     elseif (str_contains($k, 'name'))
                         $data['name'] = $val;
                     elseif (str_contains($k, 'level'))
@@ -242,10 +242,10 @@ class StudentController extends Controller
                 // conventional ordering: name, email, level, is_approved, password
                 $data['name'] = $col(0);
                 $data['phone'] = $col(1);
-                $data['email'] = $col(2);
-                $data['level'] = $col(3);
-                $data['is_approved'] = $col(4);
-                $data['password'] = $col(5);
+                // $data['email'] = $col(2);
+                $data['level'] = $col(2);
+                $data['is_approved'] = $col(3);
+                $data['password'] = $col(4);
                 // normalize is_approved
                 $data['is_approved'] = in_array(strtolower((string) $data['is_approved']), ['1', 'true', 'yes', 'approved', 'y']);
             }
@@ -311,10 +311,11 @@ class StudentController extends Controller
             $preview[] = [
                 'row' => $rowNum,
                 'name' => $data['name'],
-                'email' => $data['email'],
+                // 'email' => $data['email'],
                 'phone' => $data['phone'],
                 'level' => $levelResolved,
                 'is_approved' => (bool) ($data['is_approved']),
+                'password' => $data['password'] ? Hash::make($data['password']) : null,
                 'password_provided' => (bool) ($data['password']),
                 'existing_user_id' => $existing?->id,
                 'existing_user_name' => $existing?->name,
@@ -354,6 +355,8 @@ class StudentController extends Controller
 
         $rows = $cached['rows'];
         $policy = $request->input('on_duplicate', 'fail');
+
+        // dd($rows);
 
         // Check for preview errors first
         $hasErrors = false;
@@ -398,12 +401,17 @@ class StudentController extends Controller
                 }
 
                 // create new user
-                $randomPassword = Str::random(10);
+                // $randomPassword = Str::random(10);
+
+                // dd($r);
+                $password = $r['password_provided'] ? $r['password'] : Hash::make('12345678');
+
                 $user = User::create([
                     'name' => $r['name'],
-                    'email' => $r['email'] ?? null,
+                    // 'email' => $r['email'] ?? null,
                     'phone' => $r['phone'],
-                    'password' => Hash::make($randomPassword), // if you want to expose password for admin, you can store it in logs
+                    // 'password' => Hash::make($randomPassword), // if you want to expose password for admin, you can store it in logs
+                    'password' => $password,
                     'level_id' => $r['level']['id'] ?? null,
                     'is_approved' => $r['is_approved'] ?? false,
                 ]);

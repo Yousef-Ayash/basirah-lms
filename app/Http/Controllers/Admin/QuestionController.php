@@ -41,7 +41,7 @@ class QuestionController extends Controller
             'question_text' => $data['question_text'],
             'options' => $data['options'],
             'correct_answer' => $data['correct_answer'],
-            'mark' => $data['mark'],
+            'mark' => $data['mark'] ?? 2.5,
             'order' => $exam->questions()->max('order') + 1,
         ]);
 
@@ -76,6 +76,7 @@ class QuestionController extends Controller
                     'question_text' => $questionData['question_text'],
                     'options' => $questionData['options'],
                     'correct_answer' => $questionData['correct_answer'],
+                    'mark' => $questionData['mark'],
                     'order' => $order,
                 ]);
             }

@@ -62,7 +62,11 @@
             :message="`هل أنت متأكد من أنك تريد حذف '${subjectToDelete?.title}'؟ لا يمكن التراجع عن هذا الإجراء.`"
             @confirm="deleteSubject"
             @cancel="showConfirm = false"
-        />
+        >
+            هل أنت متأكد من أنك تريد حذف
+            <strong class="text-red-600">{{ subjectToDelete?.title }}</strong>
+            ؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>
 

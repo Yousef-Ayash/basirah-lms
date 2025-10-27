@@ -119,9 +119,12 @@ const deleteLevel = () => {
         <ConfirmDialog
             :show="showConfirm"
             title="حذف المستوى"
-            :message="`هل انت متأكد من حذف المستوى: ${levelToDelete?.name}`"
             @confirm="deleteLevel"
             @cancel="showConfirm = false"
-        />
+        >
+            هل انت متأكد من حذف المستوى:
+            <strong class="text-red-600">{{ levelToDelete?.name }}</strong>
+            ؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>

@@ -7,13 +7,21 @@
         </template>
 
         <div class="text-sm text-gray-600 dark:text-gray-300">
-            {{ props.message }}
+            <template v-if="props.message">
+                {{ props.message }}
+            </template>
+            <slot v-else></slot>
         </div>
 
         <template #footer>
             <div class="mt-4 flex justify-end gap-2">
-                <BaseButton class="bg-gray-200 dark:bg-gray-700" @click="cancel">إلغاء</BaseButton>
-                <BaseButton class="bg-red-500 text-white hover:bg-red-600" @click="confirm">
+                <BaseButton class="bg-gray-200 dark:bg-gray-700" @click="cancel"
+                    >إلغاء</BaseButton
+                >
+                <BaseButton
+                    class="bg-red-500 text-white hover:bg-red-600"
+                    @click="confirm"
+                >
                     تأكيد
                 </BaseButton>
             </div>

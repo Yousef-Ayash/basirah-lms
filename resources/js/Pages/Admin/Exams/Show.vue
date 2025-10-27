@@ -25,7 +25,9 @@
                 >
                     تصدير الأسئلة
                 </BaseButton>
-                <BaseButton @click="showQuestionManager = true">إضافة أسئلة</BaseButton>
+                <BaseButton @click="showQuestionManager = true"
+                    >إضافة أسئلة</BaseButton
+                >
             </div>
         </div>
 
@@ -105,10 +107,13 @@
         <ConfirmDialog
             :show="showConfirmDeleteAll"
             title="حذف جميع الأسئلة"
-            message="هل أنت متأكد من أنك تريد حذف جميع الأسئلة لهذا الاختبار؟ لا يمكن التراجع عن هذا الإجراء."
             @confirm="deleteAllQuestions"
             @cancel="showConfirmDeleteAll = false"
-        />
+        >
+            هل أنت متأكد من أنك تريد
+            <strong class="text-red-600">حذف جميع</strong>
+            الأسئلة لهذا الاختبار؟ لا يمكن التراجع عن هذا الإجراء.
+        </ConfirmDialog>
     </div>
 </template>
 
