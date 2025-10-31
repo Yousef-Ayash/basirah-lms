@@ -167,6 +167,10 @@ class QuestionController extends Controller
             }
             $mark = $row[7];
 
+            if (empty($mark)) {
+                $mark = 2.5;
+            }
+
             $errors = [];
             if ($questionText === '')
                 $errors[] = 'Question text is required.';

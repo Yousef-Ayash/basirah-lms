@@ -16,18 +16,46 @@ class SubjectController extends Controller
 {
     public function index(Request $request)
     {
-        $q = $request->input('q');
-        $query = Subject::with('level', 'creator', 'teacher')->withCount(['materials', 'exams']);
+        $filters = $request->only(['title', 'level_id', 'teacher_id']);
 
-        if ($q) {
-            $query->where('title', 'like', "%{$q}%");
+        $query = Subject::query()
+            ->with('level', 'creator', 'teacher')
+            ->withCount([
+                'materials as youtube_materials_count' => function ($query) {
+                    $query->where('type', 'youtube');
+                },
+                'materials as non_youtube_materials_count' => function ($query) {
+                    $query->where('type', '!=', 'youtube');
+                },
+                'exams',
+            ]);
+
+
+        // Filter by subject title (using 'like' for partial match)
+        if ($filters['title'] ?? false) {
+            $query->where('title', 'like', '%' . $filters['title'] . '%');
         }
 
-        $subjects = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        // Filter by subject level (using the ID from the relationship)
+        if ($filters['level_id'] ?? false) {
+            $query->where('level_id', $filters['level_id']);
+        }
+
+        // Filter by subject teacher (using the ID from the relationship)
+        if ($filters['teacher_id'] ?? false) {
+            $query->where('teacher_id', $filters['teacher_id']);
+        }
+
+        $subjects = $query->orderBy('title', 'asc')->paginate(25)->withQueryString();
+
+        $levels = Level::orderBy('order')->get(['id', 'name']);
+        $teachers = Teacher::orderBy('order')->get(['id', 'name']);
 
         return Inertia::render('Admin/Subjects/Index', [
             'subjects' => $subjects,
-            'filters' => ['q' => $q],
+            'levels' => $levels,
+            'teachers' => $teachers,
+            'filters' => $filters,
         ]);
     }
 

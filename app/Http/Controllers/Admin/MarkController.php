@@ -105,7 +105,7 @@ class MarkController extends Controller
     public function update(StoreMarkRequest $request, MarksReport $mark)
     {
         $exam = Exam::firstWhere('id', $mark->exam_id);
-        $score = ((int) $request->get('marks') / $exam->full_mark) * 100;
+        $score = ((float) $request->get('marks') / $exam->full_mark) * 100;
 
         $mark->update(array_merge($request->validated(), ['score' => (double) round($score, 2), 'updated_by' => auth()->id()]));
 

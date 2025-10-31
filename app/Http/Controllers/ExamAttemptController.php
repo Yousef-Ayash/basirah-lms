@@ -353,7 +353,7 @@ class ExamAttemptController extends Controller
 
             $total = $questions->count();
             $correct = 0;
-            $mark = 0;
+            $mark = 0.0;
 
             foreach ($answersPayload as $qid => $sel) {
                 $qid = (int) $qid;
