@@ -25,6 +25,8 @@ class MarksReport extends Model
     protected $casts = [
         'official' => 'boolean',
         'published_at' => 'datetime',
+        'marks' => 'float',
+        'score' => 'float',
     ];
 
     public function user()

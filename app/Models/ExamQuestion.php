@@ -19,6 +19,7 @@ class ExamQuestion extends Model
 
     protected $casts = [
         'options' => 'array',
+        'mark' => 'float',
     ];
 
     public function exam()

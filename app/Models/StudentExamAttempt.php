@@ -26,6 +26,8 @@ class StudentExamAttempt extends Model
         'submitted_at' => 'datetime',
         'scored_at' => 'datetime',
         'metadata' => 'array',
+        'mark' => 'float',
+        'score' => 'float'
     ];
 
     public function exam()
