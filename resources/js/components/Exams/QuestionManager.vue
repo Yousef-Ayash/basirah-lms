@@ -82,6 +82,7 @@
                 <BaseInput
                     label="علامة السؤال"
                     type="number"
+                    step="0.1"
                     v-model="questionForm.mark"
                     :error="questionForm.errors.mark"
                     placeholder="مثال: 4"

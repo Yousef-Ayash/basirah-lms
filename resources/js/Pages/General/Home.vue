@@ -118,14 +118,14 @@ const nextTeacherGroup = () => {
                     >
                         تسجيل الدخول
                     </Link>
-                    <Link
+                    <a
                         href="https://forms.gle/rBJK8guhKmSSMd2X6"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="hover:bg-[#4D88C7]hover:shadow-lg w-full rounded-xl bg-[#4D88C7] px-8 py-4 text-lg font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 sm:w-1/2"
                     >
                         انتسب إلى بصيرة
-                    </Link>
+                    </a>
                 </div>
             </div>
 

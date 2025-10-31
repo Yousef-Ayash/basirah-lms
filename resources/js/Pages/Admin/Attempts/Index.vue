@@ -99,9 +99,13 @@
                     </tbody>
                 </table>
             </div>
-            <Pagination :links="attempts.links" :meta="attempts.meta" />
+            <!-- <Pagination :links="attempts.links" :meta="attempts.meta" /> -->
         </Card>
         <EmptyState v-else message="لا يوجد أي محاولات لعرضها." />
+
+        <div class="mt-6">
+            <Pagination :links="attempts.links" :meta="attempts.meta" />
+        </div>
     </div>
 </template>
 

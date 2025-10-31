@@ -7,7 +7,7 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
-
+import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, ref, watch } from 'vue';
 
@@ -146,7 +146,7 @@ const exportMarks = () => {
             </div>
         </Card>
 
-        <Card>
+        <Card v-if="marks.data.length" class="space-y-2">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
@@ -211,6 +211,8 @@ const exportMarks = () => {
                 </table>
             </div>
         </Card>
+        <EmptyState v-else message="لا يوجد أي علامات لعرضها." />
+
         <div class="mt-6">
             <Pagination :links="marks.links" />
         </div>

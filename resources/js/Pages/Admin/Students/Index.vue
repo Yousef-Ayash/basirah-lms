@@ -53,13 +53,13 @@
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
-                            <th class="px-4 py-2">ID</th>
-                            <th class="px-4 py-2">الاسم</th>
-                            <!-- <th class="px-4 py-2">البريد الإلكتروني</th> -->
-                            <th class="px-4 py-2">رقم الموبايل</th>
-                            <th class="px-4 py-2">المستوى</th>
-                            <th class="px-4 py-2">تمت الموافقة</th>
-                            <th class="px-4 py-2">الإجراءات</th>
+                            <th class="p-2">ID</th>
+                            <th class="p-2">الاسم</th>
+                            <!-- <th class="p-2">البريد الإلكتروني</th> -->
+                            <th class="p-2">رقم الموبايل</th>
+                            <th class="p-2">المستوى</th>
+                            <th class="p-2">تمت الموافقة</th>
+                            <th class="p-2">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,18 +68,18 @@
                             :key="student.id"
                             class="border-t border-gray-200 dark:border-gray-700"
                         >
-                            <td class="px-4 py-2 whitespace-nowrap">
+                            <td class="p-2 whitespace-nowrap">
                                 {{ student.id }}
                             </td>
-                            <td class="px-4 py-2 whitespace-nowrap">
+                            <td class="p-2 whitespace-nowrap">
                                 {{ student.name }}
                             </td>
-                            <!-- <td class="px-4 py-2">{{ student.email }}</td> -->
-                            <td class="px-4 py-2">{{ student.phone }}</td>
-                            <td class="px-4 py-2">
+                            <!-- <td class="p-2">{{ student.email }}</td> -->
+                            <td class="p-2">{{ student.phone }}</td>
+                            <td class="p-2">
                                 {{ student.level?.name || 'بلا مستوى' }}
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="p-2">
                                 <span
                                     :class="
                                         student.is_approved
@@ -94,7 +94,7 @@
                                     }}
                                 </span>
                             </td>
-                            <td class="space-x-2 px-4 py-2 whitespace-nowrap">
+                            <td class="space-x-2 p-2 whitespace-nowrap">
                                 <BaseButton
                                     as="a"
                                     :href="

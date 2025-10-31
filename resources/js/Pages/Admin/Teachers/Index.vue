@@ -8,6 +8,7 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { ref, watch } from 'vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
+import EmptyState from '@/components/Misc/EmptyState.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -74,7 +75,7 @@ const deleteTeacher = () => {
             />
         </Card>
 
-        <Card>
+        <Card v-if="teachers.data.length" class="space-y-2">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
@@ -121,6 +122,8 @@ const deleteTeacher = () => {
                 </table>
             </div>
         </Card>
+        <EmptyState v-else message="لا يوجد مدرسون لعرضهم." />
+
         <div class="mt-6">
             <Pagination :links="teachers.links" />
         </div>

@@ -10,44 +10,100 @@
         </SectionHeader>
 
         <Card class="mb-4">
-            <BaseInput
-                v-model="search"
-                placeholder="البحث عن طريق العنوان..."
-                class="w-full sm:w-2/3"
-            />
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <BaseInput
+                    type="text"
+                    label="البحث بالعنوان"
+                    v-model="filters.title"
+                    placeholder="عنوان المادة..."
+                />
+                <BaseSelect
+                    v-model="filters.level_id"
+                    label="تصفية حسب المستوى"
+                >
+                    <option value="">تصفية حسب المستوى...</option>
+                    <option
+                        v-for="level in levels"
+                        :key="level.id"
+                        :value="level.id"
+                    >
+                        {{ level.name }}
+                    </option>
+                </BaseSelect>
+                <BaseSelect
+                    v-model="filters.teacher_id"
+                    label="تصفية حسب المدرس"
+                >
+                    <option value="">تصفية حسب المدرس...</option>
+                    <option
+                        v-for="teacher in teachers"
+                        :key="teacher.id"
+                        :value="teacher.id"
+                    >
+                        {{ teacher.name }}
+                    </option>
+                </BaseSelect>
+            </div>
         </Card>
 
         <Card v-if="subjects.data.length" class="space-y-2">
-            <div
-                v-for="subject in subjects.data"
-                :key="subject.id"
-                class="flex flex-col items-start justify-between border-b p-4 last:border-b-0 sm:flex-row sm:items-center dark:border-gray-700"
-            >
-                <div>
-                    <h3 class="font-medium text-gray-900 dark:text-white">
-                        {{ subject.title }}
-                    </h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        المستوى: {{ subject.level?.name || 'N/A' }} | المدرس:
-                        {{ subject.teacher?.name || 'لا يوجد مدرس للمادة' }} |
-                        مقررات: {{ subject.materials_count }} | الاختبارات:
-                        {{ subject.exams_count }}
-                    </p>
-                </div>
-                <div class="mt-2 flex items-center gap-2 sm:mt-0">
-                    <BaseButton
-                        class="bg-blue-500 hover:bg-blue-600"
-                        as="a"
-                        :href="route('admin.subjects.edit', subject.id)"
-                        >تعديل</BaseButton
-                    >
-                    <BaseButton
-                        class="bg-red-500 text-white hover:bg-red-600"
-                        @click="confirmDelete(subject)"
-                    >
-                        حذف
-                    </BaseButton>
-                </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100 text-right dark:bg-gray-700">
+                        <tr>
+                            <th class="p-2">عنوان المادة</th>
+                            <th class="p-2">المستوى</th>
+                            <th class="p-2">المدرس</th>
+                            <th class="p-2">المقررات</th>
+                            <th class="p-2">المحاضرات</th>
+                            <th class="p-2">الاختبارات</th>
+                            <th class="p-2">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="subject in subjects.data"
+                            :key="subject.id"
+                            class="border-t border-gray-200 dark:border-gray-700"
+                        >
+                            <td class="p-2 font-bold whitespace-nowrap">
+                                {{ subject.title }}
+                            </td>
+                            <td class="p-2">
+                                {{ subject.level?.name || 'N/A' }}
+                            </td>
+                            <td class="p-2">
+                                {{
+                                    subject.teacher?.name ||
+                                    'لا يوجد مدرس للمادة'
+                                }}
+                            </td>
+                            <td class="p-2">
+                                {{ subject.non_youtube_materials_count }}
+                            </td>
+                            <td class="p-2">
+                                {{ subject.youtube_materials_count }}
+                            </td>
+                            <td class="p-2">{{ subject.exams_count }}</td>
+                            <td class="space-x-2 p-2 whitespace-nowrap">
+                                <BaseButton
+                                    class="bg-blue-500 hover:bg-blue-600"
+                                    as="a"
+                                    :href="
+                                        route('admin.subjects.edit', subject.id)
+                                    "
+                                    >تعديل</BaseButton
+                                >
+                                <BaseButton
+                                    class="bg-red-500 text-white hover:bg-red-600"
+                                    @click="confirmDelete(subject)"
+                                >
+                                    حذف
+                                </BaseButton>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </Card>
         <EmptyState v-else message="لم يتم العثور على مواد دراسية." />
@@ -79,31 +135,38 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-
+import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import { Head, router } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { ref, watch, reactive } from 'vue';
 
 defineOptions({ layout: AdminLayout });
 
 const props = defineProps({
     subjects: Object,
+    levels: Array,
+    teachers: Array,
     filters: Object,
 });
 
 const showConfirm = ref(false);
 const subjectToDelete = ref(null);
-const search = ref(props.filters.q);
 
-watch(search, (value) => {
-    router.get(
-        route('admin.subjects.index'),
-        { q: value },
-        {
+const filters = reactive({
+    title: props.filters.title || '',
+    level_id: props.filters.level_id || '',
+    teacher_id: props.filters.teacher_id || '',
+});
+
+watch(
+    filters,
+    (newFilters) => {
+        router.get(route('admin.subjects.index'), newFilters, {
             preserveState: true,
             replace: true,
-        },
-    );
-});
+        });
+    },
+    { deep: true },
+);
 
 const confirmDelete = (subject) => {
     subjectToDelete.value = subject;

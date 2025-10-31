@@ -12,8 +12,6 @@ return new class extends Migration {
     {
         Schema::table('exam_questions', function (Blueprint $table) {
             $table->unsignedInteger('mark')->nullable()->default(1)->after('correct_answer');
-            ///////////////////////////////////////////////////////////
-            // Float not integer
         });
     }
 

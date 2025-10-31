@@ -9,6 +9,7 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, watch, ref } from 'vue';
+import EmptyState from '@/components/Misc/EmptyState.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -85,7 +86,7 @@ const deleteExam = () => {
             </div>
         </Card>
 
-        <Card>
+        <Card v-if="exams.data.length" class="space-y-2">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
@@ -130,6 +131,8 @@ const deleteExam = () => {
                 </table>
             </div>
         </Card>
+        <EmptyState v-else message="لا يوجد اختبارات لعرضها." />
+
         <div class="mt-6">
             <Pagination :links="exams.links" />
         </div>
