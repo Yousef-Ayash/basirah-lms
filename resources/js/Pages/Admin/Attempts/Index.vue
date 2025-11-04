@@ -136,7 +136,7 @@ function refresh() {
 function statusForAttempt(a) {
     if (!a.submitted_at) return 'In Progress';
     // official marks_report first
-    if (a.marks_report && a.marks_report.official) {
+    if (a.marks_report /*&& a.marks_report.official*/) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
         return a.marks_report.marks >= threshold ? 'Passed' : 'Failed';
     }

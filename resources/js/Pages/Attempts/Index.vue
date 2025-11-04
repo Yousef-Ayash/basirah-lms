@@ -6,13 +6,21 @@
                 <div class="flex gap-2">
                     <BaseButton
                         size="sm"
-                        :href="route('attempts.export.xlsx', { page: $page })"
+                        :href="
+                            route('attempts.export.xlsx', {
+                                page: $page.current_page,
+                            })
+                        "
                         as="a"
                         >تصدير الى اكسل</BaseButton
                     >
                     <BaseButton
                         size="sm"
-                        :href="route('attempts.export.pdf', { page: $page })"
+                        :href="
+                            route('attempts.export.pdf', {
+                                page: $page.current_page,
+                            })
+                        "
                         as="a"
                         >تحميل ملف PDF</BaseButton
                     >
@@ -34,7 +42,7 @@
                     <BaseSelect v-model="filters.status" label="الحالة">
                         <option value="">الكل</option>
                         <option value="in_progress">جاري التقديم</option>
-                        <option value="pending">تم التسليم (بالانتظار)</option>
+                        <!-- <option value="pending">تم التسليم (بالانتظار)</option> -->
                         <option value="passed">ناحج</option>
                         <option value="failed">راسب</option>
                     </BaseSelect>
@@ -52,6 +60,7 @@
                         label="العدد بالصفحة"
                         v-model="filters.per_page"
                     >
+                        <option :value="5">5</option>
                         <option :value="10">10</option>
                         <option :value="15">15</option>
                         <option :value="25">25</option>
@@ -97,12 +106,11 @@
                                 }}
                             </td>
                             <td class="p-2">
-                                <div
-                                    v-if="
+                                <!-- v-if="
                                         attempt.marks_report &&
                                         attempt.marks_report.official
-                                    "
-                                >
+                                    " -->
+                                <div v-if="attempt.marks_report">
                                     <strong
                                         >{{
                                             attempt.marks_report.score
@@ -120,12 +128,11 @@
                                 </div>
                             </td>
                             <td class="p-2">
-                                <div
-                                    v-if="
+                                <!-- v-if="
                                         attempt.marks_report &&
                                         attempt.marks_report.official
-                                    "
-                                >
+                                    " -->
+                                <div v-if="attempt.marks_report">
                                     <strong>{{
                                         attempt.marks_report.marks
                                     }}</strong>
@@ -211,7 +218,7 @@ function fmt(iso) {
 
 function statusForAttempt(a) {
     if (!a.submitted_at) return 'In Progress';
-    if (a.marks_report && a.marks_report.official) {
+    if (a.marks_report /*&& a.marks_report.official*/) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
         return a.marks_report.marks >= threshold ? 'Passed' : 'Failed';
     }

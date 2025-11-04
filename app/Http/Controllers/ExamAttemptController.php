@@ -176,9 +176,9 @@ class ExamAttemptController extends Controller
                     // prefer marks_report when present (official), otherwise use attempt.passed/score
                     $query->where(function ($qb) {
                         $qb->whereHas('marksReport', function ($m) {
-                            $m->where('official', true)
-                                // compare marks against exam.pass_threshold using subquery
-                                ->whereColumn('marks_reports.marks', '>=', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
+                            // $m->where('official', true)
+                            // compare marks against exam.pass_threshold using subquery
+                            $m->whereColumn('marks_reports.marks', '>=', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
                         })->orWhere('passed', true)->orWhere(function ($sub) {
                             $sub->whereNotNull('score')->where('score', '>=', 50);
                         });
@@ -188,8 +188,8 @@ class ExamAttemptController extends Controller
                 case 'failed':
                     $query->where(function ($qb) {
                         $qb->whereHas('marksReport', function ($m) {
-                            $m->where('official', true)
-                                ->whereColumn('marks_reports.marks', '<', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
+                            // $m->where('official', true)
+                            $m->whereColumn('marks_reports.marks', '<', DB::raw('(SELECT COALESCE(pass_threshold, 50) FROM exams WHERE exams.id = student_exam_attempts.exam_id)'));
                         })->orWhere('passed', false)->orWhere(function ($sub) {
                             $sub->whereNotNull('score')->where('score', '<', 50);
                         });
@@ -240,6 +240,7 @@ class ExamAttemptController extends Controller
         $query = StudentExamAttempt::with(['exam', 'marksReport.creator'])
             ->where('user_id', $scopedUserId)
             ->orderBy('created_at', 'desc');
+
 
         // apply pagination to match the UI page
         $attemptsPage = $query->paginate($perPage, ['*'], 'page', $page);
@@ -397,8 +398,6 @@ class ExamAttemptController extends Controller
                     'notes' => null,
                     'created_by' => null,
                     'updated_by' => null,
-                    'official' => true,
-                    'published_at' => null,
                 ]
             );
 
@@ -422,7 +421,7 @@ class ExamAttemptController extends Controller
             }
 
             // redirect to attempt show / result page
-            return redirect()->route('attempts.show', $attempt->id)
+            return redirect()->route('attempts.index')
                 // ->with('success', 'Your exam was submitted. Score: ' . $score)
                 ->with('success', 'تم تسليم اختبارك. الدرجة: ' . ['score' => $score])
                 ->with('review', $canReview)
@@ -438,6 +437,68 @@ class ExamAttemptController extends Controller
             ]);
             // return redirect()->route('exams.show', $exam)->withErrors(['submit' => 'Unable to submit exam — please try again.']);
             return redirect()->route('exams.show', $exam)->withErrors(['submit' => 'فشل تسليم اختبارك.']);
+        }
+    }
+
+    // POST /attempts/{attempt}/abort
+    public function abort(Request $request, StudentExamAttempt $attempt)
+    {
+        $user = $request->user();
+        $exam = $attempt->exam()->first();
+
+        if ($attempt->user_id !== $user->id) {
+            abort(403);
+        }
+        if ($attempt->submitted_at) {
+            return redirect()->route('exams.show', $exam)->withErrors(['attempt' => 'Attempt already submitted.']);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Remove any saved answers on server (autosaves)
+            StudentExamAnswer::where('attempt_id', $attempt->id)->delete();
+
+            $now = now();
+            $attempt->submitted_at = $now;
+            $attempt->scored_at = $now;
+            $attempt->score = 0.0;
+            $attempt->mark = 0.0;
+            $attempt->passed = false;
+            $attempt->passed_at = null;
+            $attempt->save();
+
+            // create or update official marks report with zero
+            MarksReport::updateOrCreate(
+                ['attempt_id' => $attempt->id],
+                [
+                    'user_id' => $attempt->user_id,
+                    'exam_id' => $exam->id,
+                    'marks' => 0.0,
+                    'score' => 0.0,
+                    'notes' => 'Aborted by user',
+                    'created_by' => null,
+                    'updated_by' => null,
+                ]
+            );
+
+            // log abort
+            ExamLog::create([
+                'exam_attempt_id' => $attempt->id,
+                'user_id' => $user->id,
+                'action' => 'abort',
+                'metadata' => ['note' => 'User aborted attempt'],
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('attempts.index')
+                ->with('success', __('messages.attempt_aborted', ['score' => 0]));
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Abort attempt failed: ' . $e->getMessage(), ['attempt_id' => $attempt->id]);
+            return redirect()->route('exams.show', $exam)->withErrors(['abort' => 'Unable to abort the attempt.']);
         }
     }
 }

@@ -15,14 +15,16 @@
 
         <template #footer>
             <div class="mt-4 flex justify-end gap-2">
-                <BaseButton class="bg-gray-200 dark:bg-gray-700" @click="cancel"
-                    >إلغاء</BaseButton
+                <BaseButton
+                    class="bg-gray-200 dark:bg-gray-700"
+                    @click="cancel"
+                    >{{ cancelTxt }}</BaseButton
                 >
                 <BaseButton
                     class="bg-red-500 text-white hover:bg-red-600"
                     @click="confirm"
                 >
-                    تأكيد
+                    {{ confirmTxt }}
                 </BaseButton>
             </div>
         </template>
@@ -37,6 +39,14 @@ const props = defineProps({
     show: Boolean,
     title: String,
     message: String,
+    confirmTxt: {
+        type: String,
+        default: 'تأكيد',
+    },
+    cancelTxt: {
+        type: String,
+        default: 'إلغاء',
+    },
 });
 
 const emit = defineEmits(['confirm', 'cancel']);

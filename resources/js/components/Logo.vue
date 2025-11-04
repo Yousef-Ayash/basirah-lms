@@ -8,6 +8,7 @@
         viewBox="0 0 203.29 202.89"
         style="enable-background: new 0 0 203.29 202.89"
         xml:space="preserve"
+        :style="svgStyles"
     >
         <g>
             <path
@@ -40,7 +41,12 @@
                     d="M75.65,148.32c-0.84,0-1.59-0.08-2.27-0.24c-0.11,0.32-0.16,0.54-0.16,0.64v3.45c0,2.84-1.01,5.33-3.02,7.46   c-1.41,1.49-3.13,2.51-5.15,2.91c-1.54,0.31-3.12,0.31-4.69,0.32c-10.8,0-21.61,0.1-32.41,0.05c-0.91,0-0.16-0.01-1.04-0.26   c-2.79-0.81-3.49-3.16-3.31-5.77c12.18-0.01,22.69-0.03,34.88-0.04c1.33,0,2.69-0.01,3.97-0.37c1.94-0.55,3.15-1.89,3.68-3.81   c0.74-2.65,0.61-5.54,0.56-8.27c-0.03-1.52-0.04-2.63-0.04-3.32v-20.92h2.24c1.82,0,3.08,0.41,3.79,1.23   c0.71,0.82,1.06,2.25,1.06,4.29v15c1,0.48,2.24,0.73,3.73,0.73h4.37v6.93H75.65z"
                 ></path>
             </g>
-            <g><path class="st0" d="M78.3,148.32v-6.93h10.72v6.93H78.3z"></path></g>
+            <g>
+                <path
+                    class="st0"
+                    d="M78.3,148.32v-6.93h10.72v6.93H78.3z"
+                ></path>
+            </g>
             <path
                 class="st0"
                 d="M102.19,125.72v9.91c0.16,3.84,2.26,5.76,6.29,5.76h1.89v6.93h-3.71c-3.41-0.16-6.08-1.21-8.02-3.14  c-2.06,1.93-4.75,2.98-8.06,3.14h-3.62v-6.93h1.89c3.95,0,6.03-2.07,6.25-6.2V120.2h2.26c1.83,0,3.09,0.41,3.79,1.23  C101.84,122.25,102.19,123.68,102.19,125.72z"
@@ -92,9 +98,21 @@
                 ></path>
             </g>
             <g>
-                <line class="st2" x1="26.12" y1="159.53" x2="17.67" y2="159.53"></line>
+                <line
+                    class="st2"
+                    x1="26.12"
+                    y1="159.53"
+                    x2="17.67"
+                    y2="159.53"
+                ></line>
                 <g>
-                    <line class="st3" x1="26.12" y1="159.53" x2="24.83" y2="159.53"></line>
+                    <line
+                        class="st3"
+                        x1="26.12"
+                        y1="159.53"
+                        x2="24.83"
+                        y2="159.53"
+                    ></line>
                     <g>
                         <path
                             class="st0"
@@ -215,32 +233,79 @@
     </svg>
 </template>
 
+<script setup>
+import { computed } from 'vue';
+
+// Define a prop to accept the override color
+const props = defineProps({
+    // Use a string. Default is null, meaning "no override"
+    overrideColor: {
+        type: String,
+        default: null,
+    },
+});
+
+// Computed style to inject the CSS variable only when the prop is provided
+const svgStyles = computed(() => {
+    if (props.overrideColor) {
+        // Inject the variable with the prop's value
+        return {
+            '--svg-override-color': props.overrideColor,
+        };
+    }
+    // If prop is null, don't inject the variable, letting the defaults take over
+    return {};
+});
+</script>
+
 <style scoped>
+/*
+  The CSS variable '--svg-override-color' is set dynamically via the prop
+  on the <svg> element. When it's not set (prop is null), the fallback
+  color (e.g., #65bc46) will be used.
+*/
+
+/* st0: Original fill: #65bc46 */
 .st0 {
-    fill: #65bc46;
+    fill: var(--svg-override-color, #65bc46);
 }
+
+/* st1: Original fill: #4e88c7 */
 .st1 {
-    fill: #4e88c7;
+    fill: var(--svg-override-color, #4e88c7);
 }
+
+/* st2: Original fill: #b33030 */
 .st2 {
-    fill: #b33030;
+    fill: var(--svg-override-color, #b33030);
 }
+
+/* st3: Original stroke: #65bc46 */
 .st3 {
     fill: none;
-    stroke: #65bc46;
+    stroke: var(
+        --svg-override-color,
+        #65bc46
+    ); /* Override applies to stroke too */
     stroke-width: 0.5027;
     stroke-miterlimit: 10;
 }
+
+/* st4: Original fill: #010101 */
 .st4 {
     fill-rule: evenodd;
     clip-rule: evenodd;
-    fill: #010101;
+    fill: var(--svg-override-color, #010101);
 }
+
+/* st5: Original fill: #eecc9d */
 .st5 {
     fill-rule: evenodd;
     clip-rule: evenodd;
-    fill: #eecc9d;
+    fill: var(--svg-override-color, #eecc9d);
 }
+
+/* st6: fill: none; (no change needed) */
 .st6 {
     fill: none;
 }

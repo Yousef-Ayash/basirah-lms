@@ -32,7 +32,14 @@ const submit = () => {
         <h1 class="mb-4 text-2xl font-bold">تعديل بيانات المدرس</h1>
         <form @submit.prevent="submit">
             <TeacherForm v-model="form" />
-            <div class="mt-4 flex justify-end">
+            <div class="mt-4 flex justify-between">
+                <BaseButton
+                    as="a"
+                    :href="route('admin.teachers.index')"
+                    class="bg-red-500 text-white hover:bg-red-600"
+                >
+                    إلغاء
+                </BaseButton>
                 <BaseButton type="submit" :disabled="form.processing"
                     >حفظ التغييرات</BaseButton
                 >

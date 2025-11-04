@@ -2,6 +2,7 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import StudentLayout from '@/Pages/Student/Layout.vue';
 import { usePage, Head } from '@inertiajs/vue3';
+import BaseButton from '@/components/FormElements/BaseButton.vue';
 
 export default {
     layout: (h, page) => {
@@ -17,14 +18,17 @@ export default {
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
-import { Link } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import formatMinutes from '@/composables/useFormatMinutes';
+import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
+import BaseButton from '@/components/FormElements/BaseButton.vue';
 
 const props = defineProps({
     exam: Object,
     attempts_count: Number,
     can_start: Boolean,
+    // start_token: String,
     next_attempt_date: Date,
     is_passed: Boolean,
 });
@@ -102,6 +106,16 @@ const alertInfo = computed(() => {
         message: 'أنت غير مؤهل لبدء هذا الاختبار في الوقت الحالي.',
     };
 });
+
+const showConfirm = ref(false);
+
+const startExam = () => {
+    // if (!props.start_token) {
+    //     alert('لا يمكن بدء الاختبار.');
+    //     return;
+    // }
+    router.post(route('exams.start', props.exam.id));
+};
 </script>
 
 <template>
@@ -168,15 +182,9 @@ const alertInfo = computed(() => {
             <div class="mt-6 text-center">
                 <Alert :type="alertInfo.type" :message="alertInfo.message" />
 
-                <Link
-                    :href="route('exams.start', exam.id)"
-                    method="post"
-                    as="button"
-                    :disabled="!can_start"
-                    class="mt-4 inline-flex items-center justify-center rounded-lg bg-[#61CE70] px-6 py-3 font-semibold text-white transition hover:cursor-pointer hover:bg-[#4CAF60] disabled:cursor-not-allowed disabled:opacity-50"
-                >
+                <BaseButton @click="showConfirm = true">
                     بدء الاختبار
-                </Link>
+                </BaseButton>
 
                 <div v-if="attempts_count > 0" class="mt-4">
                     <Link
@@ -188,5 +196,27 @@ const alertInfo = computed(() => {
                 </div>
             </div>
         </Card>
+
+        <ConfirmDialog
+            :show="showConfirm"
+            title="التعهد قبل بدء الاختبار"
+            confirm-txt="أتعهد"
+            @confirm="startExam"
+            @cancel="showConfirm = false"
+        >
+            <p
+                class="rounded-lg border-4 border-red-600 bg-red-50/50 p-4 text-right text-lg font-extrabold text-red-700 shadow-lg dark:bg-red-900/50 dark:text-red-400"
+            >
+                <span class="text-xl">
+                    أعاهد الله تعالى أن لا أغش في هذا الامتحان وأن لا أصور
+                    الشاشة.
+                </span>
+                <br /><br />
+                <span>
+                    وأن أقدم هذا الأمتحان بكل أمانة، وأن لا أنقل معلومات هذا
+                    الامتحان لأحد أبداً
+                </span>
+            </p>
+        </ConfirmDialog>
     </div>
 </template>

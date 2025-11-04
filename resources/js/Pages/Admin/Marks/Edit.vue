@@ -31,8 +31,17 @@ const submit = () => {
         <h1 class="mb-4 text-2xl font-bold">تعديل الدرجة</h1>
         <form @submit.prevent="submit">
             <MarkForm v-model="form" :users="users" :exams="exams" />
-            <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">تحديث الدرجة</BaseButton>
+            <div class="mt-4 flex justify-between">
+                <BaseButton
+                    as="a"
+                    :href="route('admin.marks.index')"
+                    class="bg-red-500 text-white hover:bg-red-600"
+                >
+                    إلغاء
+                </BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >تحديث الدرجة</BaseButton
+                >
             </div>
         </form>
     </div>

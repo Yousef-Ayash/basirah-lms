@@ -57,7 +57,7 @@ class MarkController extends Controller
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
-        $data['official'] = true;
+        // $data['official'] = true;
 
         MarksReport::create($data);
 

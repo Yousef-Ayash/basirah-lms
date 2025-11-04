@@ -13,20 +13,16 @@
             />
 
             <div class="mt-4 flex justify-between">
-                <div class="justify-start">
-                    <BaseButton
-                        as="a"
-                        :href="route('admin.subjects.index')"
-                        class="bg-red-500 text-white hover:bg-red-600"
-                    >
-                        إلغاء
-                    </BaseButton>
-                </div>
-                <div class="justify-end">
-                    <BaseButton type="submit" :disabled="form.processing">
-                        إنشاء
-                    </BaseButton>
-                </div>
+                <BaseButton
+                    as="a"
+                    :href="route('admin.subjects.index')"
+                    class="bg-red-500 text-white hover:bg-red-600"
+                >
+                    إلغاء
+                </BaseButton>
+                <BaseButton type="submit" :disabled="form.processing">
+                    إنشاء
+                </BaseButton>
             </div>
         </form>
     </div>

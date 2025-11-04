@@ -18,13 +18,13 @@ class MarksReport extends Model
         'notes',
         'created_by',
         'updated_by',
-        'official',
-        'published_at'
+        // 'official',
+        // 'published_at'
     ];
 
     protected $casts = [
-        'official' => 'boolean',
-        'published_at' => 'datetime',
+        // 'official' => 'boolean',
+        // 'published_at' => 'datetime',
         'marks' => 'float',
         'score' => 'float',
     ];

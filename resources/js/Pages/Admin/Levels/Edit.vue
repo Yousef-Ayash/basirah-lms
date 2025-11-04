@@ -27,7 +27,14 @@ function submit() {
 
         <form @submit.prevent="submit">
             <LevelForm v-model="form" :levels="props.level" />
-            <div class="mt-4 flex justify-end">
+            <div class="mt-4 flex justify-between">
+                <BaseButton
+                    as="a"
+                    :href="route('admin.levels.index')"
+                    class="bg-red-500 text-white hover:bg-red-600"
+                >
+                    إلغاء
+                </BaseButton>
                 <BaseButton type="submit" :disabled="form.processing"
                     >حفظ التعديلات</BaseButton
                 >

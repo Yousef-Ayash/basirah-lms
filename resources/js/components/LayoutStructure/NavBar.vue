@@ -4,6 +4,9 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import Logo from '../Logo.vue';
 import { Inertia } from '@inertiajs/inertia';
+import { useThemeStore } from '@/stores/themes';
+
+const themeStore = useThemeStore();
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -35,16 +38,12 @@ function logout() {
                 class="flex flex-row items-center justify-center gap-4 text-xl font-semibold text-[#61CE70]"
             >
                 <span class="h-16 w-16">
-                    <Logo />
+                    <Logo
+                        :overrideColor="
+                            themeStore.theme === 'dark' ? 'white' : null
+                        "
+                    />
                 </span>
-                <!-- <span class="h-16 w-16 rounded-lg bg-white">
-                    <Logo />
-                </span> -->
-                <!-- <span
-                    class="flex h-16 w-16 items-center justify-center rounded-lg bg-white p-1"
-                >
-                    <img src="@i/Logo2.jpg" />
-                </span> -->
             </Link>
         </div>
 

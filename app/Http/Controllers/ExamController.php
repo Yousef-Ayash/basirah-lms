@@ -32,14 +32,17 @@ class ExamController extends Controller
 
         // $passedAttempts = StudentExamAttempt::where('user_id', $user->id)->where('exam_id', $exam->id)->where('mark', '>=', $exam->pass_threshold)->get()->count();
 
-        $officialReport = MarksReport::where('user_id', $user->id)
+        $latestReport = MarksReport::where('user_id', $user->id)
             ->where('exam_id', $exam->id)
-            ->where('official', true)
-            ->latest('published_at', 'created_at')
+            // ->where('official', true)
+            // ->latest('published_at', 'created_at')
+            ->latest('created_at')
             ->first();
 
-        if ($officialReport) {
-            $isPassed = ($officialReport->marks >= ($exam->pass_threshold ?? 50));
+        // dd($officialReport);
+
+        if ($latestReport) {
+            $isPassed = ($latestReport->marks >= ($exam->pass_threshold ?? 50));
         } else {
             $passedAttempts = StudentExamAttempt::where('user_id', $user->id)
                 ->where('exam_id', $exam->id)

@@ -16,8 +16,6 @@ const props = defineProps({
     preview_id: String,
 });
 
-console.log(props.preview);
-
 const commitForm = useForm({
     preview_id: props.preview_id,
     on_duplicate: 'fail', // 'fail', 'skip', or 'update'

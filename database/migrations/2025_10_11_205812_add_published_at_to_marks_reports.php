@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('marks_reports', function (Blueprint $table) {
-            $table->timestamp('published_at')->nullable()->after('created_at');
-        });
+        // Schema::table('marks_reports', function (Blueprint $table) {
+        //     $table->timestamp('published_at')->nullable()->after('created_at');
+        // });
     }
 
     /**
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('marks_reports', function (Blueprint $table) {
-            $table->dropColumn('published_at');
-        });
+        // Schema::table('marks_reports', function (Blueprint $table) {
+        //     $table->dropColumn('published_at');
+        // });
     }
 };

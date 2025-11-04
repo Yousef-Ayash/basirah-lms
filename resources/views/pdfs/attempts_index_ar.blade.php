@@ -63,7 +63,7 @@
                     <td class="center">{{ $a->score ?? '-' }}</td>
                     <td class="center">{{ optional($a->marksReport)->marks ?? ($a->mark ?? '-') }}</td>
                     <td class="center">
-                        @if (optional($a->marksReport)->official)
+                        @if (optional($a->marksReport))
                             {{ optional($a->marksReport)->marks >= (optional($a->exam)->pass_threshold ?? 50) ? 'ناجح' : 'راسب' }}
                         @else
                             {{ $a->passed ? 'ناجح' : 'راسب' }}

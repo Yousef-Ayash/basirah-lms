@@ -64,19 +64,28 @@ const advanceStudent = () => {
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
 
-            <div class="mt-4 flex justify-end gap-2">
+            <div class="mt-4 flex justify-between gap-2">
                 <BaseButton
-                    type="button"
-                    @click="showAdvanceConfirm = true"
-                    :disabled="!nextLevel"
-                    class="bg-blue-600 hover:bg-blue-700"
-                    :title="advanceButtonTitle"
+                    as="a"
+                    :href="route('admin.students.index')"
+                    class="bg-red-500 text-white hover:bg-red-600"
                 >
-                    ترقية المستوى
+                    إلغاء
                 </BaseButton>
-                <BaseButton type="submit" :disabled="form.processing">
-                    تحديث الطالب
-                </BaseButton>
+                <div>
+                    <BaseButton
+                        type="button"
+                        @click="showAdvanceConfirm = true"
+                        :disabled="!nextLevel"
+                        class="bg-blue-600 hover:bg-blue-700"
+                        :title="advanceButtonTitle"
+                    >
+                        ترقية المستوى
+                    </BaseButton>
+                    <BaseButton type="submit" :disabled="form.processing">
+                        تحديث الطالب
+                    </BaseButton>
+                </div>
             </div>
         </form>
 

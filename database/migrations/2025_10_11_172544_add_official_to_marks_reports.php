@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('marks_reports', function (Blueprint $table) {
-            $table->boolean('official')->default(true)->after('marks');
-        });
+        // Schema::table('marks_reports', function (Blueprint $table) {
+        //     $table->boolean('official')->default(true)->after('marks');
+        // });
     }
 
     /**
@@ -20,8 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('marks_reports', function (Blueprint $table) {
-            $table->dropColumn('official');
-        });
+        // Schema::table('marks_reports', function (Blueprint $table) {
+        //     $table->dropColumn('official');
+        // });
     }
 };
