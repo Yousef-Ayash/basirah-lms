@@ -27,10 +27,17 @@ const submit = () => {
             <div class="md:col-span-1">
                 <Card>
                     <h3 class="mb-2 font-semibold">تعليمات</h3>
-                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">قم بتحميل ملف Excel (.xlsx) أو CSV بالأعمدة التالية:</p>
+                    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                        قم بتحميل ملف Excel (.xlsx) أو CSV بالأعمدة التالية:
+                    </p>
                     <ul class="list-inside list-disc space-y-1 text-sm">
-                        <li>**user_identifier** (مطلوب: بريد الطالب الإلكتروني أو معرفه)</li>
-                        <li>**exam_identifier** (مطلوب: عنوان الاختبار أو معرفه)</li>
+                        <li>
+                            **user_identifier** (مطلوب: بريد الطالب الإلكتروني
+                            أو معرفه)
+                        </li>
+                        <li>
+                            **exam_identifier** (مطلوب: عنوان الاختبار أو معرفه)
+                        </li>
                         <li>**marks** (مطلوب: رقم من 0 إلى 100)</li>
                         <li>**notes** (اختياري)</li>
                     </ul>
@@ -49,7 +56,12 @@ const submit = () => {
                             required
                         />
                         <div class="flex justify-end">
-                            <BaseButton type="submit" :disabled="form.processing"> رفع ومعاينة </BaseButton>
+                            <BaseButton
+                                type="submit"
+                                :disabled="form.processing"
+                            >
+                                رفع ومعاينة
+                            </BaseButton>
                         </div>
                     </Card>
                 </form>

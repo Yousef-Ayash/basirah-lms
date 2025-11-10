@@ -51,7 +51,8 @@
                     />
                 </div>
                 <BaseButton type="submit" :disabled="form.processing">
-                    إضافة مادة
+                    <!-- إضافة مادة -->
+                    إضافة {{ type === 'youtube' ? 'محاضرة' : 'مقرر' }}
                 </BaseButton>
             </Card>
         </form>

@@ -162,7 +162,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
 
     // ## Marks & Reporting
     Route::resource('marks', MarkController::class)->except(['show']);
-    Route::post('marks/import/preview', [MarkController::class, 'importPreview'])->name('marks.import.preview');
+    Route::match(['GET', 'POST'], 'marks/import/preview', [MarkController::class, 'importPreview'])->name('marks.import.preview');
     Route::post('marks/import/commit', [MarkController::class, 'importCommit'])->name('marks.import.commit');
     Route::get('marks/import', [MarkController::class, 'importForm'])->name('marks.import.form');
     Route::get('marks/export', [MarkController::class, 'export'])->name('marks.export');

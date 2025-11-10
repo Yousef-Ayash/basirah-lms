@@ -42,7 +42,6 @@
                     <BaseSelect v-model="filters.status" label="الحالة">
                         <option value="">الكل</option>
                         <option value="in_progress">جاري التقديم</option>
-                        <!-- <option value="pending">تم التسليم (بالانتظار)</option> -->
                         <option value="passed">ناحج</option>
                         <option value="failed">راسب</option>
                     </BaseSelect>
@@ -106,10 +105,6 @@
                                 }}
                             </td>
                             <td class="p-2">
-                                <!-- v-if="
-                                        attempt.marks_report &&
-                                        attempt.marks_report.official
-                                    " -->
                                 <div v-if="attempt.marks_report">
                                     <strong
                                         >{{
@@ -128,10 +123,6 @@
                                 </div>
                             </td>
                             <td class="p-2">
-                                <!-- v-if="
-                                        attempt.marks_report &&
-                                        attempt.marks_report.official
-                                    " -->
                                 <div v-if="attempt.marks_report">
                                     <strong>{{
                                         attempt.marks_report.marks
@@ -217,22 +208,22 @@ function fmt(iso) {
 }
 
 function statusForAttempt(a) {
-    if (!a.submitted_at) return 'In Progress';
-    if (a.marks_report /*&& a.marks_report.official*/) {
+    if (!a.submitted_at) return 'جارٍ التقديم';
+    if (a.marks_report) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.marks_report.marks >= threshold ? 'Passed' : 'Failed';
+        return a.marks_report.marks >= threshold ? 'نجاح' : 'رسوب';
     }
     if (a.score !== null && a.score !== undefined) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.score >= threshold ? 'Passed' : 'Failed';
+        return a.score >= threshold ? 'نجاح' : 'رسوب';
     }
     return 'Submitted (Pending)';
 }
 
 function statusClass(s) {
-    if (s === 'Passed') return 'text-green-600';
-    if (s === 'Failed') return 'text-red-600';
-    if (s === 'In Progress') return 'text-gray-600';
+    if (s === 'نجاح') return 'text-green-600';
+    if (s === 'رسوب') return 'text-red-600';
+    if (s === 'جارٍ التقديم') return 'text-gray-600';
     return 'text-yellow-600';
 }
 

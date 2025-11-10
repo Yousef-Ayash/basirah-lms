@@ -34,7 +34,6 @@
                             label="رقم الموبايل"
                             v-model="form.phone"
                             :error="form.errors.phone"
-                            placeholder="0900000000"
                             required
                             autocomplete="tel"
                         />
@@ -43,7 +42,6 @@
                             type="password"
                             v-model="form.password"
                             :error="form.errors.password"
-                            placeholder="••••••••"
                             required
                             autocomplete="current-password"
                         />

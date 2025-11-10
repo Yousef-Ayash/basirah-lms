@@ -6,6 +6,7 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';
+import { forEach } from 'lodash';
 import { computed } from 'vue';
 
 defineOptions({ layout: AdminLayout });
@@ -13,6 +14,10 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     preview: Array,
     preview_id: String,
+});
+
+props.preview.forEach((row) => {
+    console.log(row);
 });
 
 const form = useForm({
@@ -50,7 +55,9 @@ const submit = () => {
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
+                            <th class="p-2">ID</th>
                             <th class="p-2">الطالب</th>
+                            <th class="p-2">رقم الهاتف</th>
                             <th class="p-2">الاختبار</th>
                             <th class="p-2">الدرجات</th>
                             <th class="p-2">ملاحظات</th>
@@ -63,7 +70,8 @@ const submit = () => {
                             :key="row.row"
                             class="border-t dark:border-gray-700"
                         >
-                            <!-- <td class="p-2">{{ row.user_email }}</td> -->
+                            <td class="p-2">{{ row.user_id }}</td>
+                            <td class="p-2">{{ row.user_name }}</td>
                             <td class="p-2">{{ row.user_phone }}</td>
                             <td class="p-2">{{ row.exam_title }}</td>
                             <td class="p-2">{{ row.marks }}</td>

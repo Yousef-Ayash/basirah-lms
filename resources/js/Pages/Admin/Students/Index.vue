@@ -110,6 +110,13 @@
                                     student.is_approved ? 'رفض' : 'موافقة'
                                 }}</BaseButton>
                                 <BaseButton
+                                    class="bg-blue-600 hover:bg-blue-700"
+                                    @click="confirmAdvance(student)"
+                                    :disabled="!nextLevel"
+                                >
+                                    ترقية المستوى
+                                </BaseButton>
+                                <BaseButton
                                     class="bg-red-500 hover:bg-red-600"
                                     @click="confirmDelete(student)"
                                     >حذف</BaseButton
@@ -136,6 +143,14 @@
             <strong class="text-red-600">{{ studentToDelete?.name }}</strong
             >؟ لا يمكن التراجع عن هذا الإجراء.
         </ConfirmDialog>
+
+        <ConfirmDialog
+            :show="showAdvanceConfirm"
+            title="ترقية مستوى الطالب"
+            :message="`هل تريد ترقية الطالب ${studentToAdvance?.name} إلى المستوى ${nextLevel?.name}؟`"
+            @confirm="advanceStudent"
+            @cancel="showAdvanceConfirm = false"
+        />
     </div>
 </template>
 
@@ -149,9 +164,8 @@ import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-
 import { Head, router } from '@inertiajs/vue3';
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, computed } from 'vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -228,5 +242,36 @@ const exportStudents = () => {
     }
 
     window.location.href = url;
+};
+
+const showAdvanceConfirm = ref(false);
+const studentToAdvance = ref(null);
+
+const advanceStudent = () => {
+    router.post(
+        route('admin.students.advance', { user: studentToAdvance.value.id }),
+        {},
+        {
+            preserveScroll: true,
+            onFinish: () => (showAdvanceConfirm.value = false),
+        },
+    );
+};
+
+const currentLevel = computed(() => {
+    return props.levels.find((l) => l.id === studentToAdvance.value?.level_id);
+});
+
+const nextLevel = computed(() => {
+    if (!currentLevel.value) {
+        return props.levels.find((l) => l.order === 1);
+    }
+    const nextOrder = currentLevel.value.order + 1;
+    return props.levels.find((l) => l.order === nextOrder);
+});
+
+const confirmAdvance = (student) => {
+    studentToAdvance.value = student;
+    showAdvanceConfirm.value = true;
 };
 </script>

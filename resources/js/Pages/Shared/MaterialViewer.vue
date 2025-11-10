@@ -1,5 +1,6 @@
 <script setup>
 import Card from '@/components/LayoutStructure/Card.vue';
+// import CustomYoutubePlayer from '@/components/Misc/CustomYoutubePlayer.vue';
 
 import { Head, Link } from '@inertiajs/vue3';
 
@@ -33,7 +34,7 @@ const props = defineProps({
                     class="h-auto w-full"
                 />
 
-                <div
+                <!-- <div
                     v-else-if="material.type === 'youtube'"
                     class="aspect-video"
                 >
@@ -42,6 +43,19 @@ const props = defineProps({
                         frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
+                        class="h-full w-full"
+                    ></iframe>
+                </div> -->
+                <div
+                    v-else-if="material.type === 'youtube'"
+                    class="aspect-video"
+                >
+                    <iframe
+                        :src="material.embed_url"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
                         class="h-full w-full"
                     ></iframe>
                 </div>

@@ -43,7 +43,7 @@ class StudentController extends Controller
             $query->where('is_approved', (bool) $approved);
         }
 
-        $students = $query->orderBy('name')->paginate(25)->withQueryString();
+        $students = $query->orderBy('id')->paginate(10)->withQueryString();
         $levels = Level::orderBy('order')->get();
 
         return Inertia::render('Admin/Students/Index', [

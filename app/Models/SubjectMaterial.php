@@ -53,27 +53,48 @@ class SubjectMaterial extends Model implements hasMedia
         return $this->getFirstMediaUrl('attachments');
     }
 
-    // public function getThumbnailUrlAttribute(): ?string
+    // public function getEmbedUrlAttribute(): ?string
     // {
-    //     // For images/PDFs, it will return the 'thumb' conversion.
-    //     // For YouTube, it keeps the old logic.
     //     if ($this->type === 'youtube' && $this->youtube_id) {
-    //         return "https://img.youtube.com/vi/{$this->youtube_id}/hqdefault.jpg";
+    //         return "https://www.youtube.com/embed/{$this->youtube_id}";
     //     }
-    //     return $this->getFirstMediaUrl('attachments', 'thumb');
+    //     if ($this->type === 'picture' && $this->file_path) {
+    //         return $this->getFileUrlAttribute(); // Use the new accessor
+    //     }
+    //     return null;
     // }
 
-    // Overwrite the getEmbedUrlAttribute to use the new file_url for pictures
+    // app/Models/SubjectMaterial.php
     public function getEmbedUrlAttribute(): ?string
     {
         if ($this->type === 'youtube' && $this->youtube_id) {
-            return "https://www.youtube.com/embed/{$this->youtube_id}";
+            // Use privacy-enhanced domain and include common params:
+            // - rel=0: don't show related videos from other channels
+            // - modestbranding=1: minimal YouTube branding
+            // - enablejsapi=1: allows player API if you later use JS control
+            // - origin: required by YouTube for some embed checks (use app URL)
+            $origin = config('app.url') ? urlencode(rtrim(config('app.url'), '/')) : null;
+            $params = [
+                'rel' => '0',
+                'modestbranding' => '1',
+                'enablejsapi' => '1',
+            ];
+            if ($origin) {
+                $params['origin'] = $origin;
+            }
+            $query = http_build_query($params);
+
+            // Use youtube-nocookie.com (privacy-enhanced) domain which avoids some cookie/referrer checks
+            return "https://www.youtube-nocookie.com/embed/{$this->youtube_id}?{$query}";
         }
-        if ($this->type === 'picture' && $this->file_path) {
-            return $this->getFileUrlAttribute(); // Use the new accessor
+
+        if ($this->type === 'picture' && $this->getFirstMediaUrl('attachments')) {
+            return $this->getFirstMediaUrl('attachments');
         }
+
         return null;
     }
+
 
     public function registerMediaConversions(Media $media = null): void
     {

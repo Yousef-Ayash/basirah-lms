@@ -21,7 +21,7 @@ class MarkController extends Controller
     public function index(Request $request)
     {
         $filters = $request->only(['user_id', 'exam_id', 'date_from', 'date_to']);
-        $query = MarksReport::query()->with(['user', 'exam', 'creator', 'updater']);
+        $query = MarksReport::query()->with(['user', 'exam.subject', 'creator', 'updater']);
 
         if ($filters['user_id'] ?? false)
             $query->where('user_id', $filters['user_id']);
@@ -52,47 +52,149 @@ class MarkController extends Controller
         return Inertia::render('Admin/Marks/Create', compact('exams', 'users'));
     }
 
+    // public function store(StoreMarkRequest $request)
+    // {
+    //     $data = $request->validated();
+    //     $data['created_by'] = auth()->id();
+    //     $data['updated_by'] = auth()->id();
+
+    //     MarksReport::create($data);
+
+    //     // If attempt_id provided, sync attempt fields as well
+    //     if (!empty($data['attempt_id'])) {
+    //         $attempt = StudentExamAttempt::find($data['attempt_id']);
+    //         if ($attempt) {
+    //             $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
+    //             $attempt->mark = $data['marks'];
+    //             $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
+    //             $attempt->scored_at = now();
+    //             $attempt->submitted_at = $attempt->submitted_at ?? now();
+    //             $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
+    //             $attempt->passed_at = $attempt->passed ? now() : null;
+    //             $attempt->save();
+    //         }
+    //     } else {
+    //         // Try to find an attempt for this user + exam (optional sync)
+    //         $attempt = StudentExamAttempt::where('user_id', $data['user_id'])
+    //             ->where('exam_id', $data['exam_id'])->latest('created_at')->first();
+    //         if ($attempt) {
+    //             $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
+    //             $attempt->mark = $data['marks'];
+    //             $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
+    //             $attempt->scored_at = now();
+    //             $attempt->submitted_at = $attempt->submitted_at ?? now();
+    //             $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
+    //             $attempt->passed_at = $attempt->passed ? now() : null;
+    //             $attempt->save();
+    //         }
+    //     }
+
+    //     // return redirect()->route('admin.marks.index')->with('success', 'Mark added.');
+    //     return redirect()->route('admin.marks.index')->with('success', __('messages.mark_added'));
+    // }
+
     public function store(StoreMarkRequest $request)
     {
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $data['updated_by'] = auth()->id();
-        // $data['official'] = true;
 
-        MarksReport::create($data);
+        DB::beginTransaction();
+        try {
+            // Load exam
+            $exam = Exam::find($data['exam_id']);
+            // Determine total possible points for scoring
+            if ($exam) {
+                $totalPossible = $exam->full_mark
+                    ?? $exam->max_score
+                    ?? $exam->total_score
+                    ?? $exam->total_marks
+                    ?? 0;
+            } else {
+                $totalPossible = 0;
+            }
 
-        // If attempt_id provided, sync attempt fields as well
-        if (!empty($data['attempt_id'])) {
-            $attempt = StudentExamAttempt::find($data['attempt_id']);
-            if ($attempt) {
-                $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
-                $attempt->mark = $data['marks'];
-                $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
-                $attempt->scored_at = now();
-                $attempt->submitted_at = $attempt->submitted_at ?? now();
-                $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
+            // Fallback: if exam does not provide a total, try sum of question marks
+            if (!$totalPossible) {
+                try {
+                    $totalPossible = \App\Models\Question::where('exam_id', $data['exam_id'])
+                        ->sum(fn($q) => $q->mark ?? 1);
+                } catch (\Throwable $e) {
+                    $totalPossible = 0;
+                }
+            }
+
+            // Compute score as percent (0..100) if we have a total
+            $marksValue = is_numeric($data['marks']) ? (float) $data['marks'] : null;
+            $score = ($totalPossible > 0 && $marksValue !== null)
+                ? round(($marksValue / $totalPossible) * 100, 2)
+                : null;
+
+            // determine pass threshold percent
+            $passThreshold = $exam->pass_threshold ?? 50;
+
+            // If attempt_id provided -> update that attempt (existing behavior)
+            if (!empty($data['attempt_id'])) {
+                $attempt = StudentExamAttempt::find($data['attempt_id']);
+                if ($attempt) {
+                    // sync attempt fields
+                    $attempt->mark = $marksValue;
+                    $attempt->score = $score;
+                    $attempt->scored_at = now();
+                    $attempt->submitted_at = $attempt->submitted_at ?? now();
+                    $attempt->passed = ($score !== null) ? ($score >= $passThreshold) : null;
+                    $attempt->passed_at = $attempt->passed ? now() : null;
+                    $attempt->save();
+                }
+            } else {
+                // No attempt_id -> create a new attempt (same behavior as importCommit)
+                // compute correct attempt_number
+                $existingCount = StudentExamAttempt::where('user_id', $data['user_id'])
+                    ->where('exam_id', $data['exam_id'])
+                    ->count();
+
+                $attempt = StudentExamAttempt::create([
+                    'exam_id' => $data['exam_id'],
+                    'user_id' => $data['user_id'],
+                    'started_at' => now(),
+                    'submitted_at' => now(),
+                    'scored_at' => now(),
+                    'mark' => $marksValue,
+                    'score' => $score,
+                    'attempt_number' => $existingCount + 1,
+                    'metadata' => $data['metadata'] ?? null,
+                ]);
+
+                // set passed/failed fields on created attempt
+                $attempt->passed = ($score !== null) ? ($score >= $passThreshold) : null;
                 $attempt->passed_at = $attempt->passed ? now() : null;
                 $attempt->save();
             }
-        } else {
-            // Try to find an attempt for this user + exam (optional sync)
-            $attempt = StudentExamAttempt::where('user_id', $data['user_id'])
-                ->where('exam_id', $data['exam_id'])->latest('created_at')->first();
-            if ($attempt) {
-                $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
-                $attempt->mark = $data['marks'];
-                $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
-                $attempt->scored_at = now();
-                $attempt->submitted_at = $attempt->submitted_at ?? now();
-                $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
-                $attempt->passed_at = $attempt->passed ? now() : null;
-                $attempt->save();
-            }
+
+            // create MarksReport and attach attempt_id
+            $marksReportData = [
+                'user_id' => $data['user_id'],
+                'exam_id' => $data['exam_id'],
+                'marks' => $marksValue,
+                // include score if your marks_reports table supports it
+                'score' => $score,
+                'notes' => $data['notes'] ?? null,
+                'created_by' => $data['created_by'],
+                'updated_by' => $data['updated_by'],
+                'attempt_id' => $attempt->id ?? null,
+            ];
+
+            MarksReport::create($marksReportData);
+
+            DB::commit();
+            return redirect()->route('admin.marks.index')->with('success', __('messages.mark_added'));
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Mark store failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return redirect()->back()->withErrors(['mark' => __('messages.mark_add_failed')]);
         }
-
-        // return redirect()->route('admin.marks.index')->with('success', 'Mark added.');
-        return redirect()->route('admin.marks.index')->with('success', __('messages.mark_added'));
     }
+
 
     public function edit(MarksReport $mark)
     {
@@ -199,7 +301,7 @@ class MarkController extends Controller
             $preview[] = [
                 'row' => $rowNum,
                 'user_id' => $user?->id,
-                'user_email' => $user?->email,
+                'user_name' => $user?->name,
                 'user_phone' => $user?->phone,
                 'exam_id' => $exam?->id,
                 'exam_title' => $exam?->title,
@@ -242,21 +344,40 @@ class MarkController extends Controller
         DB::beginTransaction();
         try {
             foreach ($rows as $r) {
-                \App\Models\MarksReport::create([
+                $exam = Exam::where('id', $r['exam_id'])->first();
+                // dd($exam);
+                $totalPossible = $exam->full_mark;
+                $score = $totalPossible ? round(($r['marks'] / $totalPossible) * 100, 2) : null;
+
+                // Create Attempt for each mark
+                $attempt = StudentExamAttempt::create([
+                    'exam_id' => $r['exam_id'],
+                    'user_id' => $r['user_id'],
+                    'started_at' => now(),
+                    'submitted_at' => now(),
+                    'scored_at' => now(),
+                    'mark' => $r['marks'],
+                    'score' => $score,
+                    'metadata' => null,
+                ]);
+
+                // create MarksReport and attach attempt_id (so the attempt->marksReport relation works)
+                MarksReport::create([
                     'user_id' => $r['user_id'],
                     'exam_id' => $r['exam_id'],
                     'marks' => $r['marks'],
-                    'notes' => $r['notes'],
+                    'score' => $score,
+                    'notes' => $r['notes'] ?? null,
                     'created_by' => auth()->id(),
+                    'updated_by' => auth()->id(),
+                    'attempt_id' => $attempt->id, // <--- important
                 ]);
             }
             DB::commit();
-            // return redirect()->route('marks.index')->with('success', 'Marks imported successfully.');
             return redirect()->route('admin.marks.index')->with('success', __('messages.marks_imported'));
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error('Marks import commit failed: ' . $e->getMessage());
-            // return redirect()->back()->withErrors(['import' => 'Commit failed. See logs.']);
             return redirect()->back()->withErrors(['import' => __('messages.import_commit_failed')]);
         }
     }

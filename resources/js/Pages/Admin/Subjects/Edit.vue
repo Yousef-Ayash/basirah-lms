@@ -37,7 +37,7 @@
             <div v-show="active === 1" class="space-y-6">
                 <AddMaterialForm :subject-id="subject.id" />
 
-                <SectionHeader title="المقررات الموجودة" />
+                <SectionHeader title="المقررات والمحاضرات الموجودة" />
                 <Card v-if="subject.materials.length">
                     <ul class="divide-y dark:divide-gray-700">
                         <li
@@ -165,7 +165,11 @@ const form = useForm({
     cover_url: props.subject.cover || null, // Keep reference to existing cover
 });
 
-const tabLabels = computed(() => ['التفاصيل', 'المقرر', 'الاختبارات']);
+const tabLabels = computed(() => [
+    'التفاصيل',
+    'المقررات والمحاضرات',
+    'الاختبارات',
+]);
 
 const updateSubjectDetails = () => {
     form.post(route('admin.subjects.update', props.subject.id), {
