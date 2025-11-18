@@ -1,6 +1,7 @@
 <template>
     <Modal :show="show" @close="close">
-        <div class="sticky top-0 z-10 border-b bg-white p-4 dark:bg-gray-800">
+        <!-- <div class="sticky top-0 z-10 border-b bg-white p-4 dark:bg-gray-800"> -->
+        <div class="sticky top-0 z-10 border-b p-4">
             <h2 class="text-xl font-bold">
                 {{ `إضافة أسئلة إلى: ${exam?.title}` }}
             </h2>
@@ -103,8 +104,24 @@
                             v-for="(question, index) in stagedQuestions"
                             :key="index"
                             class="p-2 text-sm"
+                            dir="rtl"
                         >
-                            {{ question.question_text }}
+                            <strong>{{ question.question_text }}</strong> | (
+                            {{ question.mark }} درجة )
+                            <ul class="my-2">
+                                <li
+                                    v-for="(option, index) in question.options"
+                                    :key="index"
+                                    class="ms-6 list-disc p-0.5"
+                                    :class="
+                                        question.correct_answer - 1 == index
+                                            ? 'font-semibold text-green-500'
+                                            : ''
+                                    "
+                                >
+                                    {{ option }}
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </Card>

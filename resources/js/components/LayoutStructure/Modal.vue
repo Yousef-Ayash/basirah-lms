@@ -23,7 +23,7 @@
 
             <!-- Close Button -->
             <button
-                class="absolute top-4 left-6 flex h-6 w-6 items-center justify-center rounded-sm bg-gray-700 hover:cursor-pointer hover:bg-gray-600"
+                class="absolute top-4 left-6 z-50 flex h-6 w-6 items-center justify-center rounded-sm bg-gray-200 hover:cursor-pointer hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600"
                 @click="$emit('close')"
             >
                 <span class="h-full w-full">

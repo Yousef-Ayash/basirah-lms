@@ -1,16 +1,16 @@
 <template>
     <div>
-        <Head :title="`Review Attempt #${props.attempt.id}`" />
+        <Head :title="`مراجعة المحاولة #${props.attempt.id}`" />
 
         <Card class="mb-6 space-y-4">
             <div class="flex items-start justify-between">
                 <div>
-                    <h2 class="text-xl font-semibold">
+                    <h2 class="mb-5 text-xl font-semibold">
                         المحاولة #{{ props.attempt.id }} —
                         {{ props.exam.title }}
                     </h2>
-                    <p class="text-sm text-gray-500">
-                        Student:
+                    <p class="text-sm text-gray-500 dark:text-gray-300">
+                        الطالب:
                         <span class="font-medium">{{
                             props.attempt.user?.name
                         }}</span>
@@ -19,12 +19,13 @@
                             ({{ props.attempt.user?.phone }})
                         </span>
                     </p>
-                    <div class="mt-2 text-sm text-gray-600">
+                    <div class="mt-2 text-sm text-gray-500 dark:text-gray-300">
                         <span class="mr-3"
-                            >Started: {{ fmt(props.attempt.started_at) }}</span
+                            >وقت البدء:
+                            {{ fmt(props.attempt.started_at) }}</span
                         >
                         <span
-                            >Submitted:
+                            >وقت التسليم:
                             {{
                                 props.attempt.submitted_at
                                     ? fmt(props.attempt.submitted_at)
@@ -36,13 +37,13 @@
 
                 <div class="text-right">
                     <div class="text-sm">
-                        Total mark:
+                        الدرجة المستحقة:
                         <strong class="text-lg">{{
                             displayMark(props.attempt)
                         }}</strong>
                     </div>
-                    <div class="mt-1 text-xs text-gray-500">
-                        Score:
+                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-300">
+                        النسبة المستحقة:
                         <strong>{{ props.attempt.score ?? '-' }}%</strong>
                     </div>
                     <div class="mt-3">
@@ -66,7 +67,7 @@
                                 )
                             "
                         >
-                            <BaseButton size="sm">Edit Mark</BaseButton>
+                            <BaseButton size="sm">تعديل الدرجة</BaseButton>
                         </Link>
                     </div>
                 </div>
@@ -74,16 +75,16 @@
         </Card>
 
         <Card class="space-y-4">
-            <TabGroup :tabs="['Answers', 'Logs']" v-slot="{ active }">
-                <!-- ANSWERS PANEL -->
+            <TabGroup :tabs="['الإجابات', 'سجل الأحداث']" v-slot="{ active }">
                 <div v-show="active === 0" class="space-y-4">
                     <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            Showing
-                            {{ props.attempt.answers?.length ?? 0 }} question(s)
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            Total possible: <strong>{{ totalPossible }}</strong>
+                        <div class="text-sm text-gray-600 dark:text-gray-300">
+                            يتم عرض
+                            <span
+                                class="font-bold text-black dark:text-gray-300"
+                                >{{ props.attempt.answers?.length ?? 0 }}</span
+                            >
+                            أسئلة
                         </div>
                     </div>
 
@@ -98,7 +99,7 @@
                                     <div class="pr-4">
                                         <div class="flex items-baseline gap-3">
                                             <div class="mb-4 font-semibold">
-                                                Q{{ idx + 1 }}:
+                                                السؤال {{ idx + 1 }}:
                                             </div>
                                             <div
                                                 class="leading-snug font-medium"
@@ -107,25 +108,17 @@
                                                     ans.question
                                                         ?.question_text ??
                                                     ans.question_text
-                                                }}
+                                                }}؟
                                             </div>
                                         </div>
 
                                         <div class="mt-2 text-xs text-gray-500">
                                             <span v-if="ans.question?.mark"
-                                                >Points:
+                                                >درجة السؤال:
                                                 {{ ans.question.mark }}</span
                                             >
-                                            <span v-else>Points: 1</span>
+                                            <span v-else>درجة السؤال: 1</span>
                                             <span class="mx-2">•</span>
-                                            <span v-if="ans.time_spent"
-                                                >Time:
-                                                {{
-                                                    formatSeconds(
-                                                        ans.time_spent,
-                                                    )
-                                                }}</span
-                                            >
                                         </div>
                                     </div>
 
@@ -153,17 +146,9 @@
                                                 >
                                             </template>
                                             <template v-else>
-                                                <svg
-                                                    class="h-5 w-5 text-red-600"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11V5a1 1 0 10-2 0v2a1 1 0 002 0zm-1 4a1 1 0 100 2 1 1 0 000-2z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
+                                                <XIcon
+                                                    class="h-5 w-5 fill-red-600"
+                                                />
                                                 <span
                                                     class="text-sm font-semibold text-red-700"
                                                     >{{
@@ -173,7 +158,7 @@
                                             </template>
                                         </div>
                                         <div class="mt-1 text-xs text-gray-400">
-                                            Awarded
+                                            المستحقة
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +229,7 @@
                                                                     ans,
                                                                 )
                                                             "
-                                                            >Selected</span
+                                                            >المختار</span
                                                         >
                                                         <span
                                                             v-else-if="
@@ -253,15 +238,9 @@
                                                                     ans,
                                                                 )
                                                             "
-                                                            >Correct</span
+                                                            >الصحيح</span
                                                         >
                                                     </div>
-                                                </div>
-                                                <div
-                                                    v-if="opt.explanation"
-                                                    class="mt-2 text-xs text-gray-500"
-                                                >
-                                                    {{ opt.explanation }}
                                                 </div>
                                             </div>
                                         </div>
@@ -272,7 +251,7 @@
                                             <div>
                                                 <span
                                                     class="text-xs text-gray-500"
-                                                    >Student answer:</span
+                                                    >إجابة الطالب:</span
                                                 >
                                                 {{
                                                     fmtSelected(
@@ -283,7 +262,7 @@
                                             <div class="mt-1">
                                                 <span
                                                     class="text-xs text-gray-500"
-                                                    >Correct answer:</span
+                                                    >الإجابة الصحيحة:</span
                                                 >
                                                 {{
                                                     fmtSelected(
@@ -296,36 +275,19 @@
                                         </div>
                                     </template>
                                 </div>
-
-                                <div
-                                    v-if="
-                                        ans.notes || ans.question?.explanation
-                                    "
-                                    class="mt-3 text-sm text-gray-700"
-                                >
-                                    <div v-if="ans.notes">
-                                        <strong>Note:</strong> {{ ans.notes }}
-                                    </div>
-                                    <div
-                                        v-if="ans.question?.explanation"
-                                        class="mt-1"
-                                    >
-                                        <strong>Question note:</strong>
-                                        {{ ans.question.explanation }}
-                                    </div>
-                                </div>
                             </div>
                         </Card>
                     </div>
                 </div>
 
-                <!-- LOGS PANEL -->
                 <div v-show="active === 1" class="space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="text-sm text-gray-600">
-                            Activity log ({{ attempt.logs?.length ?? 0 }})
+                            سجل الأحداث ({{ attempt.logs?.length ?? 0 }})
                         </div>
-                        <div class="text-sm text-gray-500">Latest first</div>
+                        <div class="text-sm text-gray-500">
+                            الأخيرة هي الأولى
+                        </div>
                     </div>
 
                     <div class="space-y-3">
@@ -350,16 +312,21 @@
                                             {{
                                                 log.actor?.name ??
                                                 log.user?.name ??
-                                                'System'
+                                                'النظام الامتحاني'
                                             }}
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            {{
-                                                logLabel(
-                                                    log.event ?? log.action,
-                                                )
-                                            }}
-                                            · {{ fmt(log.created_at) }}
+                                            <span>
+                                                {{
+                                                    logLabel(
+                                                        log.event ?? log.action,
+                                                    )
+                                                }}
+                                            </span>
+                                            <span class="mx-1">·</span>
+                                            <span dir="rtl">{{
+                                                fmt(log.created_at)
+                                            }}</span>
                                             <span class="mx-1">·</span>
                                             <span
                                                 class="text-xs text-gray-400"
@@ -372,9 +339,12 @@
                                 </div>
 
                                 <div class="text-right text-xs text-gray-500">
-                                    <div v-if="log.ip">IP: {{ log.ip }}</div>
+                                    <div v-if="log.ip">
+                                        عنوان ال IP: {{ log.ip }}
+                                    </div>
                                     <div v-if="log.user_agent">
-                                        UA: {{ shortUA(log.user_agent) }}
+                                        وكيل المستخدم:
+                                        {{ shortUA(log.user_agent) }}
                                     </div>
                                 </div>
                             </div>
@@ -385,10 +355,11 @@
                                         <summary
                                             class="cursor-pointer text-xs text-blue-600"
                                         >
-                                            View metadata
+                                            عرض البيانات الوصفية
                                         </summary>
                                         <pre
-                                            class="mt-2 overflow-auto rounded bg-gray-50 p-3 text-xs"
+                                            class="mt-2 overflow-auto rounded bg-gray-50 p-3"
+                                            dir="ltr"
                                             >{{
                                                 prettyMeta(
                                                     log.meta ?? log.metadata,
@@ -398,7 +369,7 @@
                                     </details>
                                 </div>
                                 <div v-else class="text-xs text-gray-500">
-                                    No extra data.
+                                    ليس هناك بيانات أخرى.
                                 </div>
                             </div>
                         </div>
@@ -414,7 +385,7 @@
                         })
                     "
                 >
-                    <BaseButton size="sm">Back</BaseButton>
+                    <BaseButton size="sm">الرجوع</BaseButton>
                 </Link>
             </div>
         </Card>
@@ -428,6 +399,7 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import { computed } from 'vue';
+import XIcon from '@/components/Icons/XIcon.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -446,13 +418,13 @@ const props = defineProps({
     - marks_report (if exists) is available on attempt.marks_report
   */
 
-const totalPossible = computed(() => {
-    if (!props.attempt.answers || props.attempt.answers.length === 0) return 0;
-    return props.attempt.answers.reduce((sum, a) => {
-        const m = a.question?.mark ?? 1;
-        return sum + (typeof m === 'number' ? m : Number(m || 1));
-    }, 0);
-});
+//const totalPossible = computed(() => {
+//    if (!props.attempt.answers || props.attempt.answers.length === 0) return 0;
+//    return props.attempt.answers.reduce((sum, a) => {
+//         const m = a.question?.mark ?? 1;
+//         return sum + (typeof m === 'number' ? m : Number(m || 1));
+//     }, 0);
+// });
 
 function fmt(iso) {
     return iso ? new Date(iso).toLocaleString() : '-';
@@ -481,22 +453,22 @@ function displayMark(a) {
 }
 
 function statusForAttempt(a) {
-    if (!a.submitted_at) return 'In Progress';
+    if (!a.submitted_at) return 'جارٍ التقديم';
     if (a.marks_report /*&& a.marks_report.official*/) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.marks_report.marks >= threshold ? 'Passed' : 'Failed';
+        return a.marks_report.marks >= threshold ? 'نجاح' : 'رسوب';
     }
     if (a.score !== null && a.score !== undefined) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.score >= threshold ? 'Passed' : 'Failed';
+        return a.score >= threshold ? 'نجاح' : 'رسوب';
     }
-    return 'Submitted (Pending)';
+    return 'تم التسليم';
 }
 
 function statusClass(s) {
-    if (s === 'Passed') return 'bg-green-50 text-green-700';
-    if (s === 'Failed') return 'bg-red-50 text-red-700';
-    if (s === 'In Progress') return 'bg-gray-50 text-gray-700';
+    if (s === 'نجاح') return 'bg-green-50 text-green-700';
+    if (s === 'رسوب') return 'bg-red-50 text-red-700';
+    if (s === 'جارٍ التقديم') return 'bg-gray-50 text-gray-700';
     return 'bg-yellow-50 text-yellow-800';
 }
 
@@ -586,7 +558,7 @@ function isSelected(opt, ans) {
     const optValue = getOptionValue(opt);
 
     // 1) Normalize stored selected_option to strings
-    const stored = tryParseMaybeJson(ans.selected_option);
+    const stored = tryParseMaybeJson(ans.selected_option - 1);
     // If stored is numeric or string numeric and question options exist, map to option value
     if (
         (typeof stored === 'number' ||
@@ -627,8 +599,8 @@ function isCorrectOption(opt, ans) {
 
     const corrRaw =
         ans.question && ans.question.correct_answer !== undefined
-            ? ans.question.correct_answer
-            : ans.correct_answer;
+            ? ans.question.correct_answer - 1
+            : ans.correct_answer - 1;
     const corrParsed = tryParseMaybeJson(corrRaw);
 
     // If numeric index and options exist -> map index to option
@@ -684,13 +656,15 @@ function renderOption(opt) {
 
 /* LOG helpers */
 function logLabel(evt) {
-    if (!evt) return 'Event';
+    if (!evt) return 'الحدث';
     const map = {
-        submit: 'Submitted',
-        autosave: 'Autosave',
-        manual_mark_update: 'Manual mark updated',
-        manual_mark_create: 'Manual mark created',
-        start: 'Started',
+        submit: 'تم التسليم',
+        // autosave: 'Autosave',
+        // manual_mark_update: 'Manual mark updated',
+        manual_mark_update: 'تعديل الدرجة بشكل يدوي',
+        // manual_mark_create: 'Manual mark created',
+        manual_mark_create: 'إنشاء الدرجة بشكل يدوي',
+        start: 'البدء',
     };
     return map[evt] ?? evt.charAt(0).toUpperCase() + evt.slice(1);
 }
@@ -719,13 +693,13 @@ function relativeTime(iso) {
     const d = new Date(iso);
     const diff = Date.now() - d.getTime();
     const s = Math.floor(diff / 1000);
-    if (s < 60) return `${s}s ago`;
+    if (s < 60) return `${s} ثانية مضت`;
     const m = Math.floor(s / 60);
-    if (m < 60) return `${m}m ago`;
+    if (m < 60) return `${m} دقيقة مضت`;
     const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h ago`;
+    if (h < 24) return `${h} ساعة مضت`;
     const days = Math.floor(h / 24);
-    return `${days}d ago`;
+    return `${days} أيام مضت`;
 }
 function shortUA(ua) {
     if (!ua) return '';

@@ -82,8 +82,8 @@
                             <th class="p-2">الامتحان</th>
                             <th class="p-2">وقت البدء</th>
                             <th class="p-2">وقت التسليم</th>
-                            <th class="p-2">النسبة</th>
                             <th class="p-2">الدرجة</th>
+                            <th class="p-2">النسبة</th>
                             <th class="p-2">الحالة</th>
                         </tr>
                     </thead>
@@ -106,17 +106,15 @@
                             </td>
                             <td class="p-2">
                                 <div v-if="attempt.marks_report">
-                                    <strong
-                                        >{{
-                                            attempt.marks_report.score
-                                        }}%</strong
-                                    >
+                                    <strong>{{
+                                        attempt.marks_report.marks
+                                    }}</strong>
                                 </div>
                                 <div v-else-if="attempt.mark !== null">
-                                    {{ attempt.score }} %
-                                    <span class="text-xs text-gray-400"
-                                        >({{ attempt.mark ?? '-' }})</span
-                                    >
+                                    <strong>{{ attempt.mark }}</strong>
+                                    <!-- <span class="text-xs text-gray-400"
+                                        >({{ attempt.score ?? '-' }}%)</span
+                                    > -->
                                 </div>
                                 <div v-else class="text-gray-500">
                                     قيد الانتظار
@@ -124,15 +122,17 @@
                             </td>
                             <td class="p-2">
                                 <div v-if="attempt.marks_report">
-                                    <strong>{{
-                                        attempt.marks_report.marks
-                                    }}</strong>
+                                    <strong
+                                        >{{
+                                            attempt.marks_report.score
+                                        }}%</strong
+                                    >
                                 </div>
                                 <div v-else-if="attempt.mark !== null">
-                                    {{ attempt.mark }}
-                                    <span class="text-xs text-gray-400"
-                                        >({{ attempt.score ?? '-' }}%)</span
-                                    >
+                                    <strong>{{ attempt.score }}%</strong>
+                                    <!-- <span class="text-xs text-gray-400"
+                                        >({{ attempt.mark ?? '-' }})</span
+                                    > -->
                                 </div>
                                 <div v-else class="text-gray-500">
                                     قيد الانتظار

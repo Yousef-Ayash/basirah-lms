@@ -134,24 +134,25 @@ function refresh() {
 }
 
 function statusForAttempt(a) {
-    if (!a.submitted_at) return 'In Progress';
+    console.log(a);
+    if (!a.submitted_at) return 'جارٍ التقديم';
     // official marks_report first
     if (a.marks_report /*&& a.marks_report.official*/) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.marks_report.marks >= threshold ? 'Passed' : 'Failed';
+        return a.marks_report.marks >= threshold ? 'نجاح' : 'رسوب';
     }
     // fallback to attempt score/mark
     if (a.score !== null && a.score !== undefined) {
         const threshold = a.exam?.pass_threshold ?? a.exam?.pass_mark ?? 50;
-        return a.score >= threshold ? 'Passed' : 'Failed';
+        return a.score >= threshold ? 'نجاح' : 'رسوب';
     }
-    return 'Submitted (Pending)';
+    return 'تم التسليم';
 }
 
 function statusClass(s) {
-    if (s === 'Passed') return 'text-green-600';
-    if (s === 'Failed') return 'text-red-600';
-    if (s === 'In Progress') return 'text-gray-600';
+    if (s === 'نجاح') return 'text-green-600';
+    if (s === 'رسوب') return 'text-red-600';
+    if (s === 'جارٍ التقديم') return 'text-gray-600';
     return 'text-yellow-600';
 }
 </script>

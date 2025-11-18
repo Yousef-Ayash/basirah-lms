@@ -72,6 +72,20 @@ class ExamController extends Controller
         return Inertia::render('Admin/Exams/Show', [
             'exam' => $exam
         ]);
+
+        // // Load only the subject (not questions)
+        // $exam->load('subject');
+
+        // // Paginate questions (e.g., 10 per page)
+        // $questions = $exam->questions()
+        //     ->orderBy('id', 'asc')
+        //     ->paginate(10)
+        //     ->withQueryString(); // keeps ?page= when navigating
+
+        // return Inertia::render('Admin/Exams/Show', [
+        //     'exam' => $exam,
+        //     'questions' => $questions,
+        // ]);
     }
 
     public function exportQuestions(Exam $exam)
@@ -111,6 +125,7 @@ class ExamController extends Controller
         $attempts = $exam->attempts()
             ->with([
                 'user',
+                'exam',
                 'marksReport' => function ($q) {
                     $q->with('creator');
                 }
@@ -136,6 +151,7 @@ class ExamController extends Controller
         // This prevents N+1 query problems.
         $attempt = $exam->attempts()
             ->with([
+                'exam',
                 'user:id,name,email,phone', // Only get needed columns from user
                 'answers.question',   // Get answers and their corresponding questions
                 'logs' => fn($query) => $query->orderBy('created_at', 'desc'), // Get logs in order
