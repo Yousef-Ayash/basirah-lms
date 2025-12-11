@@ -1,13 +1,40 @@
 <script setup>
 import OtherLayout from './OtherLayout.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
+
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 defineOptions({ layout: OtherLayout });
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'عن بصيرة - برنامج الدراسات الإسلامية',
+    description:
+        'تعرف على برنامج بصيرة للدراسات الإسلامية، رؤيتنا، رسالتنا، وأهدافنا في تقديم تعليم شرعي ميسر لجميع الشرائح',
+    url: 'https://basirahonline.com/about',
+    mainEntity: {
+        '@type': 'EducationalOrganization',
+        name: 'برنامج بصيرة',
+        url: 'https://basirahonline.com',
+        logo: 'https://basirahonline.com/logo.png',
+        description:
+            'برنامج دراسات إسلامية متكاملة تجمع بين التأصيل والمعاصرة في بيئة تعليمية مرنة',
+    },
+};
 </script>
 
 <template>
     <div class="relative space-y-15">
-        <Head title="عن بصيرة" />
+        <!-- <Head title="عن بصيرة" /> -->
+
+        <SeoHead
+            title="عن بصيرة - برنامج الدراسات الإسلامية"
+            description="تعرف على برنامج بصيرة للدراسات الإسلامية، رؤيتنا في نشر التعليم الشرعي الوسطي، رسالتنا وأهدافنا في بناء طالب علم راسخ"
+        />
+        <JsonLd :data="structuredData" />
+
         <!--about-->
         <section
             class="relative w-full overflow-hidden bg-gradient-to-r from-green-50 via-green-100 to-neutral-100 py-12 sm:py-20"

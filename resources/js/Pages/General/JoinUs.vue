@@ -1,14 +1,42 @@
 <script setup>
 import OtherLayout from './OtherLayout.vue';
 import Logo from '@/components/Logo.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 defineOptions({ layout: OtherLayout });
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'انضم إلينا - برنامج بصيرة',
+    description:
+        'سجل الآن في برنامج بصيرة للدراسات الإسلامية. انتسب إلى الدفعة الجديدة واحصل على تعليم شرعي متميز',
+    url: 'https://basirahonline.com/join',
+    potentialAction: {
+        '@type': 'RegisterAction',
+        target: {
+            '@type': 'EntryPoint',
+            urlTemplate: 'https://forms.gle/rBJK8guhKmSSMd2X6',
+            actionPlatform: [
+                'http://schema.org/DesktopWebPlatform',
+                'http://schema.org/MobileWebPlatform',
+            ],
+        },
+    },
+};
 </script>
 
 <template>
     <div class="relative min-h-screen space-y-20 bg-neutral-50 px-4 py-16">
-        <Head title="انضم إلينا" />
+        <!-- <Head title="انضم إلينا" /> -->
+
+        <SeoHead
+            title="انضم إلينا"
+            description="سجل الآن في دبلوم الدراسات الإسلامية بصيرة. برنامج متكامل لغير المتفرغين مع شهادة مصدقة من وزارة الأوقاف. ابدأ رحلتك العلمية اليوم"
+        />
+        <JsonLd :data="structuredData" />
 
         <div class="mb-12 text-center">
             <h1 class="text-3xl font-bold text-green-600 md:text-4xl">

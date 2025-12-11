@@ -2,7 +2,12 @@
     <div
         class="container mx-auto max-w-7xl space-y-16 bg-neutral-50 px-4 py-16"
     >
-        <Head title="الهيئة التدريسية" />
+        <!-- <Head title="الهيئة التدريسية" /> -->
+        <SeoHead
+            title="الهيئة التدريسية"
+            description="تعرف على نخبة من الأساتذة والمتخصصين في الهيئة التدريسية لبرنامج بصيرة. علماء ومربون متميزون في العلوم الشرعية"
+        />
+        <JsonLd :data="structuredData" />
 
         <section class="relative px-6 py-16" dir="rtl">
             <div class="mb-14 text-center">
@@ -53,11 +58,38 @@
 
 <script setup>
 import OtherLayout from './OtherLayout.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 defineOptions({ layout: OtherLayout });
 
 const props = defineProps({
     teachers: Array,
 });
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'الهيئة التدريسية - برنامج بصيرة',
+    description:
+        'تعرف على أعضاء الهيئة التدريسية في برنامج بصيرة للدراسات الإسلامية',
+    url: 'https://basirahonline.com/teachers',
+    about: {
+        '@type': 'EducationalOrganization',
+        name: 'برنامج بصيرة',
+        url: 'https://basirahonline.com',
+    },
+    hasPart:
+        props.teachers?.map((teacher) => ({
+            '@type': 'Person',
+            name: teacher.name,
+            jobTitle: teacher.bio,
+            image: teacher.photo_url,
+            worksFor: {
+                '@type': 'EducationalOrganization',
+                name: 'برنامج بصيرة',
+            },
+        })) || [],
+};
 </script>

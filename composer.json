@@ -22,6 +22,7 @@
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-medialibrary": "^11.14",
         "spatie/laravel-permission": "^6.21",
+        "spatie/laravel-sitemap": "^7.3",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

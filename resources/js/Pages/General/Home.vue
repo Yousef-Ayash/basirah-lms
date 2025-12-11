@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
 import {
     BookOpen,
     Users,
@@ -12,6 +12,8 @@ import {
 } from 'lucide-vue-next';
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import OtherLayout from './OtherLayout.vue';
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 const props = defineProps({
     teachers: Array,
@@ -51,7 +53,7 @@ const teacherCarouselIndex = ref(0);
 
 const teachersPerSlide = ref(3);
 
-// 🔹 تحديد عدد البطاقات حسب حجم الشاشة
+// تحديد عدد البطاقات حسب حجم الشاشة
 const updateTeachersPerSlide = () => {
     teachersPerSlide.value = window.innerWidth < 768 ? 1 : 3;
 };
@@ -64,7 +66,7 @@ onBeforeUnmount(() => {
     window.removeEventListener('resize', updateTeachersPerSlide);
 });
 
-// 🔹 تقسيم المعلمين إلى مجموعات حسب عدد الشرائح
+// تقسيم المعلمين إلى مجموعات حسب عدد الشرائح
 const teacherGroups = computed(() => {
     const groups = [];
     for (let i = 0; i < props.teachers.length; i += teachersPerSlide.value) {
@@ -86,11 +88,27 @@ const nextTeacherGroup = () => {
             ? 0
             : teacherCarouselIndex.value + 1;
 };
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalOrganization',
+    name: 'برنامج بصيرة',
+    url: 'https://basirahonline.com',
+    logo: 'https://basirahonline.com/logo.png',
+    description: 'برنامج دراسات إسلامية منهجي لغير المتفرغين.',
+};
 </script>
 
 <template>
     <div class="bg-gradient-to-b from-green-50 via-green-100 to-white">
-        <Head title="الرئيسية" />
+        <!-- <Head title="الرئيسية" /> -->
+        <SeoHead
+            title="الرئيسية"
+            description="برنامج بصيرة هو دبلوم دراسات إسلامية لغير المتفرغين، يجمع بين التأصيل الشرعي والمعاصرة، مع شهادة مصدقة ومحاضرات تفاعلية."
+        />
+        <!-- image="https://basirahonline.com/images/share-image.jpg" -->
+
+        <JsonLd :data="structuredData" />
 
         <!-- Basirah Program -->
         <div
