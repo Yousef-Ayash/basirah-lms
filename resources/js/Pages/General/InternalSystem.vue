@@ -1,15 +1,49 @@
 <script setup>
 import OtherLayout from './OtherLayout.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 defineOptions({ layout: OtherLayout });
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'النظام الداخلي - برنامج بصيرة',
+    description:
+        'تعرف على النظام الداخلي لبرنامج بصيرة، شروط التسجيل والانتساب، الدوام والحضور، الدراسة والامتحانات',
+    url: 'https://basirahonline.com/internal-system',
+    breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'الرئيسية',
+                item: 'https://basirahonline.com',
+            },
+            {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'النظام الداخلي',
+                item: 'https://basirahonline.com/internal-system',
+            },
+        ],
+    },
+};
 </script>
 
 <template>
     <div
         class="from-green-20 relative min-h-screen space-y-20 bg-gradient-to-br via-green-50 to-neutral-100 px-4 py-16"
     >
-        <Head title="النظام الداخلي" />
+        <!-- <Head title="النظام الداخلي" /> -->
+
+        <SeoHead
+            title="النظام الداخلي"
+            description="تعرف على النظام الداخلي لبرنامج بصيرة: التسجيل والانتساب، الدوام والحضور المكاني والإلكتروني، نظام الترفع والرسوب، والدراسة والامتحانات"
+        />
+        <JsonLd :data="structuredData" />
 
         <div class="mb-12 text-center">
             <h1 class="text-3xl font-bold text-green-600 md:text-4xl">

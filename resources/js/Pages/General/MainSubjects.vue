@@ -1,6 +1,11 @@
 <template>
     <div class="min-h-screen space-y-20 bg-neutral-50 px-4 py-16">
-        <Head title="المواد الرئيسية" />
+        <!-- <Head title="المواد الرئيسية" /> -->
+        <SeoHead
+            title="المواد الرئيسية"
+            description="اكتشف المواد الأساسية في برنامج بصيرة: القرآن الكريم وعلومه، الحديث النبوي الشريف، العقيدة الإسلامية، الفقه وأصوله، واللغة العربية"
+        />
+        <JsonLd :data="structuredData" />
 
         <h1
             class="mt-2 text-center text-3xl font-bold text-green-600 md:text-4xl"
@@ -43,6 +48,8 @@
 <script setup>
 import OtherLayout from './OtherLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import SeoHead from '@/components/SeoHead.vue';
+import JsonLd from '@/components/JsonLd.vue';
 
 defineOptions({ layout: OtherLayout });
 
@@ -94,4 +101,23 @@ const subjects = [
         ],
     },
 ];
+
+const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'المواد الرئيسية - برنامج بصيرة',
+    description:
+        'تعرف على المواد الرئيسية في برنامج بصيرة: القرآن الكريم، الحديث الشريف، العقيدة، الفقه، واللغة العربية',
+    url: 'https://basirahonline.com/subjects',
+    hasPart: subjects.map((subject, index) => ({
+        '@type': 'Course',
+        name: subject.title,
+        description: subject.text,
+        provider: {
+            '@type': 'EducationalOrganization',
+            name: 'برنامج بصيرة',
+            url: 'https://basirahonline.com',
+        },
+    })),
+};
 </script>
