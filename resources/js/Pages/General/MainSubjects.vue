@@ -31,11 +31,11 @@
                     </div>
                 </div>
                 <div class="flex-1 text-right">
-                    <h3
+                    <h2
                         class="mb-4 text-2xl font-bold text-green-600 md:text-3xl"
                     >
                         {{ subject.title }}
-                    </h3>
+                    </h2>
                     <p class="text-lg leading-relaxed text-gray-800">
                         {{ subject.text }}
                     </p>

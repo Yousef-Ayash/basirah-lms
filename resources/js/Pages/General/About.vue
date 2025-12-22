@@ -91,11 +91,11 @@ const structuredData = {
                             >
                                 📖
                             </div>
-                            <h4
+                            <h2
                                 class="text-lg font-bold text-[#4D88C7] sm:text-2xl"
                             >
                                 رؤية برنامج بصيرة
-                            </h4>
+                            </h2>
                         </div>
                         <p
                             class="max-w-2xl text-base leading-relaxed font-semibold text-gray-800 sm:text-lg"
@@ -111,11 +111,11 @@ const structuredData = {
                             >
                                 👥
                             </div>
-                            <h4
+                            <h2
                                 class="text-lg font-bold text-[#4D88C7] sm:text-2xl"
                             >
                                 الشريحة المستهدفة
-                            </h4>
+                            </h2>
                         </div>
                         <p
                             class="max-w-2xl text-base leading-relaxed font-semibold text-gray-800 sm:text-lg"
@@ -155,11 +155,11 @@ const structuredData = {
                         >
                             📜
                         </div>
-                        <h4
+                        <h2
                             class="text-lg font-bold text-[#4D88C7] sm:text-2xl"
                         >
                             الرسالة
-                        </h4>
+                        </h2>
 
                         <p
                             class="max-w-2xl text-base leading-relaxed font-semibold text-gray-800 sm:text-lg"
@@ -175,11 +175,11 @@ const structuredData = {
                         >
                             🌟
                         </div>
-                        <h4
+                        <h2
                             class="text-lg font-bold text-[#4D88C7] sm:text-2xl"
                         >
                             القيم
-                        </h4>
+                        </h2>
                         <p
                             class="max-w-2xl text-base leading-relaxed font-semibold text-gray-800 sm:text-lg"
                         >
@@ -288,11 +288,11 @@ const structuredData = {
                         >
                             💡
                         </div>
-                        <h2
+                        <h1
                             class="text-xl font-bold text-[#4D88C7] sm:text-3xl"
                         >
                             عن برنامج بصيرة
-                        </h2>
+                        </h1>
                     </div>
                     <p
                         class="text-lg leading-relaxed font-semibold text-gray-800"
@@ -312,11 +312,11 @@ const structuredData = {
                         >
                             📚
                         </div>
-                        <h2
+                        <h1
                             class="text-xl font-bold text-[#4D88C7] sm:text-3xl"
                         >
                             ماذا يتضمن برنامج بصيرة؟
-                        </h2>
+                        </h1>
                     </div>
                     <p
                         class="text-lg leading-relaxed font-semibold text-gray-800"
@@ -352,11 +352,11 @@ const structuredData = {
                     </div>
                 </div>
                 <div class="space-y-6 text-center lg:text-right">
-                    <h2
+                    <h1
                         class="mb-4 text-center text-xl font-bold text-[#4D88C7] sm:text-3xl lg:text-right"
                     >
                         على ماذا يعتمد برنامج بصيرة؟
-                    </h2>
+                    </h1>
                     <div
                         class="max-w-2xl space-y-4 text-lg leading-relaxed font-semibold text-gray-800"
                     >

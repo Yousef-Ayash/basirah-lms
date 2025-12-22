@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /my-attempts
+Disallow: /bookmarks
+Disallow: /profile
+Disallow: /login
+Allow: /
+
+Sitemap: https://basirahonline.com/sitemap.xml

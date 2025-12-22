@@ -18,7 +18,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^3.1",
-        "mpdf/mpdf": "^8.2",
+        "mpdf/mpdf": "8.2.6",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-medialibrary": "^11.14",
         "spatie/laravel-permission": "^6.21",
@@ -26,7 +26,6 @@
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
-        "barryvdh/laravel-dompdf": "^3.1",
         "barryvdh/laravel-debugbar": "^3.16",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.3",

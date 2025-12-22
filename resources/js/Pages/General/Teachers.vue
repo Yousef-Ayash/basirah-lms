@@ -11,9 +11,9 @@
 
         <section class="relative px-6 py-16" dir="rtl">
             <div class="mb-14 text-center">
-                <h2 class="mt-2 text-3xl font-bold text-green-600 md:text-4xl">
+                <h1 class="mt-2 text-3xl font-bold text-green-600 md:text-4xl">
                     أعضاء الهيئة التدريسية في برنامج بصيرة
-                </h2>
+                </h1>
                 <div class="mt-3 text-xl font-semibold text-[#4D88C7]">
                     ( أُمةً وسطاً )
                 </div>
@@ -45,11 +45,11 @@
                     >
                         {{ teacher.name }}
                     </h2>
-                    <h5
+                    <h3
                         class="mt-1 text-center text-sm font-medium text-gray-800 md:text-base"
                     >
                         {{ teacher.bio }}
-                    </h5>
+                    </h3>
                 </div>
             </div>
         </section>

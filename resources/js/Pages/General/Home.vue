@@ -103,7 +103,7 @@ const structuredData = {
     <div class="bg-gradient-to-b from-green-50 via-green-100 to-white">
         <!-- <Head title="الرئيسية" /> -->
         <SeoHead
-            title="الرئيسية"
+            title="برنامج بصيرة"
             description="برنامج بصيرة هو دبلوم دراسات إسلامية لغير المتفرغين، يجمع بين التأصيل الشرعي والمعاصرة، مع شهادة مصدقة ومحاضرات تفاعلية."
         />
         <!-- image="https://basirahonline.com/images/share-image.jpg" -->
@@ -118,9 +118,9 @@ const structuredData = {
             <div
                 class="relative flex flex-1 flex-col items-center justify-center space-y-6 rounded-3xl bg-gradient-to-br from-green-100 via-green-50 to-green-200 p-10 text-center shadow-2xl md:translate-y-26 md:pr-8"
             >
-                <h2 class="mb-4 text-4xl font-bold text-green-600 md:text-5xl">
+                <h1 class="mb-4 text-4xl font-bold text-green-600 md:text-5xl">
                     برنامج بصيرة
-                </h2>
+                </h1>
                 <p
                     class="font-segoe-important max-w-md text-lg leading-relaxed font-semibold tracking-wide text-gray-800 sm:text-xl md:text-lg"
                 >
@@ -208,9 +208,9 @@ const structuredData = {
         <!-- Mainالمحاور -->
         <section class="bg-gray-50 py-12">
             <div class="mx-auto max-w-7xl px-6 text-center">
-                <h2 class="mb-4 text-2xl font-bold text-green-600 md:text-4xl">
+                <h1 class="mb-4 text-2xl font-bold text-green-600 md:text-4xl">
                     أساسيات برنامج بصيرة
-                </h2>
+                </h1>
             </div>
 
             <div
@@ -229,9 +229,9 @@ const structuredData = {
                                 class="h-14 w-14 text-purple-500 transition-transform duration-300 group-hover:scale-110"
                             />
                         </div>
-                        <h3 class="text-center text-xl leading-tight font-bold">
+                        <h2 class="text-center text-xl leading-tight font-bold">
                             المدة الزمنية
-                        </h3>
+                        </h2>
                         <p
                             class="text-base leading-relaxed font-semibold text-gray-700"
                         >
@@ -262,9 +262,9 @@ const structuredData = {
                                 class="h-14 w-14 text-blue-500 transition-transform duration-300 group-hover:scale-110"
                             />
                         </div>
-                        <h3 class="text-center text-xl leading-tight font-bold">
+                        <h2 class="text-center text-xl leading-tight font-bold">
                             دفعة جديدة
-                        </h3>
+                        </h2>
                         <p
                             class="text-base leading-relaxed font-semibold text-gray-700"
                         >
@@ -296,9 +296,9 @@ const structuredData = {
                             />
                         </div>
 
-                        <h3 class="text-center text-xl leading-tight font-bold">
+                        <h2 class="text-center text-xl leading-tight font-bold">
                             المواد الأساسية
-                        </h3>
+                        </h2>
                         <p
                             class="text-base leading-relaxed font-semibold text-gray-700"
                         >
@@ -324,11 +324,11 @@ const structuredData = {
             <div class="mx-auto max-w-6xl px-6">
                 <div class="mb-12 flex justify-center">
                     <div class="rounded-xl bg-green-50 px-6 py-4">
-                        <h2
+                        <h1
                             class="text-center text-3xl leading-tight font-bold text-green-600 sm:text-4xl"
                         >
                             المواد الأساسية لبرنامج بصيرة
-                        </h2>
+                        </h1>
                     </div>
                 </div>
 
@@ -342,11 +342,11 @@ const structuredData = {
                         ]"
                     >
                         <div class="w-full text-right">
-                            <h3
+                            <h2
                                 class="mb-2 text-3xl font-semibold text-[#4D88C7]"
                             >
                                 {{ item.title }}
-                            </h3>
+                            </h2>
                             <p class="text-lg leading-relaxed text-gray-900">
                                 {{ item.description }}
                             </p>
@@ -365,11 +365,11 @@ const structuredData = {
                 >
                     عرض الكل
                 </Link>
-                <h2
+                <h1
                     class="w-full text-center text-2xl font-bold text-gray-800 md:text-4xl"
                 >
                     أعضاء الهيئة التدريسية
-                </h2>
+                </h1>
                 <Link
                     :href="route('teachers')"
                     class="mx-auto mt-8 inline-block rounded-full bg-gradient-to-r from-green-500 to-green-700 px-4 py-2 text-sm text-white shadow transition hover:scale-105 md:hidden"
@@ -398,11 +398,11 @@ const structuredData = {
                                 />
                             </div>
                         </div>
-                        <h3
+                        <h2
                             class="mt-4 text-xl font-bold text-gray-950 transition-colors duration-300 group-hover:text-green-700"
                         >
                             {{ teacher.name }}
-                        </h3>
+                        </h2>
                     </div>
                 </div>
 
@@ -485,11 +485,11 @@ const structuredData = {
                                 />
                             </div>
                         </div>
-                        <h3
+                        <h2
                             class="text-l mt-4 font-bold text-gray-950 transition-colors duration-300 group-hover:text-green-700"
                         >
                             {{ teacher.name }}
-                        </h3>
+                        </h2>
                     </div>
                 </div>
                 <button
@@ -534,11 +534,11 @@ const structuredData = {
 
         <!--features-->
         <section class="bg-gray-50 py-16">
-            <h2
+            <h1
                 class="mx-auto mb-8 max-w-7xl px-6 text-center text-3xl font-bold text-green-600 md:text-4xl"
             >
                 ميزات داخل برنامج بصيرة
-            </h2>
+            </h1>
 
             <div
                 class="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 sm:grid-cols-2 md:grid-cols-4"
@@ -553,7 +553,7 @@ const structuredData = {
                     >
                         <UserPlus class="h-16 w-16 text-rose-400" />
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">التسجيل</h3>
+                    <h2 class="text-xl font-bold text-gray-800">التسجيل</h2>
                     <p class="leading-relaxed font-semibold text-gray-700">
                         لا يُشترط أي تحصيل علمي سابق للالتحاق بالبرنامج.
                     </p>
@@ -567,7 +567,7 @@ const structuredData = {
                     >
                         <UserCheck class="h-16 w-16 text-sky-500" />
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">الحضور</h3>
+                    <h2 class="text-xl font-bold text-gray-800">الحضور</h2>
                     <p class="leading-relaxed font-semibold text-gray-700">
                         يتيح البرنامج الحضور المكاني التفاعلي لكنه غير إلزامي،
                         كما يمكن الحضور ومتابعة المحاضرات إلكترونياً عبر الموقع.
@@ -583,7 +583,7 @@ const structuredData = {
                     >
                         <ClipboardList class="h-16 w-16 text-yellow-500" />
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">الامتحان</h3>
+                    <h2 class="text-xl font-bold text-gray-800">الامتحان</h2>
                     <p class="leading-relaxed font-semibold text-gray-700">
                         التقدُّم للامتحان يتم عبر موقع منصة بصيرة.
                     </p>
@@ -598,7 +598,7 @@ const structuredData = {
                     >
                         <Award class="h-16 w-16 text-purple-500" />
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">الشهادة</h3>
+                    <h2 class="text-xl font-bold text-gray-800">الشهادة</h2>
                     <p class="leading-relaxed font-semibold text-gray-700">
                         شهادة مصدقّة من وزارة الأوقاف السورية.
                     </p>

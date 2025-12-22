@@ -59,11 +59,11 @@ const structuredData = {
                 <div
                     class="order-2 space-y-6 text-center lg:order-1 lg:text-right"
                 >
-                    <h1
+                    <h2
                         class="text-center text-xl leading-snug font-semibold wrap-break-word text-[#4D88C7] sm:text-3xl md:text-right md:text-4xl md:whitespace-nowrap"
                     >
                         ✨ الانتساب إلى برنامج بصيرة
-                    </h1>
+                    </h2>
 
                     <p
                         class="text-base leading-relaxed font-medium text-gray-700 sm:text-lg"
