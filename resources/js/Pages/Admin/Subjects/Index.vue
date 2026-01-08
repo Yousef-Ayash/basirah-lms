@@ -18,6 +18,19 @@
                     placeholder="عنوان المادة..."
                 />
                 <BaseSelect
+                    v-model="filters.course_id"
+                    label="تصفية حسب المقرر"
+                >
+                    <option value="">تصفية حسب المقرر...</option>
+                    <option
+                        v-for="course in courses"
+                        :key="course.id"
+                        :value="course.id"
+                    >
+                        {{ course.title }}
+                    </option>
+                </BaseSelect>
+                <BaseSelect
                     v-model="filters.level_id"
                     label="تصفية حسب المستوى"
                 >
@@ -53,6 +66,7 @@
                         <tr>
                             <th class="p-2">عنوان المادة</th>
                             <th class="p-2">المستوى</th>
+                            <th class="p-2">المقرر</th>
                             <th class="p-2">المدرس</th>
                             <th class="p-2">المقررات</th>
                             <th class="p-2">المحاضرات</th>
@@ -71,6 +85,9 @@
                             </td>
                             <td class="p-2">
                                 {{ subject.level?.name || 'N/A' }}
+                            </td>
+                            <td class="p-2">
+                                {{ subject.course?.title || '—' }}
                             </td>
                             <td class="p-2">
                                 {{
@@ -145,6 +162,7 @@ const props = defineProps({
     subjects: Object,
     levels: Array,
     teachers: Array,
+    courses: Array,
     filters: Object,
 });
 
@@ -155,6 +173,7 @@ const filters = reactive({
     title: props.filters.title || '',
     level_id: props.filters.level_id || '',
     teacher_id: props.filters.teacher_id || '',
+    course_id: props.filters.course_id || '',
 });
 
 watch(

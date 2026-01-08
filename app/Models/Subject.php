@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ class Subject extends Model implements HasMedia // Implement the interface
         'created_by',
         'teacher_id',
         'level_id',
+        'course_id'
     ];
 
     // Optional: Add an accessor for easy access in your Vue components
@@ -59,5 +61,10 @@ class Subject extends Model implements HasMedia // Implement the interface
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 }

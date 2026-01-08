@@ -47,6 +47,7 @@ const viewingAsStudent = computed(() => page.props.auth.viewingAsStudent);
 const adminLinks = computed(() => [
     { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
+    { label: 'المقررات', to: route('admin.courses.index') },
     { label: 'المواد الدراسية', to: route('admin.subjects.index') },
     { label: 'الاختبارات', to: route('admin.exams.index') },
     { label: 'الطلاب', to: route('admin.students.index') },
@@ -60,7 +61,8 @@ const adminLinks = computed(() => [
 const studentLinks = computed(() => [
     { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
-    { label: 'المواد الدراسية', to: route('subjects.index') },
+    // { label: 'المواد الدراسية', to: route('subjects.index') },
+    { label: 'المواد الدراسية', to: route('courses.index') },
     { label: 'درجاتي ومحاولاتي', to: route('attempts.index') },
     { label: 'إشاراتي المرجعية', to: route('bookmarks.index') },
 ]);

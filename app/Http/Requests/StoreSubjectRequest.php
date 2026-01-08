@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,6 +18,7 @@ class StoreSubjectRequest extends FormRequest
             'description' => 'nullable|string',
             'level_id' => 'required|exists:levels,id',
             'teacher_id' => 'nullable|exists:teachers,id',
+            'course_id' => 'nullable|exists:courses,id',
             'cover' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240', // 10MB
         ];
     }

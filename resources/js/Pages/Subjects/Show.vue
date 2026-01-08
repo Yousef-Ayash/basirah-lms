@@ -103,7 +103,7 @@ const toggleBookmark = (material) => {
         </div>
 
         <TabGroup
-            :tabs="['المقرر', 'المحاضرات', 'الاختبارات']"
+            :tabs="['الملفات', 'المحاضرات', 'الاختبارات']"
             v-slot="{ active }"
         >
             <div v-show="active === 0" class="space-y-4">

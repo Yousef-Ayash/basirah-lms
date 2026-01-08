@@ -8,7 +8,6 @@ class TestDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // order matters:
         // 1. Levels
         $this->call(TestLevelsSeeder::class);
 
@@ -18,10 +17,13 @@ class TestDataSeeder extends Seeder
         // 3. Roles & admin
         $this->call(RolesAndAdminSeeder::class);
 
-        // 4. Users (students + factory)
+        // 4. Users
         $this->call(UserSeeder::class);
 
-        // 5. Subjects (depends on levels, teachers, admin user)
+        // 5. Courses (New)
+        $this->call(CourseSeeder::class);
+
+        // 6. Subjects
         $this->call(TestSubjectsSeeder::class);
     }
 }

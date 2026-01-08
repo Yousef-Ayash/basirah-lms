@@ -134,7 +134,6 @@ function refresh() {
 }
 
 function statusForAttempt(a) {
-    console.log(a);
     if (!a.submitted_at) return 'جارٍ التقديم';
     // official marks_report first
     if (a.marks_report /*&& a.marks_report.official*/) {

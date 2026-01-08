@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -11,15 +12,16 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Inertia\Inertia;
+use App\Models\Course;
 
 class SubjectController extends Controller
 {
     public function index(Request $request)
     {
-        $filters = $request->only(['title', 'level_id', 'teacher_id']);
+        $filters = $request->only(['title', 'level_id', 'teacher_id', 'course_id']);
 
         $query = Subject::query()
-            ->with('level', 'creator', 'teacher')
+            ->with('level', 'creator', 'teacher', 'course')
             ->withCount([
                 'materials as youtube_materials_count' => function ($query) {
                     $query->where('type', 'youtube');
@@ -46,15 +48,21 @@ class SubjectController extends Controller
             $query->where('teacher_id', $filters['teacher_id']);
         }
 
+        if ($filters['course_id'] ?? false) {
+            $query->where('course_id', $filters['course_id']);
+        }
+
         $subjects = $query->orderBy('title', 'asc')->paginate(25)->withQueryString();
 
         $levels = Level::orderBy('order')->get(['id', 'name']);
         $teachers = Teacher::orderBy('order')->get(['id', 'name']);
+        $courses = Course::orderBy('order')->get(['id', 'title']);
 
         return Inertia::render('Admin/Subjects/Index', [
             'subjects' => $subjects,
             'levels' => $levels,
             'teachers' => $teachers,
+            'courses' => $courses,
             'filters' => $filters,
         ]);
     }
@@ -63,7 +71,9 @@ class SubjectController extends Controller
     {
         $levels = Level::orderBy('order')->get();
         $teachers = Teacher::orderBy('name')->get();
-        return Inertia::render('Admin/Subjects/Create', ['levels' => $levels, 'teachers' => $teachers]);
+        $courses = Course::orderBy('order')->get(['id', 'title']);
+
+        return Inertia::render('Admin/Subjects/Create', ['levels' => $levels, 'teachers' => $teachers, 'courses' => $courses]);
     }
 
     public function store(StoreSubjectRequest $request)
@@ -87,10 +97,13 @@ class SubjectController extends Controller
     {
         $levels = Level::orderBy('order')->get();
         $teachers = Teacher::orderBy('name')->get();
+        $courses = Course::orderBy('order')->get(['id', 'title']);
+
         return Inertia::render('Admin/Subjects/Edit', [
             'subject' => $subject->load('materials', 'exams'),
             'levels' => $levels,
-            'teachers' => $teachers
+            'teachers' => $teachers,
+            "courses" => $courses
         ]);
     }
 
@@ -99,6 +112,11 @@ class SubjectController extends Controller
         $data = $request->validated();
 
         $subject->update($data);
+
+        // Handle Cover Removal
+        if ($request->boolean('remove_cover')) {
+            $subject->clearMediaCollection('cover');
+        }
 
         if ($request->hasFile('cover')) {
             $subject->clearMediaCollection('cover'); // Remove old cover

@@ -15,6 +15,7 @@
                         :modelValue="form"
                         :levels="levels"
                         :teachers="teachers"
+                        :courses="courses"
                         @update:modelValue="
                             (partial) => Object.assign(form, partial)
                         "
@@ -152,6 +153,7 @@ const props = defineProps({
     subject: Object,
     levels: Array,
     teachers: Array,
+    courses: Array,
 });
 
 // Initialize form with proper types and include cover_url for existing image
@@ -161,8 +163,10 @@ const form = useForm({
     description: props.subject.description || '',
     level_id: Number(props.subject.level_id) || 0,
     teacher_id: Number(props.subject.teacher_id) || 0,
+    course_id: Number(props.subject.course_id) || 0,
     cover: null,
     cover_url: props.subject.cover || null, // Keep reference to existing cover
+    remove_cover: false,
 });
 
 const tabLabels = computed(() => [

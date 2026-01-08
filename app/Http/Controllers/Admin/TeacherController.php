@@ -61,6 +61,11 @@ class TeacherController extends Controller
 
         $teacher->update($data);
 
+        // Handle Photo Removal
+        if ($request->boolean('remove_photo')) {
+            $teacher->clearMediaCollection('photo');
+        }
+
         if ($request->hasFile('photo')) {
             $teacher->clearMediaCollection('photo'); // Remove old cover
             $teacher->addMediaFromRequest('photo')->toMediaCollection('photo');

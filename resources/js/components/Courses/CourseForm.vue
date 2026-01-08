@@ -1,69 +1,35 @@
 <template>
     <Card class="space-y-4">
-        <!-- Title -->
         <BaseInput
-            label="العنوان"
+            label="عنوان المقرر"
             v-model="local.title"
             :error="local.errors?.title"
             required
             @input="emitModel"
         />
 
-        <!-- Description -->
         <BaseTextarea
             label="الوصف"
             v-model="local.description"
             :error="local.errors?.description"
-            rows="5"
+            rows="4"
             @input="emitModel"
         />
 
-        <!-- Level -->
-        <BaseSelect
-            label="المستوى"
-            v-model="local.level_id"
-            :error="local.errors?.level_id"
-            @change="emitModel"
-        >
-            <option :value="0" disabled>-- بلا مستوى --</option>
-            <option v-for="level in levels" :key="level.id" :value="level.id">
-                {{ level.name }}
-            </option>
-        </BaseSelect>
+        <div>
+            <BaseInput
+                label="الترتيب"
+                type="number"
+                v-model="local.order"
+                :error="local.errors?.order"
+                placeholder="اتركه فارغاً للترتيب التلقائي"
+                @input="emitModel"
+            />
+            <p class="mt-1 text-xs text-gray-500">
+                يحدد ترتيب ظهور المقرر في القوائم.
+            </p>
+        </div>
 
-        <BaseSelect
-            label="المقرر التدريبي"
-            v-model="local.course_id"
-            :error="local.errors?.course_id"
-            @change="emitModel"
-        >
-            <option :value="0" disabled>-- اختر المقرر --</option>
-            <option
-                v-for="course in courses"
-                :key="course.id"
-                :value="course.id"
-            >
-                {{ course.title }}
-            </option>
-        </BaseSelect>
-
-        <BaseSelect
-            label="مدرس المادة"
-            v-model="local.teacher_id"
-            :error="local.errors?.teacher_id"
-            @change="emitModel"
-        >
-            <option :value="0">-- بدون مدرس --</option>
-            <option
-                v-for="teacher in teachers"
-                :key="teacher.id"
-                :value="teacher.id"
-            >
-                {{ teacher.name }}
-            </option>
-        </BaseSelect>
-
-        <!-- File input -->
         <BaseFileInput
             label="صورة الغلاف (اختياري)"
             :error="local.errors?.cover"
@@ -76,7 +42,12 @@
                 formatBytes(local.cover.size)
             }})
         </div>
-
+        <!-- <img
+            v-else-if="local.cover_url"
+            :src="local.cover_url"
+            class="mt-2 max-w-xs rounded-lg border border-gray-200 dark:border-gray-700"
+            alt="cover preview"
+        /> -->
         <div
             v-else-if="local.cover_url && !local.remove_cover"
             class="group relative mt-2 inline-block"
@@ -88,10 +59,7 @@
             />
             <button
                 type="button"
-                @click="
-                    local.remove_cover = true;
-                    emitModel();
-                "
+                @click="markRemove"
                 class="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white opacity-0 shadow transition-opacity group-hover:opacity-100 hover:bg-red-600"
                 title="حذف الصورة"
             >
@@ -111,15 +79,11 @@
                 </svg>
             </button>
         </div>
-
         <div v-if="local.remove_cover" class="mt-2 text-sm text-red-500">
             سيتم حذف الصورة الحالية عند الحفظ.
             <button
                 type="button"
-                @click="
-                    local.remove_cover = false;
-                    emitModel();
-                "
+                @click="undoRemove"
                 class="mx-2 text-gray-500 underline hover:text-gray-700"
             >
                 تراجع
@@ -133,45 +97,36 @@ import { reactive, watch, toRaw } from 'vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
-import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseFileInput from '@/components/FormElements/BaseFileInput.vue';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
-    levels: { type: Array, default: () => [] },
-    teachers: { type: Array, default: () => [] },
-    courses: { type: Array, default: () => [] },
 });
 
 const emit = defineEmits(['update:modelValue']);
 
-// Make a shallow reactive copy of the form object so we can mutate locally
+// Make a shallow reactive copy of the form object
 const local = reactive({ ...props.modelValue });
 
-// Keep local in sync when parent replaces the form object
+// Sync local state when parent prop changes
 watch(
     () => props.modelValue,
     (newVal) => {
-        // replace keys in local
         Object.keys(local).forEach((k) => delete local[k]);
         Object.assign(local, newVal || {});
     },
     { deep: true },
 );
 
-// Emit updated model to parent (clone to plain object to avoid Proxy cycles)
 function emitModel() {
     emit('update:modelValue', toRaw({ ...local }));
 }
 
-// Handler for file updates coming from BaseFileInput
 function onFileUpdate(fileOrNull) {
-    // fileOrNull is either a File object or null
     local.cover = fileOrNull;
     emitModel();
 }
 
-// Utility: detect File
 function isFile(v) {
     return (
         v &&
@@ -191,7 +146,6 @@ function undoRemove() {
     emitModel();
 }
 
-// Small helper to show file size human readable (optional)
 function formatBytes(bytes, decimals = 1) {
     if (!bytes || bytes === 0) return '0 B';
     const k = 1024;
@@ -200,4 +154,6 @@ function formatBytes(bytes, decimals = 1) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+console.log(local.cover_url);
 </script>

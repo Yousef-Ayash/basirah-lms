@@ -18,8 +18,8 @@ import MapPinIcon from '../Icons/MapPinIcon.vue';
                 <h3 class="text-3xl font-extrabold tracking-tight">بصيرة</h3>
                 <p class="text-sm leading-relaxed text-white/90">
                     هو برنامج دراسات إسلامية لغير المتفرغين، حيث يجمع بين
-                    الثقافة والتأصيل والوضوح والاعتدال، بالإضافة إلى دورات داعمة
-                    ومحاضرات إثرائية.
+                    الثقافة والتأصيل والوضوح والاعتدال، بالإضافة إلى مقررات
+                    داعمة ومحاضرات إثرائية.
                 </p>
             </div>
 

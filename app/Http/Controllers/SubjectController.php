@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Subject;
 use App\Models\Level;
 use App\Models\Teacher;
@@ -14,46 +16,51 @@ class SubjectController extends Controller
     // GET /subjects
     public function index(Request $request)
     {
-        // 1. Get the currently authenticated user
         $user = $request->user();
-
-        // 2. Determine the student's current level. Default to level 1 if not set.
         $studentLevelId = $user->level_id ?? 1;
 
-        // 3. Start the query for Subjects
-        $query = Subject::query()->withCount(['materials', 'exams'])->with(['level']);
-
-        // 4. IMPORTANT: Filter subjects to only include those at or below the student's level
-        $query->whereHas('level', function ($q) use ($studentLevelId) {
-            $q->where('id', '<=', $studentLevelId);
-        });
-
-        // --- The existing filters still work on top of the personalized list ---
-        $q = $request->input('q');
+        // Filters
+        $courseId = $request->input('course_id');
         $levelId = $request->input('level_id');
+        $q = $request->input('q');
+
+        // Start Query
+        $query = Subject::query()
+            ->where('level_id', '<=', $studentLevelId)
+            ->with(['teacher', 'course'])
+            ->withCount(['materials', 'exams']);
+
+        // Apply Course Filter
+        if ($courseId) {
+            $query->where('course_id', $courseId);
+        }
 
         if ($levelId) {
             $query->where('level_id', $levelId);
         }
 
+        // Apply Search
         if ($q) {
-            $query->where(function ($qq) use ($q) {
-                $qq->where('title', 'like', "%{$q}%")
-                    ->orWhere('description', 'like', "%{$q}%");
-            });
+            $query->where('title', 'like', "%{$q}%");
         }
 
-        $subjects = $query->orderBy('title')->paginate(12)->withQueryString();
+        $subjects = $query->orderBy('title')
+            ->paginate(12)
+            ->withQueryString();
 
-
-        // 5. IMPORTANT: Also filter the list of Levels for the dropdown
-        //    so a student can't filter by levels they haven't reached yet.
         $levels = Level::where('id', '<=', $studentLevelId)->orderBy('order')->get();
+
+        // If a course is selected, fetch its details to show a title/header in the view
+        $selectedCourse = $courseId ? Course::find($courseId) : null;
 
         return Inertia::render('Subjects/Index', [
             'subjects' => $subjects,
             'levels' => $levels,
-            'filters' => ['q' => $q, 'level_id' => $levelId],
+            'filters' => [
+                'q' => $q,
+                'course_id' => $courseId
+            ],
+            'selectedCourse' => $selectedCourse
         ]);
     }
 
