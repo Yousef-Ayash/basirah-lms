@@ -16,6 +16,8 @@ const form = useForm({
     order: props.teacher.order,
     bio: props.teacher.bio,
     photo: null,
+    photo_url: props.teacher.photo_url || null,
+    remove_photo: false,
 });
 
 const submit = () => {

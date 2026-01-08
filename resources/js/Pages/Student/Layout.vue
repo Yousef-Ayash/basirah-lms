@@ -23,7 +23,8 @@ import ScrollToTop from '@/components/Misc/ScrollToTop.vue';
 const navLinks = computed(() => [
     { label: 'الرئيسية', to: route('home') },
     { label: 'لوحة التحكم', to: route('dashboard') },
-    { label: 'المواد الدراسية', to: route('subjects.index') },
+    // { label: 'المواد الدراسية', to: route('subjects.index') },
+    { label: 'المواد الدراسية', to: route('courses.index') },
     { label: 'درجاتي', to: route('attempts.index') },
     { label: 'إشاراتي المرجعية', to: route('bookmarks.index') },
 ]);

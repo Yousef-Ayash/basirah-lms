@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Admin\LevelController as AdminLevelController;
+use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\CourseController;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Inertia\Inertia;
@@ -101,10 +103,37 @@ Route::middleware('auth')->group(function () {
 // #####################################################################
 Route::middleware(['auth', 'approved'])->group(function () {
 
+    // 1. Main Entry: "Subjects" link in nav now shows COURSES
+    Route::get('/subjects', [CourseController::class, 'index'])
+        ->name('courses.index'); // Name it courses.index or subjects.index depending on your nav links
+
+    // 2. Subject List: Used when clicking a course to see its subjects
+    Route::get('/subjects/list', [SubjectController::class, 'index'])
+        ->name('subjects.list');
+
+
     // ## Subjects, Materials & Bookmarks
-    Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
+    // Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
     Route::get('materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
+
+    // ## Courses (Replaces the old Subjects Index)
+    // 1. We override the 'subjects.index' name to point to CourseController
+    //    so existing links in the Sidebar/Dashboard still work but show Courses.
+    // Route::get('/subjects', [CourseController::class, 'index'])
+    //     ->name('subjects.index');
+
+    // 2. Add route to view a specific Course (which lists its subjects)
+    // Route::get('/courses/{course}', [CourseController::class, 'show'])
+    //     ->name('courses.show');
+
+
+
+    // 3. Subject Detail: Viewing a specific subject's materials
+    Route::get('/subjects/{subject}', [SubjectController::class, 'show'])
+        ->name('subjects.show');
+
+    // ==================
 
     Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
     Route::post('/bookmarks', [BookmarkController::class, 'store'])->name('bookmarks.store');
@@ -121,7 +150,6 @@ Route::middleware(['auth', 'approved'])->group(function () {
     // ## Export and download attempts
     Route::get('/attempts/export.xlsx', [ExamAttemptController::class, 'exportAttemptsExcel'])->name('attempts.export.xlsx');
     Route::get('/attempts/export_ar.pdf', [ExportController::class, 'exportAttemptsPdf'])->name('attempts.export.pdf');
-
 });
 
 // #####################################################################
@@ -138,6 +166,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::resource('subjects', AdminSubjectController::class)->except(['show']);
     Route::post('subjects/{subject}/materials', [AdminMaterialController::class, 'store'])->name('subjects.materials.store');
     Route::delete('materials/{material}', [AdminMaterialController::class, 'destroy'])->name('materials.destroy');
+
+    // ## Courses Management
+    Route::resource('courses', AdminCourseController::class)->except(['show']);
+
+    // CHANGE 1: Point 'subjects.index' URL to CourseController
+    // Route::get('/subjects', [CourseController::class, 'index'])->name('subjects.index');
+
+    // CHANGE 2: Add route for viewing a single Course (which lists its subjects)
+    Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
     // ## Exam, Question, and Attempt Management
     Route::resource('exams', AdminExamController::class);

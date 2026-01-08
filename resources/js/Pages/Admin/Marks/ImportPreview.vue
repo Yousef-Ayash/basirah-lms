@@ -16,10 +16,6 @@ const props = defineProps({
     preview_id: String,
 });
 
-props.preview.forEach((row) => {
-    console.log(row);
-});
-
 const form = useForm({
     preview_id: props.preview_id,
 });

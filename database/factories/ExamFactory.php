@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,7 +23,11 @@ class ExamFactory extends Factory
             'time_limit_minutes' => fake()->numberBetween(10, 120),
             'open_at' => $open,
             'close_at' => $close,
-            'max_attempts' => fake()->numberBetween(1,3),
+            'max_attempts' => fake()->numberBetween(1, 3),
+            'distance_between_attempts' => 0,
+            'questions_to_display' => 0,
+            'full_mark' => 100,
+            'pass_threshold' => 50,
             'review_allowed' => fake()->boolean(80),
             'show_answers_after_close' => fake()->boolean(40),
             'created_by' => User::inRandomOrder()->first()?->id ?? User::factory(),

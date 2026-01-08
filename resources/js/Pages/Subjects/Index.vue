@@ -15,31 +15,30 @@ export default {
 
 <script setup>
 import BaseInput from '@/components/FormElements/BaseInput.vue';
-import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { Link, router } from '@inertiajs/vue3';
-import { reactive, watch } from 'vue';
+import { Link, router, Head } from '@inertiajs/vue3';
+import { reactive, ref, watch } from 'vue';
+import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 
 const props = defineProps({
-    subjects: Object, // Paginated subjects object
+    subjects: Object,
     levels: Array,
     filters: Object,
+    selectedCourse: Object,
 });
 
-// A reactive object to hold the current filter values
 const filters = reactive({
     q: props.filters.q || '',
     level_id: props.filters.level_id || '',
 });
 
-// Watch for changes and send a new request to the server
 watch(
     filters,
     (newFilters) => {
-        router.get(route('subjects.index'), newFilters, {
+        router.get(route('subjects.list'), newFilters, {
             preserveState: true,
             replace: true,
         });
@@ -51,7 +50,23 @@ watch(
 <template>
     <div>
         <Head title="المواد الدراسية" />
-        <SectionHeader title="تصفح المواد" />
+
+        <div v-if="selectedCourse" class="mb-2">
+            <Link
+                :href="route('courses.index')"
+                class="text-sm text-blue-500 hover:underline"
+            >
+                ← العودة إلى قائمة المقررات
+            </Link>
+        </div>
+
+        <SectionHeader
+            :title="
+                selectedCourse
+                    ? `مواد مقرر: ${selectedCourse.title}`
+                    : 'المواد الدراسية'
+            "
+        />
 
         <Card class="mb-6">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -82,7 +97,7 @@ watch(
                 :href="route('subjects.show', subject.id)"
             >
                 <Card
-                    class="h-full transition hover:-translate-y-1 hover:shadow-lg"
+                    class="flex h-full flex-col transition hover:-translate-y-1 hover:shadow-lg"
                 >
                     <div
                         class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700"
@@ -97,26 +112,29 @@ watch(
                             >لا توجد صورة</span
                         >
                     </div>
+
                     <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">
                         {{ subject.title }}
                     </h2>
+                    <p>{{ subject.level }}</p>
                     <p
                         class="line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
                     >
                         {{ subject.description }}
                     </p>
                     <div class="mt-2 text-xs text-gray-500">
-                        <span>{{ subject.materials_count }} مقررات</span>
+                        <span>{{ subject.materials_count }} منهاج</span>
                         |
                         <span>{{ subject.exams_count }} الاختبارات</span>
                     </div>
                 </Card>
             </Link>
         </div>
+
         <EmptyState
             v-else
-            message="لم يتم العثور على مواد دراسية."
-            sub="حاول تعديل فلاتر البحث."
+            message="لا توجد مواد دراسية متاحة."
+            sub="حاول تغيير البحث أو التحقق لاحقاً."
         />
 
         <div class="mt-6">

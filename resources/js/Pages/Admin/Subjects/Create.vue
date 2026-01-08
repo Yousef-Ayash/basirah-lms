@@ -9,6 +9,7 @@
                 :modelValue="form"
                 :levels="levels"
                 :teachers="teachers"
+                :courses="courses"
                 @update:modelValue="(partial) => Object.assign(form, partial)"
             />
 
@@ -39,6 +40,7 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     levels: Array,
     teachers: Array,
+    courses: Array,
 });
 
 const form = useForm({
@@ -46,6 +48,7 @@ const form = useForm({
     description: '',
     level_id: 0,
     teacher_id: 0,
+    course: 0,
     cover: null,
 });
 
