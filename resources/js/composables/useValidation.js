@@ -18,12 +18,12 @@ export function minLength(n, fieldName = 'Field') {
             : `يجب أن يتكون ${fieldName} من ${n} أحرف على الأقل`;
 }
 
-export function isEmail(value) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(value).toLowerCase())
-        ? true
-        : `أدخل بريدًا إلكترونيًا صالحًا`;
-}
+// export function isEmail(value) {
+//     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return re.test(String(value).toLowerCase())
+//         ? true
+//         : `أدخل بريدًا إلكترونيًا صالحًا`;
+// }
 
 export function isPhoneNumber(value) {
     // The regular expression for a flexible international phone number format

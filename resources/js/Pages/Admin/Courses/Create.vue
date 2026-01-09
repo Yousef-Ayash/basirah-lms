@@ -3,7 +3,7 @@
         <Head title="إنشاء مقرر جديد" />
         <h1 class="mb-4 text-2xl font-bold">إنشاء مقرر جديد</h1>
 
-        <form @submit.prevent="submit" enctype="multipart/form-data"></form>
+        <form @submit.prevent="submit" enctype="multipart/form-data">
             <CourseForm
                 :modelValue="form"
                 @update:modelValue="(partial) => Object.assign(form, partial)"

@@ -26,10 +26,7 @@
 
         <Card class="mb-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <BaseInput
-                    v-model="filters.q"
-                    placeholder="البحث بالاسم أو البريد الإلكتروني..."
-                />
+                <BaseInput v-model="filters.q" placeholder="البحث بالاسم..." />
                 <BaseSelect v-model="filters.level_id">
                     <option value="">كل المستويات</option>
                     <option

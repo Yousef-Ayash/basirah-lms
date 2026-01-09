@@ -14,7 +14,7 @@
             <div
                 class="hidden h-[340px] border-1 border-gray-600/80 md:flex"
             ></div>
-            <div>
+            <div class="flex items-center justify-center">
                 <div>
                     <h1 class="mb-4 text-2xl font-semibold text-[#61CE70]">
                         تسجيل الدخول
@@ -46,6 +46,12 @@
                             autocomplete="current-password"
                         />
                         <div class="flex items-center justify-between">
+                            <Link
+                                :href="route('home')"
+                                class="text-sm text-gray-600 hover:underline dark:text-gray-300"
+                            >
+                                العودة للصفحة الرئيسية
+                            </Link>
                             <button
                                 type="submit"
                                 class="rounded bg-[#61CE70] px-4 py-2 font-medium text-white hover:cursor-pointer hover:bg-green-600 disabled:opacity-60"
@@ -56,15 +62,15 @@
                                 >
                                 <span v-else>تسجيل الدخول</span>
                             </button>
-                            <Link
+                            <!-- <Link
                                 :href="route('password.request')"
                                 class="text-sm text-gray-600 hover:underline dark:text-gray-300"
                             >
                                 هل نسيت كلمة المرور؟
-                            </Link>
+                            </Link> -->
                         </div>
                     </form>
-                    <p
+                    <!-- <p
                         class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400"
                     >
                         ليس لديك حساب؟
@@ -74,7 +80,7 @@
                             class="text-[#61CE70] hover:underline"
                             >تسجيل</a
                         >
-                    </p>
+                    </p> -->
                 </div>
             </div>
         </div>

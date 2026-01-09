@@ -32,8 +32,7 @@ const submit = () => {
                     </p>
                     <ul class="list-inside list-disc space-y-1 text-sm">
                         <li>
-                            **user_identifier** (مطلوب: بريد الطالب الإلكتروني
-                            أو معرفه)
+                            **user_identifier** (مطلوب: رقم الطالب أو معرفه)
                         </li>
                         <li>
                             **exam_identifier** (مطلوب: عنوان الاختبار أو معرفه)

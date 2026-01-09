@@ -103,8 +103,7 @@ const closeModal = () => {
                         معلومات الملف الشخصي
                     </h2>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        تحديث معلومات الملف الشخصي وعنوان البريد الإلكتروني
-                        لحسابك.
+                        تحديث معلومات الملف الشخصي لحسابك.
                     </p>
                 </header>
                 <form
@@ -117,13 +116,13 @@ const closeModal = () => {
                         :error="profileForm.errors.name"
                         required
                     />
-                    <BaseInput
+                    <!-- <BaseInput
                         label="البريد الإلكتروني"
                         type="email"
                         v-model="profileForm.email"
                         :error="profileForm.errors.email"
                         required
-                    />
+                    /> -->
                     <BaseInput
                         label="رقم الموبايل"
                         v-model="profileForm.phone"

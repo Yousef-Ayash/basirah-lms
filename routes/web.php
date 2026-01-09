@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ViewController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+// use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ExamAttemptController;
 use App\Http\Controllers\ExamController;
@@ -87,8 +87,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 // Page for users whose accounts are pending approval
-Route::get('/approval-pending', [RegisteredUserController::class, 'approvalPending'])
-    ->name('auth.approval.pending');
+// Route::get('/approval-pending', [RegisteredUserController::class, 'approvalPending'])
+//     ->name('auth.approval.pending');
 
 // User profile management (edit, update, delete)
 Route::middleware('auth')->group(function () {
