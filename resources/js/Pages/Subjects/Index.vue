@@ -33,6 +33,7 @@ const props = defineProps({
 const filters = reactive({
     q: props.filters.q || '',
     level_id: props.filters.level_id || '',
+    course_id: props.filters.course_id || '',
 });
 
 watch(
@@ -40,6 +41,7 @@ watch(
     (newFilters) => {
         router.get(route('subjects.list'), newFilters, {
             preserveState: true,
+            preserveScroll: true,
             replace: true,
         });
     },
@@ -116,7 +118,11 @@ watch(
                     <h2 class="mb-1 text-lg font-semibold text-[#61CE70]">
                         {{ subject.title }}
                     </h2>
-                    <p>{{ subject.level }}</p>
+                    <div class="m-1 text-gray-500 dark:text-gray-300">
+                        <span>{{ subject.level.name }}</span>
+                        |
+                        <span>{{ subject.teacher.name }}</span>
+                    </div>
                     <p
                         class="line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
                     >
@@ -125,7 +131,7 @@ watch(
                     <div class="mt-2 text-xs text-gray-500">
                         <span>{{ subject.materials_count }} منهاج</span>
                         |
-                        <span>{{ subject.exams_count }} الاختبارات</span>
+                        <span>{{ subject.exams_count }} اختبارات</span>
                     </div>
                 </Card>
             </Link>

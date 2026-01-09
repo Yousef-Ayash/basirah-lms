@@ -192,7 +192,7 @@ const exportMarks = () => {
                                     ).toLocaleDateString()
                                 }}
                             </td>
-                            <td class="p-2">
+                            <td class="p-2 whitespace-nowrap">
                                 <BaseButton
                                     as="a"
                                     :href="route('admin.marks.edit', mark.id)"

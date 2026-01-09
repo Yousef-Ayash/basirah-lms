@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +20,6 @@ class SubjectMaterialFactory extends Factory
             'title' => fake()->sentence(4),
             'key_points' => fake()->sentence(10),
             'type' => $type,
-            // 'file_path' => $type === 'youtube' ? null : 'materials/sample-' . fake()->numberBetween(1, 10) . '.pdf',
             'youtube_id' => $type === 'youtube' ? 'dQw4w9WgXcQ' : null,
             'order' => fake()->numberBetween(0, 20),
         ];

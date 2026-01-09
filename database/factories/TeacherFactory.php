@@ -19,7 +19,8 @@ class TeacherFactory extends Factory
         return [
             'name' => fake()->name(),
             'bio' => fake()->paragraph(3),
-            // 'photo_path' => null, // handle images manually for now
+            'order' => fake()->unique()->numberBetween(1, 100),
+            // 'photo_path' => null, // handle images manually
         ];
     }
 }

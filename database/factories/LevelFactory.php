@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -11,8 +12,8 @@ class LevelFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'Level ' . fake()->unique()->numberBetween(1, 20),
-            'order' => fake()->numberBetween(1, 10),
+            'name' => 'Level ' . fake()->unique()->numberBetween(1, 100),
+            'order' => fake()->unique()->numberBetween(1, 100),
         ];
     }
 }

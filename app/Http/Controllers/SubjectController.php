@@ -41,10 +41,15 @@ class SubjectController extends Controller
 
         // Apply Search
         if ($q) {
-            $query->where('title', 'like', "%{$q}%");
+            $query->where(function ($sub) use ($q) {
+                $sub->where('title', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
+            });
         }
 
-        $subjects = $query->orderBy('title')
+        $subjects = $query
+            ->with(['level:id,name', 'course:id,title', 'teacher'])
+            ->orderBy('title')
             ->paginate(12)
             ->withQueryString();
 
@@ -58,7 +63,8 @@ class SubjectController extends Controller
             'levels' => $levels,
             'filters' => [
                 'q' => $q,
-                'course_id' => $courseId
+                'course_id' => $courseId,
+                'level_id' => $levelId
             ],
             'selectedCourse' => $selectedCourse
         ]);

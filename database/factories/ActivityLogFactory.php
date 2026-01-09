@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -12,11 +13,14 @@ class ActivityLogFactory extends Factory
     public function definition()
     {
         return [
+            'log_name' => 'default',
+            'description' => fake()->sentence(),
+            'event' => fake()->randomElement(['created', 'updated', 'deleted']),
+            'subject_type' => 'App\Models\Subject',
+            'subject_id' => fake()->randomDigitNotNull(),
+            'causer_type' => 'App\Models\User',
             'causer_id' => User::inRandomOrder()->first()?->id ?? User::factory(),
-            'action' => fake()->randomElement(['created_subject','deleted_material','approved_user']),
-            'subject_type' => null,
-            'subject_id' => null,
-            'properties' => ['note' => fake()->sentence()],
+            'properties' => ['ip' => fake()->ipv4()],
         ];
     }
 }

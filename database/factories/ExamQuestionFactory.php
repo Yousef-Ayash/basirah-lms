@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,8 +22,9 @@ class ExamQuestionFactory extends Factory
         return [
             'exam_id' => Exam::inRandomOrder()->first()?->id ?? Exam::factory(),
             'question_text' => fake()->sentence(12),
-            'options' => $options,
+            'options' => $options, // cast to json automatically by model
             'correct_answer' => $correct,
+            'mark' => fake()->randomFloat(2, 1, 10),
             'order' => fake()->numberBetween(0, 100),
         ];
     }
