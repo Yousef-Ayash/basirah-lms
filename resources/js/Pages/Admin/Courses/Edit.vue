@@ -43,7 +43,6 @@ const form = useForm({
     _method: 'PUT', // Spoofing PUT for file upload support in Laravel
     title: props.course.title || '',
     description: props.course.description || '',
-    order: props.course.order,
     cover: null,
     cover_url: props.course.cover_url || null,
     remove_cover: false,

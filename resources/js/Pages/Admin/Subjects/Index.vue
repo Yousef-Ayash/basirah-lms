@@ -68,7 +68,7 @@
                             <th class="p-2">المستوى</th>
                             <th class="p-2">المقرر</th>
                             <th class="p-2">المدرس</th>
-                            <th class="p-2">المقررات</th>
+                            <th class="p-2">الملفات</th>
                             <th class="p-2">المحاضرات</th>
                             <th class="p-2">الاختبارات</th>
                             <th class="p-2">الإجراءات</th>

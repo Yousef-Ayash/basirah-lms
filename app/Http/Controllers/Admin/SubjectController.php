@@ -56,7 +56,7 @@ class SubjectController extends Controller
 
         $levels = Level::orderBy('order')->get(['id', 'name']);
         $teachers = Teacher::orderBy('order')->get(['id', 'name']);
-        $courses = Course::orderBy('order')->get(['id', 'title']);
+        $courses = Course::orderBy('title')->get(['id', 'title']);
 
         return Inertia::render('Admin/Subjects/Index', [
             'subjects' => $subjects,
@@ -71,7 +71,7 @@ class SubjectController extends Controller
     {
         $levels = Level::orderBy('order')->get();
         $teachers = Teacher::orderBy('name')->get();
-        $courses = Course::orderBy('order')->get(['id', 'title']);
+        $courses = Course::orderBy('title')->get(['id', 'title']);
 
         return Inertia::render('Admin/Subjects/Create', ['levels' => $levels, 'teachers' => $teachers, 'courses' => $courses]);
     }
@@ -97,7 +97,7 @@ class SubjectController extends Controller
     {
         $levels = Level::orderBy('order')->get();
         $teachers = Teacher::orderBy('name')->get();
-        $courses = Course::orderBy('order')->get(['id', 'title']);
+        $courses = Course::orderBy('title')->get(['id', 'title']);
 
         return Inertia::render('Admin/Subjects/Edit', [
             'subject' => $subject->load('materials', 'exams'),

@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ViewController;
-// use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ExamAttemptController;
 use App\Http\Controllers\ExamController;
@@ -19,7 +18,6 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\DashboardController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TeacherController as AdminTeacherController;
 use App\Http\Controllers\TeacherController;
@@ -27,20 +25,10 @@ use App\Http\Controllers\Admin\LevelController as AdminLevelController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\SecureMediaController;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Inertia\Inertia;
-
-
-// Public and Foundational Routes
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
 
 // #####################################################################
@@ -68,10 +56,6 @@ Route::get('/join-us', function () {
     return Inertia::render('General/JoinUs');
 })->name('join');
 
-// Route::get('/teachers-new', function () {
-//     return Inertia::render('General/Teachers');
-// })->name('teachers');
-
 Route::get('/main-subjects', function () {
     return Inertia::render('General/MainSubjects');
 })->name('subjects');
@@ -87,11 +71,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'approved'])
     ->name('dashboard');
 
-// Page for users whose accounts are pending approval
-// Route::get('/approval-pending', [RegisteredUserController::class, 'approvalPending'])
-//     ->name('auth.approval.pending');
-
-// User profile management (edit, update, delete)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -104,37 +83,21 @@ Route::middleware('auth')->group(function () {
 // #####################################################################
 Route::middleware(['auth', 'approved'])->group(function () {
 
-    // 1. Main Entry: "Subjects" link in nav now shows COURSES
+    //  Main Entry: "Subjects" link in nav now shows COURSES
     Route::get('/subjects', [CourseController::class, 'index'])
-        ->name('courses.index'); // Name it courses.index or subjects.index depending on your nav links
+        ->name('courses.index');
 
-    // 2. Subject List: Used when clicking a course to see its subjects
+    // Subject List: Used when clicking a course to see its subjects
     Route::get('/subjects/list', [SubjectController::class, 'index'])
         ->name('subjects.list');
 
-
     // ## Subjects, Materials & Bookmarks
-    // Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
     Route::get('materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
 
-    // ## Courses (Replaces the old Subjects Index)
-    // 1. We override the 'subjects.index' name to point to CourseController
-    //    so existing links in the Sidebar/Dashboard still work but show Courses.
-    // Route::get('/subjects', [CourseController::class, 'index'])
-    //     ->name('subjects.index');
-
-    // 2. Add route to view a specific Course (which lists its subjects)
-    // Route::get('/courses/{course}', [CourseController::class, 'show'])
-    //     ->name('courses.show');
-
-
-
-    // 3. Subject Detail: Viewing a specific subject's materials
+    // Subject Detail: Viewing a specific subject's materials
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])
         ->name('subjects.show');
-
-    // ==================
 
     Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
     Route::post('/bookmarks', [BookmarkController::class, 'store'])->name('bookmarks.store');
@@ -151,6 +114,11 @@ Route::middleware(['auth', 'approved'])->group(function () {
     // ## Export and download attempts
     Route::get('/attempts/export.xlsx', [ExamAttemptController::class, 'exportAttemptsExcel'])->name('attempts.export.xlsx');
     Route::get('/attempts/export_ar.pdf', [ExportController::class, 'exportAttemptsPdf'])->name('attempts.export.pdf');
+
+    // ## Secure Media Route
+    Route::get('/private-media/{media}/{conversion?}', [SecureMediaController::class, 'show'])
+        ->where('media', '[0-9]+')
+        ->name('media.secure');
 });
 
 // #####################################################################
@@ -170,11 +138,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
 
     // ## Courses Management
     Route::resource('courses', AdminCourseController::class)->except(['show']);
-
-    // CHANGE 1: Point 'subjects.index' URL to CourseController
-    // Route::get('/subjects', [CourseController::class, 'index'])->name('subjects.index');
-
-    // CHANGE 2: Add route for viewing a single Course (which lists its subjects)
     Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
     // ## Exam, Question, and Attempt Management
@@ -192,7 +155,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::post('exams/{exam}/questions/import/commit', [AdminQuestionController::class, 'importCommit'])->name('exams.questions.import.commit');
     Route::get('exams/{exam}/attempts', [AdminExamController::class, 'attempts'])->name('exams.attempts.index');
     Route::get('exams/{exam}/attempts/{attempt}', [AdminExamController::class, 'attemptShow'])->name('exams.attempts.show');
-    // Route::delete('exams/')
 
     // ## Exam Logging & Auditing
     Route::get('logs/exam', [ExamLogController::class, 'index'])->name('logs.exam.index');

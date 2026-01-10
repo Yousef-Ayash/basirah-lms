@@ -74,7 +74,6 @@ const deleteCourse = () => {
                 <table class="w-full text-sm">
                     <thead class="bg-gray-100 text-right dark:bg-gray-700">
                         <tr>
-                            <th class="p-2">الترتيب</th>
                             <th class="p-2">العنوان</th>
                             <th class="p-2">عدد المواد</th>
                             <th class="p-2">الإجراءات</th>
@@ -86,7 +85,6 @@ const deleteCourse = () => {
                             :key="course.id"
                             class="border-t border-gray-200 dark:border-gray-700"
                         >
-                            <td class="p-2">{{ course.order }}</td>
                             <td class="p-2 font-medium">{{ course.title }}</td>
                             <td class="p-2">
                                 {{ course.subjects_count }} مواد

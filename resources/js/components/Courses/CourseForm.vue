@@ -16,20 +16,6 @@
             @input="emitModel"
         />
 
-        <div>
-            <BaseInput
-                label="الترتيب"
-                type="number"
-                v-model="local.order"
-                :error="local.errors?.order"
-                placeholder="اتركه فارغاً للترتيب التلقائي"
-                @input="emitModel"
-            />
-            <p class="mt-1 text-xs text-gray-500">
-                يحدد ترتيب ظهور المقرر في القوائم.
-            </p>
-        </div>
-
         <BaseFileInput
             label="صورة الغلاف (اختياري)"
             :error="local.errors?.cover"
@@ -42,12 +28,6 @@
                 formatBytes(local.cover.size)
             }})
         </div>
-        <!-- <img
-            v-else-if="local.cover_url"
-            :src="local.cover_url"
-            class="mt-2 max-w-xs rounded-lg border border-gray-200 dark:border-gray-700"
-            alt="cover preview"
-        /> -->
         <div
             v-else-if="local.cover_url && !local.remove_cover"
             class="group relative mt-2 inline-block"

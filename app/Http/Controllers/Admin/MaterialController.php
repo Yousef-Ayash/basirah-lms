@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -27,18 +28,37 @@ class MaterialController extends Controller
             $data['youtube_id'] = $youtubeId;
         }
 
-        // Create the database record for the material first.
+        // // Create the database record for the material first.
+        // $material = SubjectMaterial::create($data);
+
+        // // If a file was uploaded (for 'pdf' or 'picture'), add it to the media library.
+        // if ($request->hasFile('file')) {
+        //     $material->addMediaFromRequest('file')->toMediaCollection('attachments');
+        //     $material = $material->fresh();
+        //     $coverUrl = $material->file_url; // accessor
+        // }
+
+        // // return redirect()->route('admin.subjects.edit', $subject->id)->with('success', 'Material uploaded.');
+        // return redirect()->route('admin.subjects.edit', $subject->id)->with('success', __('messages.material_uploaded'));
+
+        // Create the database record
         $material = SubjectMaterial::create($data);
 
-        // If a file was uploaded (for 'pdf' or 'picture'), add it to the media library.
+        // Upload Handling
         if ($request->hasFile('file')) {
-            $material->addMediaFromRequest('file')->toMediaCollection('attachments');
+            // REMOVE the manual storeAs('materials', ..., 'public') if it exists
+
+            // USE Spatie to handle it. It will read the 'private' disk 
+            // from the registerMediaCollections method we added to the model.
+            $material->addMediaFromRequest('file')
+                ->toMediaCollection('attachments');
+
+            // Refresh to get media data
             $material = $material->fresh();
-            $coverUrl = $material->file_url; // accessor
         }
 
-        // return redirect()->route('admin.subjects.edit', $subject->id)->with('success', 'Material uploaded.');
-        return redirect()->route('admin.subjects.edit', $subject->id)->with('success', __('messages.material_uploaded'));
+        return redirect()->route('admin.subjects.edit', $subject->id)
+            ->with('success', __('messages.material_uploaded'));
     }
 
     public function destroy(SubjectMaterial $material)

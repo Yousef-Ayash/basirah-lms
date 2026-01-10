@@ -33,6 +33,14 @@ class Teacher extends Model implements HasMedia
             ->sharpen(10);
     }
 
+    // Define the collection to use the 'public' disk
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('photo')
+            ->useDisk('public') // Force Public Disk
+            ->singleFile();
+    }
+
     protected $appends = ['photo_url'];
 
     /**

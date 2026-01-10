@@ -48,7 +48,7 @@ const form = useForm({
     description: '',
     level_id: 0,
     teacher_id: 0,
-    course: 0,
+    course_id: 0,
     cover: null,
 });
 

@@ -19,8 +19,7 @@ class CourseController extends Controller
             $query->where('title', 'like', "%{$q}%");
         }
 
-        // Order by custom order column, then title
-        $courses = $query->orderBy('order')->orderBy('title')
+        $courses = $query->orderBy('title')
             ->paginate(15)
             ->withQueryString();
 

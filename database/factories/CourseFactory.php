@@ -15,7 +15,6 @@ class CourseFactory extends Factory
         return [
             'title' => fake()->unique()->words(3, true),
             'description' => fake()->paragraph(),
-            'order' => fake()->numberBetween(1, 100),
             'created_by' => User::inRandomOrder()->first()?->id ?? User::factory(),
         ];
     }

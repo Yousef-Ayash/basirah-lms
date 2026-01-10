@@ -36,7 +36,6 @@ defineOptions({ layout: AdminLayout });
 const form = useForm({
     title: '',
     description: '',
-    order: '',
     cover: null,
 });
 

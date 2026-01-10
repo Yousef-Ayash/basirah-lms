@@ -38,7 +38,7 @@
             <div v-show="active === 1" class="space-y-6">
                 <AddMaterialForm :subject-id="subject.id" />
 
-                <SectionHeader title="المقررات والمحاضرات الموجودة" />
+                <SectionHeader title="الملفات والمحاضرات الموجودة" />
                 <Card v-if="subject.materials.length">
                     <ul class="divide-y dark:divide-gray-700">
                         <li
@@ -80,7 +80,7 @@
                 </Card>
                 <EmptyState
                     v-else
-                    message="لم تتم إضافة أي مقررات لهذه المادة بعد."
+                    message="لم تتم إضافة أي ملفات لهذه المادة بعد."
                 />
             </div>
 
@@ -171,7 +171,7 @@ const form = useForm({
 
 const tabLabels = computed(() => [
     'التفاصيل',
-    'المقررات والمحاضرات',
+    'الملفات والمحاضرات',
     'الاختبارات',
 ]);
 

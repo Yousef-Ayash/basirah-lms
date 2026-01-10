@@ -15,7 +15,6 @@ class Course extends Model implements HasMedia
     protected $fillable = [
         'title',
         'description',
-        'order',
         'created_by',
     ];
 

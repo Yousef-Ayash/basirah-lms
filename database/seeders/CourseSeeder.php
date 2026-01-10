@@ -14,9 +14,9 @@ class CourseSeeder extends Seeder
 
         // Create 3 main courses
         $courses = [
-            ['title' => 'المقرر التأسيسي', 'order' => 1],
-            ['title' => 'المقرر المتوسط', 'order' => 2],
-            ['title' => 'المقرر المتقدم', 'order' => 3],
+            ['title' => 'المقرر التأسيسي'],
+            ['title' => 'المقرر المتوسط'],
+            ['title' => 'المقرر المتقدم'],
         ];
 
         foreach ($courses as $courseData) {
@@ -24,7 +24,6 @@ class CourseSeeder extends Seeder
                 ['title' => $courseData['title']],
                 [
                     'description' => 'وصف تجريبي للمقرر التدريبي...',
-                    'order' => $courseData['order'],
                     'created_by' => $admin ? $admin->id : null,
                 ]
             );

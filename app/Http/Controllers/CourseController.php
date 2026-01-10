@@ -31,7 +31,7 @@ class CourseController extends Controller
                 ->orWhere('description', 'like', "%{$q}%");
         }
 
-        $courses = $query->orderBy('order')
+        $courses = $query
             ->orderBy('title')
             ->paginate(12)
             ->withQueryString();
