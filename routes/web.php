@@ -26,6 +26,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Admin\LevelController as AdminLevelController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Inertia\Inertia;
@@ -47,8 +48,8 @@ use Inertia\Inertia;
 // #####################################################################
 
 Route::get('/', function () {
-    $teachers = \App\Models\Teacher::orderBy('order')->get();
-    $subjects = \App\Models\Subject::orderBy('id')->get(['title', 'description']);
+    $teachers = Teacher::orderBy('order')->get();
+    $subjects = Subject::orderBy('id')->get(['title', 'description']);
     return Inertia::render('General/Home', [
         'teachers' => $teachers,
         'subjects' => $subjects
@@ -230,6 +231,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
 
     // ## Levels routes
     Route::resource('levels', AdminLevelController::class)->except(['show']);
+
+    // ## Admin user management
+    Route::resource('admins', AdminUserController::class);
 });
 
 require __DIR__ . '/auth.php';

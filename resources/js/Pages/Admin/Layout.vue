@@ -51,6 +51,7 @@ const adminLinks = computed(() => [
     { label: 'المواد الدراسية', to: route('admin.subjects.index') },
     { label: 'الاختبارات', to: route('admin.exams.index') },
     { label: 'الطلاب', to: route('admin.students.index') },
+    { label: 'المسؤولين', to: route('admin.admins.index') },
     { label: 'الدرجات', to: route('admin.marks.index') },
     { label: 'التقارير', to: route('admin.reports.index') },
     { label: 'السجلات', to: route('admin.logs.exam.index') },
