@@ -22,20 +22,48 @@ class Subject extends Model implements HasMedia // Implement the interface
     ];
 
     // Optional: Add an accessor for easy access in your Vue components
-    protected $appends = ['cover_url'];
+    // protected $appends = ['cover_url'];
+    protected $appends = ['cover_url', 'cover_thumb_url'];
 
-    public function getCoverUrlAttribute(): ?string
+    // public function getCoverUrlAttribute(): ?string
+    // {
+    //     return $this->getFirstMediaUrl('cover', 'thumb'); // Get 'thumb' conversion
+    // }
+
+    public function registerMediaCollections(): void
     {
-        return $this->getFirstMediaUrl('cover', 'thumb'); // Get 'thumb' conversion
+        $this->addMediaCollection('cover')
+            ->useDisk('private') // Store on the secure disk
+            ->singleFile();
     }
 
     // Define your media conversions here
+    // public function registerMediaConversions(Media $media = null): void
+    // {
+    //     $this->addMediaConversion('thumb')
+    //         ->width(400)
+    //         ->height(200)
+    //         ->sharpen(10);
+    // }
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(400)
-            ->height(200)
-            ->sharpen(10);
+            ->height(400)
+            ->sharpen(10)
+            ->nonQueued(); // Process immediately for testing
+    }
+
+    public function getCoverUrlAttribute()
+    {
+        $media = $this->getFirstMedia('cover');
+        return $media ? route('media.secure', ['media' => $media->id]) : null;
+    }
+
+    public function getCoverThumbUrlAttribute()
+    {
+        $media = $this->getFirstMedia('cover');
+        return $media ? route('media.secure', ['media' => $media->id, 'conversion' => 'thumb']) : null;
     }
 
     public function level()

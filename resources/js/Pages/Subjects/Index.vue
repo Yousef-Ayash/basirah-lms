@@ -105,8 +105,8 @@ watch(
                         class="mb-3 flex h-40 w-full items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700"
                     >
                         <img
-                            v-if="subject.cover_url"
-                            :src="subject.cover_url"
+                            v-if="subject.cover_thumb_url"
+                            :src="subject.cover_thumb_url"
                             alt="Subject Cover"
                             class="h-full w-full rounded-md object-cover"
                         />
