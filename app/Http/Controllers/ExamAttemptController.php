@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
@@ -104,6 +105,9 @@ class ExamAttemptController extends Controller
         $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
         $expiresAt = $timeLimitSeconds ? $now->copy()->addSeconds($timeLimitSeconds) : null;
 
+        // Calculate remaining seconds relative to NOW on the server
+        $remainingSeconds = $expiresAt ? max(0, $expiresAt->diffInSeconds(now())) : null;
+
         return Inertia::render('Exams/Take', [
             'exam' => [
                 'id' => $exam->id,
@@ -114,6 +118,7 @@ class ExamAttemptController extends Controller
                 'id' => $attempt->id,
                 'started_at' => $attempt->started_at,
                 'expires_at' => $expiresAt,
+                'remaining_seconds' => $remainingSeconds,
             ],
             'questions' => $displayQuestions,
         ]);
@@ -347,8 +352,8 @@ class ExamAttemptController extends Controller
             $questions = $questionIdsForThisAttempt ?
                 // If specific questions were stored, fetch only those
                 ExamQuestion::whereIn('id', $questionIdsForThisAttempt)
-                    ->get()
-                    ->keyBy('id')
+                ->get()
+                ->keyBy('id')
                 // Fallback for older attempts: get all questions for the exam
                 : $exam->questions()->get()->keyBy('id');
 

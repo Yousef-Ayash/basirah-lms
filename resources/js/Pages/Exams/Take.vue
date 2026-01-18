@@ -33,21 +33,40 @@ const now = ref(new Date());
 let timerInterval = null;
 
 const elapsedTime = computed(() => Math.floor((now.value - startedAt) / 1000));
-const timeLeft = computed(() =>
-    Math.max(0, timeLimitInSeconds - elapsedTime.value),
+
+// const timeLeft = computed(() =>
+//     Math.max(0, timeLimitInSeconds - elapsedTime.value),
+// );
+const timeLeft = ref(
+    props.attempt.remaining_seconds ?? props.exam.time_limit_minutes * 60,
 );
+
+// const minutesLeft = computed(() =>
+//     String(Math.floor(timeLeft.value / 60)).padStart(2, '0'),
+// );
 const minutesLeft = computed(() =>
     String(Math.floor(timeLeft.value / 60)).padStart(2, '0'),
 );
+
+// const secondsLeft = computed(() =>
+//     String(timeLeft.value % 60).padStart(2, '0'),
+// );
 const secondsLeft = computed(() =>
     String(timeLeft.value % 60).padStart(2, '0'),
 );
 
 // ---------- submit / abort helpers ----------
-const csrfToken =
-    document
-        .querySelector('meta[name="csrf-token"]')
-        ?.getAttribute('content') || '';
+// const csrfToken =
+//     document
+//         .querySelector('meta[name="csrf-token"]')
+//         ?.getAttribute('content') || '';
+
+function getCsrfToken() {
+    const match = document.cookie.match(
+        new RegExp('(^|;)\\s*XSRF-TOKEN\\s*=\\s*([^;]+)'),
+    );
+    return match ? decodeURIComponent(match[2]) : '';
+}
 
 const submitExam = () => {
     // make sure we stop the unload handlers to avoid accidental abort on submit
@@ -88,13 +107,19 @@ function handlePageHide(event) {
     // We'll send a keepalive POST to abort the attempt.
     try {
         const url = route('attempts.abort', { attempt: props.attempt.id });
+        const token = getCsrfToken();
 
         // try fetch with keepalive (allows including CSRF token and JSON)
         // Note: keepalive requests are best-effort and may be size-limited.
         fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ _token: csrfToken }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': token,
+            },
+            // Laravel expects _token in body or X-XSRF-TOKEN header.
+            // Sending both is safest.
+            body: JSON.stringify({ _token: token }),
             keepalive: true,
         }).catch(() => {
             // ignore failures here; best-effort. Optionally fallback to sendBeacon (without CSRF).
@@ -128,11 +153,21 @@ function removeUnloadListeners() {
 // ---------- lifecycle ----------
 onMounted(() => {
     // start timers as you already do
+    // timerInterval = setInterval(() => {
+    //     now.value = new Date();
+    //     if (timeLeft.value <= 0) {
+    //         // final save just in case
+    //         submitExam();
+    //     }
+    // }, 1000);
+
     timerInterval = setInterval(() => {
-        now.value = new Date();
-        if (timeLeft.value <= 0) {
-            // final save just in case
+        if (timeLeft.value > 0) {
+            timeLeft.value--;
+        } else {
+            // Time is up
             submitExam();
+            clearInterval(timerInterval);
         }
     }, 1000);
 
