@@ -34,18 +34,6 @@ const props = defineProps({
                     class="h-auto w-full"
                 />
 
-                <!-- <div
-                    v-else-if="material.type === 'youtube'"
-                    class="aspect-video"
-                >
-                    <iframe
-                        :src="material.embed_url"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        class="h-full w-full"
-                    ></iframe>
-                </div> -->
                 <div
                     v-else-if="material.type === 'youtube'"
                     class="aspect-video"
@@ -53,7 +41,7 @@ const props = defineProps({
                     <iframe
                         :src="material.embed_url"
                         frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                         referrerpolicy="no-referrer-when-downgrade"
                         class="h-full w-full"

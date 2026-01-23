@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMaterialRequest;
@@ -53,19 +54,19 @@ class MaterialController extends Controller
 
     public function show(SubjectMaterial $material)
     {
-        // return response()->json([
-        //     'id' => $material->id,
-        //     'subject_id' => $material->subject_id,
-        //     'title' => $material->title,
-        //     'type' => $material->type,
-        //     'preview_url' => $material->preview_url,
-        //     'thumbnail_url' => $material->thumbnail_url,
-        //     'key_points' => $material->key_points,
-        // ]);
         $material->load('subject:id,title');
 
         return Inertia::render('Shared/MaterialViewer', [
-            'material' => $material,
+            'material' => [
+                'id' => $material->id,
+                'title' => $material->title,
+                'type' => $material->type,
+                'key_points' => $material->key_points,
+                'preview_url' => $material->preview_url,
+                'thumbnail_url' => $material->thumbnail_url,
+                'embed_url' => $material->embed_url,
+                'subject' => $material->subject,
+            ],
         ]);
     }
 

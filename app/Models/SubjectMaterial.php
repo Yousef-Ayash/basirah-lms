@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Services\YoutubeService;
 
 class SubjectMaterial extends Model implements hasMedia
 {
@@ -23,7 +24,7 @@ class SubjectMaterial extends Model implements hasMedia
         'order',
     ];
 
-    protected $appends = ['preview_url', 'thumbnail_url'];
+    protected $appends = ['preview_url', 'thumbnail_url', 'embed_url'];
 
     // Register the collection and force the 'private' disk
     public function registerMediaCollections(): void
@@ -51,9 +52,14 @@ class SubjectMaterial extends Model implements hasMedia
 
     public function getThumbnailUrlAttribute()
     {
+        if ($this->type === 'youtube' && $this->youtube_id) {
+            return YoutubeService::getThumbnail($this->youtube_id);
+        }
+
         if ($this->type === 'youtube') return "https://img.youtube.com/vi/{$this->youtube_id}/hqdefault.jpg";
         $media = $this->getFirstMedia('attachments');
-        return $media ? route('media.secure', ['media' => $media->id, 'conversion' => 'thumb']) : null;
+
+        return $this->preview_url;
     }
 
     public function getFileUrlAttribute(): ?string
@@ -61,41 +67,14 @@ class SubjectMaterial extends Model implements hasMedia
         return $this->getFirstMediaUrl('attachments');
     }
 
-
     public function getEmbedUrlAttribute(): ?string
     {
         if ($this->type === 'youtube' && $this->youtube_id) {
-            // Use privacy-enhanced domain and include common params:
-            // - rel=0: don't show related videos from other channels
-            // - modestbranding=1: minimal YouTube branding
-            // - enablejsapi=1: allows player API if you later use JS control
-            // - origin: required by YouTube for some embed checks (use app URL)
-            $origin = config('app.url') ? urlencode(rtrim(config('app.url'), '/')) : null;
-            $params = [
-                'rel' => '0',
-                'modestbranding' => '1',
-                'enablejsapi' => '1',
-            ];
-            if ($origin) {
-                $params['origin'] = $origin;
-            }
-            $query = http_build_query($params);
-
-            // Use youtube-nocookie.com (privacy-enhanced) domain which avoids some cookie/referrer checks
-            return "https://www.youtube-nocookie.com/embed/{$this->youtube_id}?{$query}";
+            return YoutubeService::getEmbedUrl($this->youtube_id);
         }
-
-        // if ($this->type === 'picture' && $this->getFirstMediaUrl('attachments')) {
-        //     return $this->getFirstMediaUrl('attachments');
-        // }
-
-        if ($this->type === 'picture') {
-            // For private images, we use the secure route as the source
-            return $this->preview_url;
-        }
-
         return null;
     }
+
 
     public function subject()
     {
