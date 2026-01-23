@@ -4,7 +4,7 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 
 defineOptions({ layout: StudentLayout });
 
@@ -18,96 +18,65 @@ const props = defineProps({
 const currentIndex = ref(0);
 const answers = reactive({});
 const showConfirm = ref(false);
+const showAbortConfirm = ref(false);
 
-// form for Inertia post
 const form = useForm({
     answers: {},
 });
 
-let showAbortConfirm = ref(false);
-
 // ------------------ timer logic ------------------
-const timeLimitInSeconds = props.exam.time_limit_minutes * 60;
-const startedAt = new Date(props.attempt.started_at);
-const now = ref(new Date());
+// Initialize timeLeft directly from the server provided seconds.
+// If null (unlimited time), we set a high number or handle null explicitly.
+const timeLeft = ref(props.attempt.remaining_seconds ?? null);
+
 let timerInterval = null;
 
-const elapsedTime = computed(() => Math.floor((now.value - startedAt) / 1000));
+const minutesLeft = computed(() => {
+    if (timeLeft.value === null) return '--';
+    return String(Math.floor(timeLeft.value / 60)).padStart(2, '0');
+});
 
-// const timeLeft = computed(() =>
-//     Math.max(0, timeLimitInSeconds - elapsedTime.value),
-// );
-const timeLeft = ref(
-    props.attempt.remaining_seconds ?? props.exam.time_limit_minutes * 60,
-);
-
-// const minutesLeft = computed(() =>
-//     String(Math.floor(timeLeft.value / 60)).padStart(2, '0'),
-// );
-const minutesLeft = computed(() =>
-    String(Math.floor(timeLeft.value / 60)).padStart(2, '0'),
-);
-
-// const secondsLeft = computed(() =>
-//     String(timeLeft.value % 60).padStart(2, '0'),
-// );
-const secondsLeft = computed(() =>
-    String(timeLeft.value % 60).padStart(2, '0'),
-);
+const secondsLeft = computed(() => {
+    if (timeLeft.value === null) return '--';
+    return String(timeLeft.value % 60).padStart(2, '0');
+});
 
 // ---------- submit / abort helpers ----------
-// const csrfToken =
-//     document
-//         .querySelector('meta[name="csrf-token"]')
-//         ?.getAttribute('content') || '';
-
-function getCsrfToken() {
-    const match = document.cookie.match(
-        new RegExp('(^|;)\\s*XSRF-TOKEN\\s*=\\s*([^;]+)'),
-    );
-    return match ? decodeURIComponent(match[2]) : '';
-}
+const csrfToken =
+    document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute('content') || '';
 
 const submitExam = () => {
-    // make sure we stop the unload handlers to avoid accidental abort on submit
     removeUnloadListeners();
-
-    form.answers = { ...answers }; // fixed spread of answers object
+    form.answers = { ...answers };
     form.post(route('attempts.submit', { attempt: props.attempt.id }));
 };
 
 const localAbort = async () => {
-    // Called by the "End exam" button — we want to show a confirm dialog and then call abort.
     removeUnloadListeners();
-
-    // perform a normal Inertia post so the abort goes through and user is redirected
-    // (You already have an abort route: POST /attempts/{attempt}/abort)
     await fetch(route('attempts.abort', { attempt: props.attempt.id }), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken, // Ensure token is sent in header too
+        },
         body: JSON.stringify({ _token: csrfToken }),
     });
-
-    // Redirect back to exam show (or let server redirect). We'll navigate to exams.show
-    // window.location.href = route('exams.show', { exam: props.exam.id });
     window.location.href = route('attempts.index');
-    showAbortConfirm = false;
 };
 
-// ---------- unload handlers ----------
+// ---------- unload handlers (No changes here) ----------
 function handleBeforeUnload(event) {
-    // Standard way to ask the browser to confirm navigation.
     event.preventDefault();
     event.returnValue = '';
     return '';
 }
 
 function handlePageHide(event) {
-    // pagehide runs only when the page is truly unloading (i.e., the user confirmed the refresh/close).
-    // We'll send a keepalive POST to abort the attempt.
     try {
         const url = route('attempts.abort', { attempt: props.attempt.id });
-        const token = getCsrfToken();
+        // const token = getCsrfToken();
 
         // try fetch with keepalive (allows including CSRF token and JSON)
         // Note: keepalive requests are best-effort and may be size-limited.
@@ -119,7 +88,7 @@ function handlePageHide(event) {
             },
             // Laravel expects _token in body or X-XSRF-TOKEN header.
             // Sending both is safest.
-            body: JSON.stringify({ _token: token }),
+            body: JSON.stringify({ _token: csrfToken }),
             keepalive: true,
         }).catch(() => {
             // ignore failures here; best-effort. Optionally fallback to sendBeacon (without CSRF).
@@ -152,24 +121,17 @@ function removeUnloadListeners() {
 
 // ---------- lifecycle ----------
 onMounted(() => {
-    // start timers as you already do
-    // timerInterval = setInterval(() => {
-    //     now.value = new Date();
-    //     if (timeLeft.value <= 0) {
-    //         // final save just in case
-    //         submitExam();
-    //     }
-    // }, 1000);
-
-    timerInterval = setInterval(() => {
-        if (timeLeft.value > 0) {
-            timeLeft.value--;
-        } else {
-            // Time is up
-            submitExam();
-            clearInterval(timerInterval);
-        }
-    }, 1000);
+    // Only start timer if there is a time limit
+    if (timeLeft.value !== null) {
+        timerInterval = setInterval(() => {
+            if (timeLeft.value > 0) {
+                timeLeft.value--;
+            } else {
+                clearInterval(timerInterval);
+                submitExam();
+            }
+        }, 1000);
+    }
 
     addUnloadListeners();
 });
@@ -197,7 +159,7 @@ onUnmounted(() => {
                     v-if="exam.time_limit_minutes"
                     class="rounded-md bg-red-500 px-3 py-1 font-mono text-xl text-white"
                 >
-                    {{ minutesLeft }}:{{ secondsLeft }}
+                    {{ minutesLeft }}:{{ Math.trunc(secondsLeft) }}
                 </div>
             </div>
         </div>

@@ -182,7 +182,13 @@ const startExam = () => {
             <div class="mt-6 text-center">
                 <Alert :type="alertInfo.type" :message="alertInfo.message" />
 
-                <BaseButton @click="showConfirm = true">
+                <BaseButton
+                    @click="showConfirm = true"
+                    :disabled="!can_start"
+                    :class="{
+                        '!cursor-not-allowed': !can_start,
+                    }"
+                >
                     بدء الاختبار
                 </BaseButton>
 

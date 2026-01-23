@@ -110,6 +110,8 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('attempts/{attempt}/autosave', [ExamAttemptController::class, 'autosave'])->name('attempts.autosave');
     Route::post('attempts/{attempt}/submit', [ExamAttemptController::class, 'submit'])->name('attempts.submit');
     Route::post('/attempts/{attempt}/abort', [ExamAttemptController::class, 'abort'])->name('attempts.abort');
+    // Route::get('/attempts/{attempt}/sync', [App\Http\Controllers\ExamAttemptController::class, 'sync'])
+    // ->name('attempts.sync');
 
     // ## Export and download attempts
     Route::get('/attempts/export.xlsx', [ExamAttemptController::class, 'exportAttemptsExcel'])->name('attempts.export.xlsx');

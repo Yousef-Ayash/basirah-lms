@@ -102,11 +102,17 @@ class ExamAttemptController extends Controller
         });
 
         // compute time_left (seconds) if time_limit_minutes present
+        // $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
+        // $expiresAt = $timeLimitSeconds ? $now->copy()->addSeconds($timeLimitSeconds) : null;
+
+        // compute time_left (seconds) if time_limit_minutes present
         $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
-        $expiresAt = $timeLimitSeconds ? $now->copy()->addSeconds($timeLimitSeconds) : null;
+
+        // Calculate expiry based on server time
+        $expiresAt = $timeLimitSeconds ? $attempt->started_at->copy()->addSeconds($timeLimitSeconds) : null;
 
         // Calculate remaining seconds relative to NOW on the server
-        $remainingSeconds = $expiresAt ? max(0, $expiresAt->diffInSeconds(now())) : null;
+        $remainingSeconds = $expiresAt ? max(0, now()->diffInSeconds($expiresAt, false)) : null;
 
         return Inertia::render('Exams/Take', [
             'exam' => [
@@ -117,11 +123,25 @@ class ExamAttemptController extends Controller
             'attempt' => [
                 'id' => $attempt->id,
                 'started_at' => $attempt->started_at,
-                'expires_at' => $expiresAt,
                 'remaining_seconds' => $remainingSeconds,
             ],
             'questions' => $displayQuestions,
         ]);
+
+        // return Inertia::render('Exams/Take', [
+        //     'exam' => [
+        //         'id' => $exam->id,
+        //         'title' => $exam->title,
+        //         'time_limit_minutes' => $exam->time_limit_minutes,
+        //     ],
+        //     'attempt' => [
+        //         'id' => $attempt->id,
+        //         'started_at' => $attempt->started_at,
+        //         'expires_at' => $expiresAt,
+        //     ],
+        //     // 'initialRemainingSeconds' => $remainingSeconds,
+        //     'questions' => $displayQuestions,
+        // ]);
     }
 
     // GET attempts list for user
