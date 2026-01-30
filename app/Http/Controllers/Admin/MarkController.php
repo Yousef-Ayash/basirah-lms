@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MarksExport;
 use App\Models\StudentExamAttempt;
+use App\Models\ExamQuestion;
 
 class MarkController extends Controller
 {
@@ -52,47 +54,6 @@ class MarkController extends Controller
         return Inertia::render('Admin/Marks/Create', compact('exams', 'users'));
     }
 
-    // public function store(StoreMarkRequest $request)
-    // {
-    //     $data = $request->validated();
-    //     $data['created_by'] = auth()->id();
-    //     $data['updated_by'] = auth()->id();
-
-    //     MarksReport::create($data);
-
-    //     // If attempt_id provided, sync attempt fields as well
-    //     if (!empty($data['attempt_id'])) {
-    //         $attempt = StudentExamAttempt::find($data['attempt_id']);
-    //         if ($attempt) {
-    //             $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
-    //             $attempt->mark = $data['marks'];
-    //             $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
-    //             $attempt->scored_at = now();
-    //             $attempt->submitted_at = $attempt->submitted_at ?? now();
-    //             $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
-    //             $attempt->passed_at = $attempt->passed ? now() : null;
-    //             $attempt->save();
-    //         }
-    //     } else {
-    //         // Try to find an attempt for this user + exam (optional sync)
-    //         $attempt = StudentExamAttempt::where('user_id', $data['user_id'])
-    //             ->where('exam_id', $data['exam_id'])->latest('created_at')->first();
-    //         if ($attempt) {
-    //             $totalPossible = $attempt->exam->questions()->sum(fn($q) => $q->mark ?? 1);
-    //             $attempt->mark = $data['marks'];
-    //             $attempt->score = $totalPossible > 0 ? round(($data['marks'] / $totalPossible) * 100, 2) : null;
-    //             $attempt->scored_at = now();
-    //             $attempt->submitted_at = $attempt->submitted_at ?? now();
-    //             $attempt->passed = ($attempt->score !== null) ? ($attempt->score >= ($attempt->exam->pass_threshold ?? 50)) : null;
-    //             $attempt->passed_at = $attempt->passed ? now() : null;
-    //             $attempt->save();
-    //         }
-    //     }
-
-    //     // return redirect()->route('admin.marks.index')->with('success', 'Mark added.');
-    //     return redirect()->route('admin.marks.index')->with('success', __('messages.mark_added'));
-    // }
-
     public function store(StoreMarkRequest $request)
     {
         $data = $request->validated();
@@ -117,7 +78,7 @@ class MarkController extends Controller
             // Fallback: if exam does not provide a total, try sum of question marks
             if (!$totalPossible) {
                 try {
-                    $totalPossible = \App\Models\Question::where('exam_id', $data['exam_id'])
+                    $totalPossible = ExamQuestion::where('exam_id', $data['exam_id'])
                         ->sum(fn($q) => $q->mark ?? 1);
                 } catch (\Throwable $e) {
                     $totalPossible = 0;
@@ -162,7 +123,8 @@ class MarkController extends Controller
                     'mark' => $marksValue,
                     'score' => $score,
                     'attempt_number' => $existingCount + 1,
-                    'metadata' => $data['metadata'] ?? null,
+                    // 'metadata' => $data['metadata'] ?? null,
+                    'metadata' => array_merge($data['metadata'] ?? [], ['is_manual_entry' => true]),
                 ]);
 
                 // set passed/failed fields on created attempt
@@ -209,7 +171,7 @@ class MarkController extends Controller
         $exam = Exam::firstWhere('id', $mark->exam_id);
         $score = ((float) $request->get('marks') / $exam->full_mark) * 100;
 
-        $mark->update(array_merge($request->validated(), ['score' => (double) round($score, 2), 'updated_by' => auth()->id()]));
+        $mark->update(array_merge($request->validated(), ['score' => (float) round($score, 2), 'updated_by' => auth()->id()]));
 
         // return redirect()->route('admin.marks.index')->with('success', 'Mark updated.');
         return redirect()->route('admin.marks.index')->with('success', __('messages.mark_updated'));
@@ -358,7 +320,8 @@ class MarkController extends Controller
                     'scored_at' => now(),
                     'mark' => $r['marks'],
                     'score' => $score,
-                    'metadata' => null,
+                    // 'metadata' => null,
+                    'metadata' => ['is_imported' => true],
                 ]);
 
                 // create MarksReport and attach attempt_id (so the attempt->marksReport relation works)

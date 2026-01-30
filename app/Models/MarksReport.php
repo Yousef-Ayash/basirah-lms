@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +29,21 @@ class MarksReport extends Model
         'marks' => 'float',
         'score' => 'float',
     ];
+
+    protected static function booted()
+    {
+        // Triggered when a MarksReport is deleted (soft or force)
+        static::deleted(function ($marksReport) {
+            // Check if there is an associated attempt
+            if ($marksReport->attempt_id) {
+                $attempt = $marksReport->attempt;
+
+                if ($attempt) {
+                    $attempt->delete();
+                }
+            }
+        });
+    }
 
     public function user()
     {
