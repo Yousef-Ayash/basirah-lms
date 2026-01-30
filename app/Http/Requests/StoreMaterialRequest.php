@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\MaterialController;
-use App\Services\YouTubeService;
+use App\Services\YoutubeService;
 
 class StoreMaterialRequest extends FormRequest
 {
@@ -63,7 +64,7 @@ class StoreMaterialRequest extends FormRequest
             }
 
             if ($type === 'youtube' && $this->input('youtube_link')) {
-                if (!YouTubeService::extractYoutubeId($this->input('youtube_link'))) {
+                if (!YoutubeService::extractId($this->input('youtube_link'))) {
                     $v->errors()->add('youtube_link', 'Invalid YouTube link.');
                 }
             }

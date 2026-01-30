@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMaterialRequest;
 use App\Models\Subject;
 use App\Models\SubjectMaterial;
-use App\Services\YouTubeService;
+use App\Services\YoutubeService;
 use Illuminate\Http\RedirectResponse;
 
 class MaterialController extends Controller
@@ -25,7 +25,7 @@ class MaterialController extends Controller
         // If type is YouTube, extract the ID using the Service logic
         if ($data['type'] === 'youtube') {
             // We use the 'youtube_link' input to populate the 'youtube_id' column
-            $data['youtube_id'] = YouTubeService::extractId($request->input('youtube_link'));
+            $data['youtube_id'] = YoutubeService::extractId($request->input('youtube_link'));
         }
 
         // Create the record via the relationship
