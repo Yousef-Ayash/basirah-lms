@@ -19,7 +19,7 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import Alert from '@/components/Misc/Alert.vue';
 import { Link, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import formatMinutes from '@/composables/useFormatMinutes';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
@@ -109,13 +109,40 @@ const alertInfo = computed(() => {
 
 const showConfirm = ref(false);
 
+const starting = ref(false);
+
 const startExam = () => {
-    // if (!props.start_token) {
-    //     alert('لا يمكن بدء الاختبار.');
-    //     return;
-    // }
-    router.post(route('exams.start', props.exam.id));
+    if (starting.value) return;
+    starting.value = true;
+
+    router.post(
+        route('exams.start', props.exam.id),
+        {},
+        {
+            onFinish: () => {
+                starting.value = false; // in case of error; successful redirect will replace page
+            },
+            preserveState: false,
+            preserveScroll: false,
+        },
+    );
 };
+
+onMounted(() => {
+    window.addEventListener('pageshow', (e) => {
+        const navEntries =
+            (performance.getEntriesByType &&
+                performance.getEntriesByType('navigation')) ||
+            [];
+        const isBack =
+            e.persisted ||
+            (navEntries[0] && navEntries[0].type === 'back_forward');
+        if (isBack) {
+            // force reload from server to recalc can_start
+            window.location.reload();
+        }
+    });
+});
 </script>
 
 <template>
@@ -183,10 +210,17 @@ const startExam = () => {
                 <Alert :type="alertInfo.type" :message="alertInfo.message" />
 
                 <BaseButton
+                    v-if="
+                        can_start &&
+                        !isNotYetOpen &&
+                        !isClosed &&
+                        !hasNoQuestions &&
+                        !passed
+                    "
                     @click="showConfirm = true"
-                    :disabled="!can_start"
+                    :disabled="starting || !can_start"
                     :class="{
-                        '!cursor-not-allowed': !can_start,
+                        '!cursor-not-allowed': starting || !can_start,
                     }"
                 >
                     بدء الاختبار

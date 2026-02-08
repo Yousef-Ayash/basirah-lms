@@ -23,7 +23,7 @@ class ExamAttemptController extends Controller
         $user = $request->user();
         $now = now();
 
-        // check open/close
+        // same open/close checks you already have...
         if ($exam->open_at && $now->lt($exam->open_at)) {
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار لم يفتح بعد.']);
         }
@@ -31,118 +31,249 @@ class ExamAttemptController extends Controller
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار مغلق بالفعل.']);
         }
 
-        // attempts check
-        $attemptCount = StudentExamAttempt::where('exam_id', $exam->id)
-            ->where('user_id', $user->id)
-            ->count();
-
-        if ($attemptCount >= $exam->max_attempts) {
-            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'تم الوصول إلى الحد الأقصى من المحاولات.']);
-        }
-
+        // quick guard: there must be questions
         if ($exam->questions()->count() === 0) {
             return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'هذا الاختبار لا يحتوي على أسئلة ولا يمكن البدء به.']);
         }
 
-        $last_attempt = StudentExamAttempt::where('exam_id', $exam->id)->where('user_id', $user->id)->latest('submitted_at')->value('submitted_at');
+        try {
+            return DB::transaction(function () use ($request, $exam, $user, $now) {
+                // 1) If there's an existing *open* attempt (not submitted), lock it for update.
+                $existingOpen = StudentExamAttempt::where('exam_id', $exam->id)
+                    ->where('user_id', $user->id)
+                    ->whereNull('submitted_at')
+                    ->lockForUpdate()
+                    ->first();
 
-        if ($last_attempt) {
-            $submittedDate = Carbon::parse($last_attempt)->startOfDay();
-            $nowDay = now()->startOfDay();
+                if ($existingOpen) {
+                    // Option A: return the Take view for the existing attempt (recommended)
+                    $questionIds = $existingOpen->metadata['question_ids'] ?? [];
+                    $questions = ExamQuestion::whereIn('id', $questionIds)->get();
+                    $displayQuestions = $questions->map(fn($q) => [
+                        'id' => $q->id,
+                        'question_text' => $q->question_text,
+                        'options' => $q->options,
+                    ]);
+                    $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
+                    $expiresAt = $timeLimitSeconds ? $existingOpen->started_at->copy()->addSeconds($timeLimitSeconds) : null;
+                    $remainingSeconds = $expiresAt ? max(0, now()->diffInSeconds($expiresAt, false)) : null;
 
-            if (!$submittedDate->lte($nowDay->subDays($exam->distance_between_attempts))) {
-                return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'لم يحن موعد محاولة التقديم التالية.']);
-            }
+                    return Inertia::render('Exams/Take', [
+                        'exam' => [
+                            'id' => $exam->id,
+                            'title' => $exam->title,
+                            'time_limit_minutes' => $exam->time_limit_minutes,
+                        ],
+                        'attempt' => [
+                            'id' => $existingOpen->id,
+                            'started_at' => $existingOpen->started_at,
+                            'remaining_seconds' => $remainingSeconds,
+                        ],
+                        'questions' => $displayQuestions,
+                    ]);
+                }
+
+                // 2) No open attempt — re-check total attempts (locked read)
+                $attemptCount = StudentExamAttempt::where('exam_id', $exam->id)
+                    ->where('user_id', $user->id)
+                    ->lockForUpdate()
+                    ->count();
+
+                if ($attemptCount >= $exam->max_attempts) {
+                    return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'تم الوصول إلى الحد الأقصى من المحاولات.']);
+                }
+
+                // 3) select questions (random subset if configured), same as before
+                $questionsQuery = $exam->questions();
+
+                if ($exam->questions_to_display > 0 && $questionsQuery->count() >= $exam->questions_to_display) {
+                    $questions = $questionsQuery->inRandomOrder()->limit($exam->questions_to_display)->get();
+                } else {
+                    $questions = $questionsQuery->orderBy('order')->get();
+                }
+
+                $questionIds = $questions->pluck('id')->toArray();
+
+                // 4) create attempt
+                $attempt = StudentExamAttempt::create([
+                    'exam_id' => $exam->id,
+                    'user_id' => $user->id,
+                    'started_at' => $now,
+                    'attempt_number' => $attemptCount + 1,
+                    'metadata' => [
+                        'ip' => $request->ip(),
+                        'user_agent' => $request->userAgent(),
+                        'question_ids' => $questionIds
+                    ],
+                ]);
+
+                ExamLog::create([
+                    'exam_attempt_id' => $attempt->id,
+                    'user_id' => $user->id,
+                    'action' => 'start',
+                    'metadata' => ['attempt_number' => $attempt->attempt_number],
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+
+                // 5) render Take page (same as existing code)
+                $displayQuestions = $questions->map(function (ExamQuestion $q) {
+                    return [
+                        'id' => $q->id,
+                        'question_text' => $q->question_text,
+                        'options' => $q->options,
+                    ];
+                });
+
+                $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
+                $expiresAt = $timeLimitSeconds ? $attempt->started_at->copy()->addSeconds($timeLimitSeconds) : null;
+                $remainingSeconds = $expiresAt ? max(0, now()->diffInSeconds($expiresAt, false)) : null;
+
+                return Inertia::render('Exams/Take', [
+                    'exam' => [
+                        'id' => $exam->id,
+                        'title' => $exam->title,
+                        'time_limit_minutes' => $exam->time_limit_minutes,
+                    ],
+                    'attempt' => [
+                        'id' => $attempt->id,
+                        'started_at' => $attempt->started_at,
+                        'remaining_seconds' => $remainingSeconds,
+                    ],
+                    'questions' => $displayQuestions,
+                ]);
+            }, 5); // transaction with 5s attempt
+        } catch (\Throwable $e) {
+            \Log::error('Exam start failed: ' . $e->getMessage(), ['exam_id' => $exam->id, 'user_id' => $user->id]);
+            return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'فشل بدء الاختبار — حاول مرة أخرى.']);
         }
-
-        $questionsQuery = $exam->questions();
-
-        // Check if we need to select a random subset of questions
-        if ($exam->questions_to_display > 0 && $questionsQuery->count() >= $exam->questions_to_display) {
-            // Fetch a random subset of questions directly from the database
-            $questions = $questionsQuery->inRandomOrder()->limit($exam->questions_to_display)->get();
-        } else {
-            // Fallback to the original behavior: get all questions in order
-            $questions = $questionsQuery->orderBy('order')->get();
-        }
-
-        // Pluck the IDs to store them, ensuring the order is preserved for this attempt
-        $questionIds = $questions->pluck('id')->toArray();
-
-        // create attempt
-        $attempt = StudentExamAttempt::create([
-            'exam_id' => $exam->id,
-            'user_id' => $user->id,
-            'started_at' => $now,
-            'attempt_number' => $attemptCount + 1,
-            'metadata' => [
-                'ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'question_ids' => $questionIds
-            ],
-        ]);
-
-        // log
-        ExamLog::create([
-            'exam_attempt_id' => $attempt->id,
-            'user_id' => $user->id,
-            'action' => 'start',
-            'metadata' => ['attempt_number' => $attempt->attempt_number],
-            'ip' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ]);
-
-        // load questions without correct answers
-        $displayQuestions = $questions->map(function (ExamQuestion $q) {
-            return [
-                'id' => $q->id,
-                'question_text' => $q->question_text,
-                'options' => $q->options,
-            ];
-        });
-
-        // compute time_left (seconds) if time_limit_minutes present
-        // $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
-        // $expiresAt = $timeLimitSeconds ? $now->copy()->addSeconds($timeLimitSeconds) : null;
-
-        // compute time_left (seconds) if time_limit_minutes present
-        $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
-
-        // Calculate expiry based on server time
-        $expiresAt = $timeLimitSeconds ? $attempt->started_at->copy()->addSeconds($timeLimitSeconds) : null;
-
-        // Calculate remaining seconds relative to NOW on the server
-        $remainingSeconds = $expiresAt ? max(0, now()->diffInSeconds($expiresAt, false)) : null;
-
-        return Inertia::render('Exams/Take', [
-            'exam' => [
-                'id' => $exam->id,
-                'title' => $exam->title,
-                'time_limit_minutes' => $exam->time_limit_minutes,
-            ],
-            'attempt' => [
-                'id' => $attempt->id,
-                'started_at' => $attempt->started_at,
-                'remaining_seconds' => $remainingSeconds,
-            ],
-            'questions' => $displayQuestions,
-        ]);
-
-        // return Inertia::render('Exams/Take', [
-        //     'exam' => [
-        //         'id' => $exam->id,
-        //         'title' => $exam->title,
-        //         'time_limit_minutes' => $exam->time_limit_minutes,
-        //     ],
-        //     'attempt' => [
-        //         'id' => $attempt->id,
-        //         'started_at' => $attempt->started_at,
-        //         'expires_at' => $expiresAt,
-        //     ],
-        //     // 'initialRemainingSeconds' => $remainingSeconds,
-        //     'questions' => $displayQuestions,
-        // ]);
     }
+
+    // public function start(Request $request, Exam $exam)
+    // {
+    //     $user = $request->user();
+    //     $now = now();
+
+    //     // check open/close
+    //     if ($exam->open_at && $now->lt($exam->open_at)) {
+    //         return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار لم يفتح بعد.']);
+    //     }
+    //     if ($exam->close_at && $now->gt($exam->close_at)) {
+    //         return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'الاختبار مغلق بالفعل.']);
+    //     }
+
+    //     // attempts check
+    //     $attemptCount = StudentExamAttempt::where('exam_id', $exam->id)
+    //         ->where('user_id', $user->id)
+    //         ->count();
+
+    //     if ($attemptCount >= $exam->max_attempts) {
+    //         return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'تم الوصول إلى الحد الأقصى من المحاولات.']);
+    //     }
+
+    //     if ($exam->questions()->count() === 0) {
+    //         return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'هذا الاختبار لا يحتوي على أسئلة ولا يمكن البدء به.']);
+    //     }
+
+    //     $last_attempt = StudentExamAttempt::where('exam_id', $exam->id)->where('user_id', $user->id)->latest('submitted_at')->value('submitted_at');
+
+    //     if ($last_attempt) {
+    //         $submittedDate = Carbon::parse($last_attempt)->startOfDay();
+    //         $nowDay = now()->startOfDay();
+
+    //         if (!$submittedDate->lte($nowDay->subDays($exam->distance_between_attempts))) {
+    //             return redirect()->route('exams.show', $exam)->withErrors(['exam' => 'لم يحن موعد محاولة التقديم التالية.']);
+    //         }
+    //     }
+
+    //     $questionsQuery = $exam->questions();
+
+    //     // Check if we need to select a random subset of questions
+    //     if ($exam->questions_to_display > 0 && $questionsQuery->count() >= $exam->questions_to_display) {
+    //         // Fetch a random subset of questions directly from the database
+    //         $questions = $questionsQuery->inRandomOrder()->limit($exam->questions_to_display)->get();
+    //     } else {
+    //         // Fallback to the original behavior: get all questions in order
+    //         $questions = $questionsQuery->orderBy('order')->get();
+    //     }
+
+    //     // Pluck the IDs to store them, ensuring the order is preserved for this attempt
+    //     $questionIds = $questions->pluck('id')->toArray();
+
+    //     // create attempt
+    //     $attempt = StudentExamAttempt::create([
+    //         'exam_id' => $exam->id,
+    //         'user_id' => $user->id,
+    //         'started_at' => $now,
+    //         'attempt_number' => $attemptCount + 1,
+    //         'metadata' => [
+    //             'ip' => $request->ip(),
+    //             'user_agent' => $request->userAgent(),
+    //             'question_ids' => $questionIds
+    //         ],
+    //     ]);
+
+    //     // log
+    //     ExamLog::create([
+    //         'exam_attempt_id' => $attempt->id,
+    //         'user_id' => $user->id,
+    //         'action' => 'start',
+    //         'metadata' => ['attempt_number' => $attempt->attempt_number],
+    //         'ip' => $request->ip(),
+    //         'user_agent' => $request->userAgent(),
+    //     ]);
+
+    //     // load questions without correct answers
+    //     $displayQuestions = $questions->map(function (ExamQuestion $q) {
+    //         return [
+    //             'id' => $q->id,
+    //             'question_text' => $q->question_text,
+    //             'options' => $q->options,
+    //         ];
+    //     });
+
+    //     // compute time_left (seconds) if time_limit_minutes present
+    //     // $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
+    //     // $expiresAt = $timeLimitSeconds ? $now->copy()->addSeconds($timeLimitSeconds) : null;
+
+    //     // compute time_left (seconds) if time_limit_minutes present
+    //     $timeLimitSeconds = $exam->time_limit_minutes ? $exam->time_limit_minutes * 60 : null;
+
+    //     // Calculate expiry based on server time
+    //     $expiresAt = $timeLimitSeconds ? $attempt->started_at->copy()->addSeconds($timeLimitSeconds) : null;
+
+    //     // Calculate remaining seconds relative to NOW on the server
+    //     $remainingSeconds = $expiresAt ? max(0, now()->diffInSeconds($expiresAt, false)) : null;
+
+    //     return Inertia::render('Exams/Take', [
+    //         'exam' => [
+    //             'id' => $exam->id,
+    //             'title' => $exam->title,
+    //             'time_limit_minutes' => $exam->time_limit_minutes,
+    //         ],
+    //         'attempt' => [
+    //             'id' => $attempt->id,
+    //             'started_at' => $attempt->started_at,
+    //             'remaining_seconds' => $remainingSeconds,
+    //         ],
+    //         'questions' => $displayQuestions,
+    //     ]);
+
+    // return Inertia::render('Exams/Take', [
+    //     'exam' => [
+    //         'id' => $exam->id,
+    //         'title' => $exam->title,
+    //         'time_limit_minutes' => $exam->time_limit_minutes,
+    //     ],
+    //     'attempt' => [
+    //         'id' => $attempt->id,
+    //         'started_at' => $attempt->started_at,
+    //         'expires_at' => $expiresAt,
+    //     ],
+    //     // 'initialRemainingSeconds' => $remainingSeconds,
+    //     'questions' => $displayQuestions,
+    // ]);
+    // }
 
     // GET attempts list for user
     public function index(Request $request)
