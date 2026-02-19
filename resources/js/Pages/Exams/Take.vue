@@ -153,7 +153,7 @@ onUnmounted(() => {
                     @click="showAbortConfirm = true"
                     class="bg-red-500 text-white hover:bg-red-600"
                 >
-                    إنهاء الاختبار
+                    إلغاء الاختبار
                 </BaseButton>
                 <div
                     v-if="exam.time_limit_minutes"
@@ -219,12 +219,12 @@ onUnmounted(() => {
 
         <ConfirmDialog
             :show="showAbortConfirm"
-            title="إنهاء الاختبار"
-            confirm-txt="إنهاء"
+            title="إلغاء الاختبار"
+            confirm-txt="تأكيد"
             @confirm="localAbort"
             @cancel="showAbortConfirm = false"
         >
-            هل أنت متأكد من أنك تريد إنهاء الاختبار الآن؟
+            هل أنت متأكد من أنك تريد إلغاء الاختبار الآن؟
             <strong class="font-bold text-red-600">
                 سيتم اعتبار هذه المحاولة فاشلة اعتمادًا على قواعد الاختبار.
             </strong>
