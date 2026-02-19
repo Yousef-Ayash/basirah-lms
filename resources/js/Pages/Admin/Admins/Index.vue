@@ -4,11 +4,12 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -49,7 +50,7 @@ const deleteAdmin = () => {
 
 <template>
     <div>
-        <Head title="إدارة المسؤولين" />
+        <!-- <Head title="إدارة المسؤولين" />
         <SectionHeader title="المسؤولين">
             <template #action>
                 <BaseButton as="a" :href="route('admin.admins.create')">
@@ -64,7 +65,21 @@ const deleteAdmin = () => {
                 placeholder="البحث بالاسم أو الرقم..."
                 class="w-full sm:w-1/2"
             />
-        </Card>
+        </Card> -->
+        <PageHeader title="إدارة المسؤولين">
+            <template #actions>
+                <BaseButton as="a" :href="route('admin.admins.create')"
+                    >+ إضافة مسؤول</BaseButton
+                >
+            </template>
+            <template #filters>
+                <BaseInput
+                    v-model="search"
+                    placeholder="البحث بالاسم أو الرقم..."
+                    class="w-full sm:w-1/2"
+                />
+            </template>
+        </PageHeader>
 
         <Card v-if="admins.data.length">
             <div class="overflow-x-auto">

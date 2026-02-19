@@ -1,9 +1,11 @@
 <template>
     <div>
-        <Head :title="`تعديل المقرر: ${course.title}`" />
+        <!-- <Head :title="`تعديل المقرر: ${course.title}`" />
         <h1 class="mb-4 text-2xl font-bold">
             {{ `تعديل المقرر: ${course.title}` }}
-        </h1>
+        </h1> -->
+
+        <PageHeader :title="`تعديل المقرر: ${course.title}`" />
 
         <form @submit.prevent="submit" enctype="multipart/form-data">
             <CourseForm
@@ -32,6 +34,7 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import CourseForm from '@/components/Courses/CourseForm.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 

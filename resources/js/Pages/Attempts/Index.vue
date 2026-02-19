@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head title="درجاتي" />
+        <!-- <Head title="درجاتي" />
         <SectionHeader title="درجاتي ومحاولتي">
             <template #action>
                 <div class="flex gap-2">
@@ -28,7 +28,6 @@
             </template>
         </SectionHeader>
 
-        <!-- Filters -->
         <Card class="mb-4">
             <div class="flex flex-col justify-between gap-4 md:flex-row">
                 <div
@@ -72,7 +71,79 @@
                     >
                 </div>
             </div>
-        </Card>
+        </Card> -->
+
+        <PageHeader title="درجاتي ومحاولاتي">
+            <template #actions>
+                <div class="flex gap-2">
+                    <BaseButton
+                        size="sm"
+                        :href="
+                            route('attempts.export.xlsx', {
+                                page: $page.current_page,
+                            })
+                        "
+                        as="a"
+                        >تصدير الى اكسل</BaseButton
+                    >
+                    <BaseButton
+                        size="sm"
+                        :href="
+                            route('attempts.export.pdf', {
+                                page: $page.current_page,
+                            })
+                        "
+                        as="a"
+                        >تحميل ملف PDF</BaseButton
+                    >
+                </div>
+            </template>
+
+            <template #filters>
+                <div class="flex flex-col justify-between gap-4 md:flex-row">
+                    <div
+                        class="flex w-full flex-col gap-2 md:flex-row md:items-center md:gap-3"
+                    >
+                        <BaseInput
+                            label="البحث عن امتحان"
+                            v-model="filters.q"
+                            placeholder="البحث عن اسم الامتحان..."
+                        />
+                        <BaseSelect v-model="filters.status" label="الحالة">
+                            <option value="">الكل</option>
+                            <option value="in_progress">جاري التقديم</option>
+                            <option value="passed">ناحج</option>
+                            <option value="failed">راسب</option>
+                        </BaseSelect>
+                        <BaseInput
+                            type="date"
+                            label="من تاريخ"
+                            v-model="filters.from"
+                        />
+                        <BaseInput
+                            type="date"
+                            label="إلى تاريخ"
+                            v-model="filters.to"
+                        />
+                        <BaseSelect
+                            label="العدد بالصفحة"
+                            v-model="filters.per_page"
+                        >
+                            <option :value="5">5</option>
+                            <option :value="10">10</option>
+                            <option :value="15">15</option>
+                            <option :value="25">25</option>
+                            <option :value="50">50</option>
+                        </BaseSelect>
+                    </div>
+                    <div class="flex items-center justify-center gap-2">
+                        <BaseButton @click="clearFilters" class="w-full"
+                            >مسح الفلاتر</BaseButton
+                        >
+                    </div>
+                </div>
+            </template>
+        </PageHeader>
 
         <Card>
             <div class="overflow-x-auto">
@@ -160,7 +231,7 @@ import { usePage, Head } from '@inertiajs/vue3';
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import StudentLayout from '@/Pages/Student/Layout.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
-import { attempt } from 'lodash';
+// import { attempt } from 'lodash';
 
 export default {
     layout: (h, page) => {
@@ -180,7 +251,7 @@ import { reactive, watch } from 'vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import { Head, router } from '@inertiajs/vue3';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 
 const props = defineProps({ attempts: Object, filters: Object });
 

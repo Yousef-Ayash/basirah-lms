@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head title="إدارة المواد" />
+        <!-- <Head title="إدارة المواد" />
         <SectionHeader title="المواد الدراسية">
             <template #action>
                 <BaseButton as="a" :href="route('admin.subjects.create')">
@@ -57,7 +57,65 @@
                     </option>
                 </BaseSelect>
             </div>
-        </Card>
+        </Card> -->
+        <PageHeader title="المواد الدراسية">
+            <template #actions>
+                <BaseButton as="a" :href="route('admin.subjects.create')"
+                    >+ مادة جديدة</BaseButton
+                >
+            </template>
+            <template #filters>
+                <div
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                >
+                    <BaseInput
+                        type="text"
+                        label="البحث بالعنوان"
+                        v-model="filters.title"
+                        placeholder="عنوان المادة..."
+                    />
+                    <BaseSelect
+                        v-model="filters.course_id"
+                        label="تصفية حسب المقرر"
+                    >
+                        <option value="">تصفية حسب المقرر...</option>
+                        <option
+                            v-for="course in courses"
+                            :key="course.id"
+                            :value="course.id"
+                        >
+                            {{ course.title }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect
+                        v-model="filters.level_id"
+                        label="تصفية حسب المستوى"
+                    >
+                        <option value="">تصفية حسب المستوى...</option>
+                        <option
+                            v-for="level in levels"
+                            :key="level.id"
+                            :value="level.id"
+                        >
+                            {{ level.name }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect
+                        v-model="filters.teacher_id"
+                        label="تصفية حسب المدرس"
+                    >
+                        <option value="">تصفية حسب المدرس...</option>
+                        <option
+                            v-for="teacher in teachers"
+                            :key="teacher.id"
+                            :value="teacher.id"
+                        >
+                            {{ teacher.name }}
+                        </option>
+                    </BaseSelect>
+                </div>
+            </template>
+        </PageHeader>
 
         <Card v-if="subjects.data.length" class="space-y-2">
             <div class="overflow-x-auto">
@@ -149,12 +207,13 @@ import BaseButton from '@/components/FormElements/BaseButton.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch, reactive } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 

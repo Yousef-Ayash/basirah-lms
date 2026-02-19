@@ -5,11 +5,12 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, watch, ref } from 'vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -58,7 +59,7 @@ const deleteExam = () => {
 
 <template>
     <div>
-        <Head title="إدارة الاختبارات" />
+        <!--<Head title="إدارة الاختبارات" />
         <SectionHeader title="الاختبارات">
             <template #action>
                 <BaseButton as="a" :href="route('admin.exams.create')"
@@ -84,7 +85,33 @@ const deleteExam = () => {
                     </option>
                 </BaseSelect>
             </div>
-        </Card>
+        </Card> -->
+
+        <PageHeader title="إدارة الاختبارات">
+            <template #actions>
+                <BaseButton as="a" :href="route('admin.exams.create')">
+                    + اختبار جديد
+                </BaseButton>
+            </template>
+            <template #filters>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <BaseInput
+                        v-model="filters.q"
+                        placeholder="البحث عن طريق العنوان..."
+                    />
+                    <BaseSelect v-model="filters.subject_id">
+                        <option value="">تصفية حسب المادة...</option>
+                        <option
+                            v-for="subject in subjects"
+                            :key="subject.id"
+                            :value="subject.id"
+                        >
+                            {{ subject.title }}
+                        </option>
+                    </BaseSelect>
+                </div>
+            </template>
+        </PageHeader>
 
         <Card v-if="exams.data.length" class="space-y-2">
             <div class="overflow-x-auto">

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head title="إدارة الطلاب" />
+        <!-- <Head title="إدارة الطلاب" />
         <SectionHeader title="قائمة الطلاب">
             <template #action>
                 <div class="flex gap-2">
@@ -43,7 +43,50 @@
                     <option value="0">قيد الانتظار</option>
                 </BaseSelect>
             </div>
-        </Card>
+        </Card> -->
+        <PageHeader title="إدارة الطلاب">
+            <template #actions>
+                <div class="flex gap-2">
+                    <BaseButton
+                        @click="exportStudents"
+                        class="bg-gray-700 hover:bg-gray-800"
+                        >تصدير القائمة</BaseButton
+                    >
+                    <BaseButton as="a" :href="route('admin.students.create')"
+                        >+ إضافة طالب</BaseButton
+                    >
+                    <BaseButton
+                        as="a"
+                        :href="route('admin.students.import.form')"
+                        class="bg-green-600 hover:bg-green-700"
+                        >استيراد الطلاب</BaseButton
+                    >
+                </div>
+            </template>
+            <template #filters>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <BaseInput
+                        v-model="filters.q"
+                        placeholder="البحث بالاسم..."
+                    />
+                    <BaseSelect v-model="filters.level_id">
+                        <option value="">كل المستويات</option>
+                        <option
+                            v-for="level in levels"
+                            :key="level.id"
+                            :value="level.id"
+                        >
+                            {{ level.name }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect v-model="filters.is_approved">
+                        <option value="">أي حالة موافقة</option>
+                        <option value="1">تمت الموافقة</option>
+                        <option value="0">قيد الانتظار</option>
+                    </BaseSelect>
+                </div>
+            </template>
+        </PageHeader>
 
         <Card v-if="students.data.length">
             <div class="overflow-x-auto">
@@ -158,11 +201,12 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, ref, watch, computed } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 

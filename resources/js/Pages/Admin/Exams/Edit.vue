@@ -1,7 +1,10 @@
 <template>
     <div>
-        <Head :title="`تعديل الاختبار: ${exam.title}`" />
-        <h1 class="mb-4 text-2xl font-bold">تعديل الاختبار</h1>
+        <!-- <Head :title="`تعديل الاختبار: ${exam.title}`" />
+        <h1 class="mb-4 text-2xl font-bold">تعديل الاختبار</h1> -->
+
+        <PageHeader :title="`تعديل الاختبار: ${exam.title}`" />
+
         <form @submit.prevent="submit">
             <ExamForm v-model="form" :subjects="subjects" />
             <div class="mt-4 flex justify-between">
@@ -24,6 +27,7 @@
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import ExamForm from '@/components/Exams/ExamForm.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';
 

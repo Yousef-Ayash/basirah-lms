@@ -16,10 +16,11 @@ export default {
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { Link, router, Head } from '@inertiajs/vue3';
+import { Link, router /*, Head*/ } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 const props = defineProps({
     courses: Object,
@@ -40,7 +41,7 @@ watch(search, (val) => {
 
 <template>
     <div>
-        <Head title="المقررات الدراسية" />
+        <!-- <Head title="المقررات الدراسية" />
         <SectionHeader title="المقررات الدراسية" />
 
         <Card class="mb-6">
@@ -51,7 +52,19 @@ watch(search, (val) => {
                     class="w-full md:w-1/2"
                 />
             </div>
-        </Card>
+        </Card> -->
+
+        <PageHeader title="المقررات الدراسية">
+            <template #filters>
+                <div class="flex flex-col gap-4 md:flex-row">
+                    <BaseInput
+                        v-model="search"
+                        placeholder="ابحث عن مقرر..."
+                        class="w-full md:w-1/2"
+                    />
+                </div>
+            </template>
+        </PageHeader>
 
         <div
             v-if="courses.data.length"

@@ -1,9 +1,12 @@
 <template>
     <div>
-        <Head :title="`إضافة أسئلة إلى: ${exam.title}`" />
+        <!-- <Head :title="`إضافة أسئلة إلى: ${exam.title}`" />
         <h1 class="mb-4 text-2xl font-bold">
             {{ `إضافة أسئلة إلى: ${exam.title}` }}
-        </h1>
+        </h1> -->
+
+        <PageHeader :title="`إضافة أسئلة إلى: ${exam.title}`" />
+
         <form @submit.prevent="submit">
             <Card class="space-y-4">
                 <BaseTextarea
@@ -23,9 +26,7 @@
 
                 <div v-for="(option, index) in form.options" :key="index">
                     <BaseInput
-                        :label="
-                            `الخيار ${index + 1}`
-                        "
+                        :label="`الخيار ${index + 1}`"
                         v-model="form.options[index]"
                         :error="form.errors[`options.${index}`]"
                     />
@@ -37,9 +38,7 @@
                     :error="form.errors.correct_answer"
                     required
                 >
-                    <option :value="null">
-                        اختر الإجابة الصحيحة
-                    </option>
+                    <option :value="null">اختر الإجابة الصحيحة</option>
                     <option
                         v-for="(option, index) in form.options"
                         :key="index"
@@ -58,7 +57,9 @@
                 />
             </Card>
             <div class="mt-4 flex justify-end">
-                <BaseButton type="submit" :disabled="form.processing">حفظ السؤال</BaseButton>
+                <BaseButton type="submit" :disabled="form.processing"
+                    >حفظ السؤال</BaseButton
+                >
             </div>
         </form>
     </div>
@@ -71,6 +72,7 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseTextarea from '@/components/FormElements/BaseTextarea.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';

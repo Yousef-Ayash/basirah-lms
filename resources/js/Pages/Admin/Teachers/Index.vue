@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
@@ -9,6 +9,7 @@ import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { ref, watch } from 'vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -58,7 +59,7 @@ const deleteTeacher = () => {
 
 <template>
     <div>
-        <Head title="إدارة المدرسين" />
+        <!-- <Head title="إدارة المدرسين" />
         <SectionHeader title="المدرسون">
             <template #action>
                 <BaseButton as="a" :href="route('admin.teachers.create')"
@@ -73,7 +74,21 @@ const deleteTeacher = () => {
                 placeholder="البحث عن طريق الاسم..."
                 class="w-full sm:w-2/3"
             />
-        </Card>
+        </Card> -->
+        <PageHeader title="إدارة المدرسين">
+            <template #actions>
+                <BaseButton as="a" :href="route('admin.teachers.create')"
+                    >إضافة مدرس +</BaseButton
+                >
+            </template>
+            <template #filters>
+                <BaseInput
+                    v-model="search"
+                    placeholder="البحث عن طريق الاسم..."
+                    class="w-full sm:w-2/3"
+                />
+            </template>
+        </PageHeader>
 
         <Card v-if="teachers.data.length" class="space-y-2">
             <div class="overflow-x-auto">

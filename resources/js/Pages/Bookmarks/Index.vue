@@ -17,9 +17,10 @@ export default {
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Link, router } from '@inertiajs/vue3';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 const props = defineProps({
     bookmarks: Object,
@@ -34,11 +35,15 @@ function removeBookmark(materialId) {
 
 <template>
     <div>
-        <Head title="إشاراتي المرجعية" />
+        <!-- <Head title="إشاراتي المرجعية" />
         <SectionHeader title="إشاراتي المرجعية" />
         <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">
             جميع المواد المحفوظة في مكان واحد لسهولة الوصول إليها.
-        </p>
+        </p> -->
+        <PageHeader
+            title="إشاراتي المرجعية"
+            subtitle="جميع المواد المحفوظة في مكان واحد لسهولة الوصول إليها."
+        />
 
         <div
             v-if="bookmarks.data.length"

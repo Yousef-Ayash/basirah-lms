@@ -5,11 +5,12 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, ref, watch } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -84,7 +85,7 @@ const exportMarks = () => {
 
 <template>
     <div>
-        <Head title="إدارة الدرجات" />
+        <!-- <Head title="إدارة الدرجات" />
         <SectionHeader title="إدارة الدرجات">
             <template #action>
                 <div class="flex gap-2">
@@ -106,7 +107,70 @@ const exportMarks = () => {
                     </BaseButton>
                 </div>
             </template>
-        </SectionHeader>
+        </SectionHeader> -->
+
+        <PageHeader title="إدارة الدرجات">
+            <template #actions>
+                <div class="flex gap-2">
+                    <BaseButton
+                        @click="exportMarks"
+                        class="bg-gray-700 hover:bg-gray-800"
+                        >تصدير الدرجات</BaseButton
+                    >
+                    <BaseButton
+                        as="a"
+                        :href="route('admin.marks.import.form')"
+                        class="bg-green-600 hover:bg-green-700"
+                        >استيراد الدرجات</BaseButton
+                    >
+                    <BaseButton as="a" :href="route('admin.marks.create')"
+                        >+ إضافة درجة يدوياً</BaseButton
+                    >
+                </div>
+            </template>
+            <template #filters>
+                <div
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                >
+                    <BaseSelect
+                        v-model="filters.user_id"
+                        label="تصفية حسب الطالب"
+                    >
+                        <option value="">تصفية حسب الطالب...</option>
+                        <option
+                            v-for="user in users"
+                            :key="user.id"
+                            :value="user.id"
+                        >
+                            {{ user.name }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect
+                        v-model="filters.exam_id"
+                        label="تصفية حسب الاختبار"
+                    >
+                        <option value="" disabled>تصفية حسب الاختبار...</option>
+                        <option
+                            v-for="exam in exams"
+                            :key="exam.id"
+                            :value="exam.id"
+                        >
+                            {{ exam.title }}
+                        </option>
+                    </BaseSelect>
+                    <BaseInput
+                        type="date"
+                        label="من تاريخ"
+                        v-model="filters.date_from"
+                    />
+                    <BaseInput
+                        type="date"
+                        label="إلى تاريخ"
+                        v-model="filters.date_to"
+                    />
+                </div>
+            </template>
+        </PageHeader>
 
         <Card class="mb-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

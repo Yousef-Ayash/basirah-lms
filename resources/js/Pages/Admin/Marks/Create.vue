@@ -1,6 +1,7 @@
 <script setup>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 import MarkForm from '@/components/Marks/MarkForm.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';
@@ -26,8 +27,11 @@ const submit = () => {
 
 <template>
     <div>
-        <Head title="إضافة درجة" />
-        <h1 class="mb-4 text-2xl font-bold">إضافة درجة جديدة</h1>
+        <!-- <Head title="إضافة درجة" />
+        <h1 class="mb-4 text-2xl font-bold">إضافة درجة جديدة</h1> -->
+
+        <PageHeader title="إضافة درجة" />
+
         <form @submit.prevent="submit">
             <MarkForm v-model="form" :users="users" :exams="exams" />
             <div class="mt-4 flex justify-between">

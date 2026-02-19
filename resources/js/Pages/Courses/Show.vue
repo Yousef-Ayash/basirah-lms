@@ -17,6 +17,7 @@ import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Link, Head } from '@inertiajs/vue3';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineProps({
     course: Object,
@@ -26,7 +27,13 @@ defineProps({
 
 <template>
     <div>
-        <Head :title="course.title" />
+        <!-- <Head :title="course.title" /> -->
+        <PageHeader
+            :title="course.title"
+            :subtitle="course.description"
+            :back-url="route('subjects.index')"
+            back-label="العودة إلى قائمة المقررات"
+        />
 
         <div class="mb-6">
             <Link

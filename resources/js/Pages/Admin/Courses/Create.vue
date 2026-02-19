@@ -1,7 +1,9 @@
 <template>
     <div>
-        <Head title="إنشاء مقرر جديد" />
-        <h1 class="mb-4 text-2xl font-bold">إنشاء مقرر جديد</h1>
+        <!-- <Head title="إنشاء مقرر جديد" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء مقرر جديد</h1> -->
+
+        <PageHeader title="إنشاء مقرر جديد" />
 
         <form @submit.prevent="submit" enctype="multipart/form-data">
             <CourseForm
@@ -30,6 +32,7 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import CourseForm from '@/components/Courses/CourseForm.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 

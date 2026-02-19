@@ -1,9 +1,10 @@
 <template>
     <div>
-        <Head :title="`تعديل المادة: ${subject.title}`" />
+        <!-- <Head :title="`تعديل المادة: ${subject.title}`" />
         <h1 class="mb-4 text-2xl font-bold">
             {{ `تعديل المادة: ${subject.title}` }}
-        </h1>
+        </h1> -->
+        <PageHeader :title="`تعديل المادة: ${subject.title}`" />
 
         <TabGroup :tabs="tabLabels" v-slot="{ active }">
             <div v-show="active === 0">
@@ -143,7 +144,7 @@ import TabGroup from '@/components/LayoutStructure/TabGroup.vue';
 import AddMaterialForm from '@/components/Materials/AddMaterialForm.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import SubjectForm from '@/components/Subjects/SubjectForm.vue';
-
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 

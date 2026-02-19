@@ -1,7 +1,10 @@
 <template>
     <div>
-        <Head title="إنشاء طالب جديد" />
-        <h1 class="mb-4 text-2xl font-bold">إنشاء طالب جديد</h1>
+        <!-- <Head title="إنشاء طالب جديد" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء طالب جديد</h1> -->
+
+        <PageHeader title="إنشاء طالب جديد" />
+
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
             <div class="mt-4 flex justify-between">
@@ -23,6 +26,7 @@
 <script setup>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 import StudentForm from '@/components/Students/StudentForm.vue';
 
 import { Head, useForm } from '@inertiajs/vue3';

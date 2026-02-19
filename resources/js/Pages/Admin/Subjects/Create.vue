@@ -1,7 +1,9 @@
 <template>
     <div>
-        <Head title="إنشاء مادة جديدة" />
-        <h1 class="mb-4 text-2xl font-bold">إنشاء مادة جديدة</h1>
+        <!-- <Head title="إنشاء مادة جديدة" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء مادة جديدة</h1> -->
+
+        <PageHeader title="إنشاء مادة جديدة" />
 
         <form @submit.prevent="storeSubject" enctype="multipart/form-data">
             <!-- SubjectForm expects v-model="form" and will emit update:modelValue -->
@@ -32,6 +34,7 @@
 <script setup>
 import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 import SubjectForm from '@/components/Subjects/SubjectForm.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 

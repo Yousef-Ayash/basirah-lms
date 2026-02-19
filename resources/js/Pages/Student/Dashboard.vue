@@ -6,6 +6,7 @@ import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: StudentLayout });
 
@@ -32,8 +33,10 @@ const viewMaterial = (material) => {
 
 <template>
     <div class="min-h-screen space-y-8">
-        <Head title="لوحة التحكم" />
-        <SectionHeader :title="`أهلاً بك، ${studentName}!`" />
+        <!-- <Head title="لوحة التحكم" />
+        <SectionHeader :title="`أهلاً بك، ${studentName}!`" /> -->
+
+        <PageHeader :title="`أهلاً بك، ${studentName}!`" />
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Card class="p-6 text-center">

@@ -17,11 +17,12 @@ export default {
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
 import { Link, router, Head } from '@inertiajs/vue3';
 import { reactive, ref, watch } from 'vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 const props = defineProps({
     subjects: Object,
@@ -51,7 +52,7 @@ watch(
 
 <template>
     <div>
-        <Head title="المواد الدراسية" />
+        <!-- <Head title="المواد الدراسية" />
 
         <div v-if="selectedCourse" class="mb-2">
             <Link
@@ -87,7 +88,36 @@ watch(
                     </option>
                 </BaseSelect>
             </div>
-        </Card>
+        </Card> -->
+
+        <PageHeader
+            :title="
+                selectedCourse
+                    ? `مواد مقرر: ${selectedCourse.title}`
+                    : 'المواد الدراسية'
+            "
+            :back-url="selectedCourse ? route('courses.index') : null"
+            back-label="العودة إلى قائمة المقررات"
+        >
+            <template #filters>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <BaseInput
+                        v-model="filters.q"
+                        placeholder="البحث بالعنوان أو الوصف..."
+                    />
+                    <BaseSelect v-model="filters.level_id">
+                        <option value="">كل المستويات</option>
+                        <option
+                            v-for="level in levels"
+                            :key="level.id"
+                            :value="level.id"
+                        >
+                            {{ level.name }}
+                        </option>
+                    </BaseSelect>
+                </div>
+            </template>
+        </PageHeader>
 
         <div
             v-if="subjects.data.length"

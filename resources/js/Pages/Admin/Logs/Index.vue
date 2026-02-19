@@ -4,8 +4,8 @@ import BaseInput from '@/components/FormElements/BaseInput.vue';
 import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import Pagination from '@/components/LayoutStructure/Pagination.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
 
@@ -41,7 +41,7 @@ watch(
 
 <template>
     <div>
-        <Head title="سجلات الاختبارات" />
+        <!-- <Head title="سجلات الاختبارات" />
         <SectionHeader title="سجلات تدقيق الاختبار" />
 
         <Card class="mb-4">
@@ -88,7 +88,57 @@ watch(
                     v-model="filters.date_to"
                 />
             </div>
-        </Card>
+        </Card> -->
+
+        <PageHeader title="سجلات تدقيق الاختبار">
+            <template #filters>
+                <div
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                    <BaseSelect v-model="filters.user_id">
+                        <option value="">تصفية حسب الطالب...</option>
+                        <option
+                            v-for="user in users"
+                            :key="user.id"
+                            :value="user.id"
+                        >
+                            {{ user.name }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect v-model="filters.exam_id">
+                        <option value="">تصفية حسب الاختبار...</option>
+                        <option
+                            v-for="exam in exams"
+                            :key="exam.id"
+                            :value="exam.id"
+                        >
+                            {{ exam.title }}
+                        </option>
+                    </BaseSelect>
+                    <BaseSelect v-model="filters.action">
+                        <option value="">تصفية حسب الإجراء...</option>
+                        <option value="start">بدء</option>
+                        <option value="autosave">حفظ تلقائي</option>
+                        <option value="submit">إرسال</option>
+                    </BaseSelect>
+                    <BaseInput
+                        v-model="filters.ip"
+                        label="تصفية حسب عنوان IP"
+                        placeholder="تصفية حسب عنوان IP..."
+                    />
+                    <BaseInput
+                        type="date"
+                        label="من تاريخ"
+                        v-model="filters.date_from"
+                    />
+                    <BaseInput
+                        type="date"
+                        label="إلى تاريخ"
+                        v-model="filters.date_to"
+                    />
+                </div>
+            </template>
+        </PageHeader>
 
         <Card>
             <div class="overflow-x-auto">

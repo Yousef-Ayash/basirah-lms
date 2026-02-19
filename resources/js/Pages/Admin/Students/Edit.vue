@@ -57,10 +57,13 @@ const advanceStudent = () => {
 
 <template>
     <div>
-        <Head :title="`تعديل الطالب: ${student.name}`" />
+        <!-- <Head :title="`تعديل الطالب: ${student.name}`" />
         <h1 class="mb-4 text-2xl font-bold">
             {{ `تعديل الطالب: ${student.name}` }}
-        </h1>
+        </h1> -->
+
+        <PageHeader :title="`تعديل الطالب: ${student.name}`" />
+
         <form @submit.prevent="submit">
             <StudentForm v-model="form" :levels="levels" />
 

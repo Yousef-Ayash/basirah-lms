@@ -1,8 +1,9 @@
 <script setup>
 import StudentLayout from '@/Pages/Student/Layout.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
 import Card from '@/components/LayoutStructure/Card.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: StudentLayout });
 
@@ -13,8 +14,9 @@ const props = defineProps({
 
 <template>
     <div>
-        <Head title="مدرّسونا" />
-        <SectionHeader title="مدرّسونا" />
+        <!-- <Head title="مدرّسونا" />
+        <SectionHeader title="مدرّسونا" /> -->
+        <PageHeader title="مدرّسونا" />
 
         <div
             class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"

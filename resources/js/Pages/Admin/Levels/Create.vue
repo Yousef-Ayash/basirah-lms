@@ -3,6 +3,7 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import LevelForm from '@/components/Levels/LevelForm.vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -22,8 +23,10 @@ function submit() {
 
 <template>
     <div>
-        <Head title="إنشاء مستوى" />
-        <h1 class="mb-4 text-2xl font-bold">إنشاء مستوى</h1>
+        <!-- <Head title="إنشاء مستوى" />
+        <h1 class="mb-4 text-2xl font-bold">إنشاء مستوى</h1> -->
+
+        <PageHeader title="إنشاء مستوى" />
 
         <form @submit.prevent="submit">
             <LevelForm v-model="form" :levels="props.levels" />

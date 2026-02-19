@@ -3,6 +3,7 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import BaseButton from '@/components/FormElements/BaseButton.vue';
 import AdminForm from '@/components/Admins/AdminForm.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 defineOptions({ layout: AdminLayout });
 
@@ -24,8 +25,11 @@ const submit = () => {
 
 <template>
     <div>
-        <Head :title="`تعديل المسؤول: ${admin.name}`" />
-        <h1 class="mb-4 text-2xl font-bold">تعديل بيانات المسؤول</h1>
+        <!-- <Head :title="`تعديل المسؤول: ${admin.name}`" />
+        <h1 class="mb-4 text-2xl font-bold">تعديل بيانات المسؤول</h1> -->
+
+        <PageHeader :title="`تعديل المسؤول: ${admin.name}`" />
+
         <form @submit.prevent="submit">
             <AdminForm v-model="form" :isEdit="true" />
             <div class="mt-4 flex justify-between">

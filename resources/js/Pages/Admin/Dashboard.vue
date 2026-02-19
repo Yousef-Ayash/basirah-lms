@@ -1,7 +1,9 @@
 <template>
     <div class="space-y-10">
-        <Head title="لوحة تحكم المسؤول" />
-        <SectionHeader title="لوحة تحكم المسؤول" />
+        <!-- <Head title="لوحة تحكم المسؤول" />
+        <SectionHeader title="لوحة تحكم المسؤول" /> -->
+
+        <PageHeader title="لوحة تحكم المسؤول" />
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             <Link
@@ -114,8 +116,9 @@ import AdminLayout from '@/Pages/Admin/Layout.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
 import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
 import EmptyState from '@/components/Misc/EmptyState.vue';
-import { Head } from '@inertiajs/vue3';
+// import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 // Set the layout for this page
 defineOptions({ layout: AdminLayout });

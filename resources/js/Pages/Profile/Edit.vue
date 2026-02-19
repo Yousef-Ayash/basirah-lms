@@ -16,13 +16,14 @@ export default {
 
 <script setup>
 import BaseButton from '@/components/FormElements/BaseButton.vue';
-import BaseSelect from '@/components/FormElements/BaseSelect.vue';
+// import BaseSelect from '@/components/FormElements/BaseSelect.vue';
 import BaseInput from '@/components/FormElements/BaseInput.vue';
 import Card from '@/components/LayoutStructure/Card.vue';
-import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
-import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
+// import SectionHeader from '@/components/LayoutStructure/SectionHeader.vue';
+// import ConfirmDialog from '@/components/Misc/ConfirmDialog.vue';
 import { useForm, Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+// import { ref } from 'vue';
+import PageHeader from '@/components/LayoutStructure/PageHeader.vue';
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
@@ -31,20 +32,20 @@ const props = defineProps({
 });
 
 // --- Form for Profile Information ---
-const profileForm = useForm({
-    name: props.user.name,
-    email: props.user.email,
-    phone: props.user.phone,
-    // locale: props.user.locale || 'ar',
-});
+// const profileForm = useForm({
+//     name: props.user.name,
+//     email: props.user.email,
+//     phone: props.user.phone,
+//     // locale: props.user.locale || 'ar',
+// });
 
-const updateProfileInformation = () => {
-    profileForm.patch(route('profile.update'), {
-        onSuccess: () => {
-            window.location.reload();
-        },
-    });
-};
+// const updateProfileInformation = () => {
+//     profileForm.patch(route('profile.update'), {
+//         onSuccess: () => {
+//             window.location.reload();
+//         },
+//     });
+// };
 
 // --- Form for Updating Password ---
 const passwordForm = useForm({
@@ -66,36 +67,41 @@ const updatePassword = () => {
 };
 
 // --- Logic for Deleting Account ---
-const confirmingUserDeletion = ref(false);
-const passwordInput = ref(null);
-const deleteForm = useForm({ password: '' });
+// const confirmingUserDeletion = ref(false);
+// const passwordInput = ref(null);
+// const deleteForm = useForm({ password: '' });
 
-const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
-};
+// const confirmUserDeletion = () => {
+//     confirmingUserDeletion.value = true;
+// };
 
-const deleteUser = () => {
-    deleteForm.delete(route('profile.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
-        onFinish: () => deleteForm.reset(),
-    });
-};
+// const deleteUser = () => {
+//     deleteForm.delete(route('profile.destroy'), {
+//         preserveScroll: true,
+//         onSuccess: () => closeModal(),
+//         onError: () => passwordInput.value.focus(),
+//         onFinish: () => deleteForm.reset(),
+//     });
+// };
 
-const closeModal = () => {
-    confirmingUserDeletion.value = false;
-    deleteForm.reset();
-};
+// const closeModal = () => {
+//     confirmingUserDeletion.value = false;
+//     deleteForm.reset();
+// };
 </script>
 
 <template>
     <div>
-        <Head title="إعدادات الملف الشخصي" />
-        <SectionHeader title="إعدادات الملف الشخصي" />
+        <!-- <Head title="إعدادات الملف الشخصي" />
+        <SectionHeader title="إعدادات الملف الشخصي" /> -->
+
+        <PageHeader
+            title="إعدادات الملف الشخصي"
+            subtitle="تحديث معلومات الملف الشخصي وتغيير كلمة المرور."
+        />
 
         <div class="mx-auto max-w-3xl space-y-6">
-            <Card>
+            <!-- <Card>
                 <header>
                     <h2
                         class="text-lg font-medium text-gray-900 dark:text-gray-100"
@@ -116,26 +122,26 @@ const closeModal = () => {
                         :error="profileForm.errors.name"
                         required
                     />
-                    <!-- <BaseInput
+                    <BaseInput
                         label="البريد الإلكتروني"
                         type="email"
                         v-model="profileForm.email"
                         :error="profileForm.errors.email"
                         required
-                    /> -->
+                    />
                     <BaseInput
                         label="رقم الموبايل"
                         v-model="profileForm.phone"
                         :error="profileForm.errors.phone"
                         required
                     />
-                    <!-- <BaseSelect
+                    <BaseSelect
                         label="اللغة"
                         v-model="profileForm.locale"
                     >
                         <option value="ar">العربية (Arabic)</option>
                         <option value="en">English (الانكليزية)</option>
-                    </BaseSelect> -->
+                    </BaseSelect>
                     <div class="flex items-center gap-4">
                         <BaseButton :disabled="profileForm.processing"
                             >حفظ</BaseButton
@@ -154,7 +160,7 @@ const closeModal = () => {
                         </Transition>
                     </div>
                 </form>
-            </Card>
+            </Card> -->
 
             <Card>
                 <header>
