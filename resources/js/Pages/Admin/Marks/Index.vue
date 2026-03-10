@@ -172,7 +172,7 @@ const exportMarks = () => {
             </template>
         </PageHeader>
 
-        <Card class="mb-4">
+        <!-- <Card class="mb-4">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <BaseSelect v-model="filters.user_id" label="تصفية حسب الطالب">
                     <option value="">تصفية حسب الطالب...</option>
@@ -208,7 +208,7 @@ const exportMarks = () => {
                     v-model="filters.date_to"
                 />
             </div>
-        </Card>
+        </Card> -->
 
         <Card v-if="marks.data.length" class="space-y-2">
             <div class="overflow-x-auto">
